@@ -1,1 +1,5 @@
 Giraffe
+
+Management:
+- Rowdy
+- Paul
