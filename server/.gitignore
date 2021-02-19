@@ -12,6 +12,8 @@ lerna-debug.log*
 
 # OS
 .DS_Store
+*.sqlite
+*.env
 
 # Tests
 /coverage
