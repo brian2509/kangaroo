@@ -1,9 +1,9 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
-import { UsersService } from "../user/user.service";
+import { UsersService } from "../users/user.service";
 import { CreateStickerDto } from "./dto/create-sticker.dto";
-import { StickerRo } from "./dto/response-sticker";
+import { StickerRo } from "./dto/response-sticker.dto";
 import { UpdateStickerDto } from "./dto/update-sticker.dto";
 import { Sticker } from "./entities/sticker.entity";
 

@@ -1,9 +1,9 @@
 import { Module } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { Sticker } from "./stickers/entities/sticker.entity";
-import { User } from "./user/entities/user.entity";
-import { UserModule } from "./user/user.module";
 import { StickersModule } from "./stickers/stickers.module";
+import { User } from "./users/entities/user.entity";
+import { UserModule } from "./users/user.module";
 
 @Module({
   imports: [
