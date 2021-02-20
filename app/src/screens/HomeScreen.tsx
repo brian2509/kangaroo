@@ -1,5 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { Divider, Layout, List, ListItem, Text, Button, Spinner } from "@ui-kitten/components";
+import {
+    Divider,
+    Layout,
+    List,
+    ListItem,
+    Text,
+    Button,
+    Spinner,
+    Icon,
+} from "@ui-kitten/components";
 import { SafeAreaView, StyleSheet } from "react-native";
 import { TopNavigationBar } from "../common/TopNavigationBar";
 import axios from "../api/axios";
@@ -73,11 +82,16 @@ export const HomeScreen = (props: Props) => {
             });
     };
 
+    const TrashIcon = (props: any) => <Icon {...props} name="trash" />;
+
     const renderItemAccessory = (sticker: Sticker) => {
         return (
-            <Button size="small" status="danger" onPress={() => deleteSticker(sticker.id)}>
-                Delete
-            </Button>
+            <Button
+                status="danger"
+                appearance="outline"
+                onPress={() => deleteSticker(sticker.id)}
+                accessoryLeft={TrashIcon}
+            />
         );
     };
 
@@ -97,10 +111,10 @@ export const HomeScreen = (props: Props) => {
                     Welcome! 🦒
                 </Text>
                 <Layout style={styles.buttonContainer}>
-                    <Button style={styles.button} onPress={getStickers}>
+                    <Button style={styles.button} appearance="outline" onPress={getStickers}>
                         Fetch Stickers
                     </Button>
-                    <Button style={styles.button} onPress={addSticker}>
+                    <Button style={styles.button} appearance="outline" onPress={addSticker}>
                         Add Sticker
                     </Button>
                 </Layout>
