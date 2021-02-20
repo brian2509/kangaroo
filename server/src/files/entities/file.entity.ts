@@ -3,25 +3,26 @@ import {
   CreateDateColumn,
   Entity,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
-import { PublicFile } from "../../files/entities/file.entity";
+import { Sticker } from "../../stickers/entities/sticker.entity";
 import { User } from "../../users/entities/user.entity";
 
-@Entity("sticker")
-export class Sticker {
+@Entity("file")
+export class PublicFile {
   @PrimaryGeneratedColumn("uuid")
   id: string;
 
   @Column()
-  name: string;
+  bucketName: string;
 
   @ManyToOne(() => User, (user) => user.stickers)
-  author: User;
+  fileName: string;
 
-  @ManyToOne(() => PublicFile, (file) => file.stickers)
-  file: PublicFile;
+  @OneToMany(() => Sticker, (sticker) => sticker.file)
+  stickers?: Sticker[];
 
   @CreateDateColumn()
   createdAt: Date;
