@@ -10,7 +10,6 @@ import {
     Icon,
 } from "@ui-kitten/components";
 import { SafeAreaView, StyleSheet } from "react-native";
-import { TopNavigationBar } from "../common/TopNavigationBar";
 import axios from "../api/axios";
 
 interface Props {}
@@ -105,7 +104,6 @@ export const HomeScreen = (props: Props) => {
 
     return (
         <SafeAreaView style={{ flex: 1 }}>
-            <TopNavigationBar />
             <Layout style={styles.container}>
                 <Text style={styles.text} category="h1">
                     Welcome! 🦒
@@ -118,20 +116,14 @@ export const HomeScreen = (props: Props) => {
                         Add Sticker
                     </Button>
                 </Layout>
-                {stickers.length > 0 ? (
-                    <Layout style={styles.listContainer}>
-                        <List
-                            data={stickers}
-                            ItemSeparatorComponent={Divider}
-                            renderItem={renderItem}
-                        />
-                    </Layout>
-                ) : (
-                    <Text style={styles.text} appearance="hint">
-                        No Stickers
-                    </Text>
-                )}
-                {loading && <Spinner size="giant" />}
+                <List
+                    style={styles.list}
+                    data={stickers}
+                    ItemSeparatorComponent={Divider}
+                    renderItem={renderItem}
+                    ListFooterComponent={loading ? <Spinner size="giant" /> : null}
+                    ListFooterComponentStyle={styles.spinner}
+                />
             </Layout>
         </SafeAreaView>
     );
@@ -141,7 +133,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         alignItems: "center",
-        paddingVertical: 16,
+        paddingTop: 16,
     },
     text: {
         textAlign: "center",
@@ -152,11 +144,14 @@ const styles = StyleSheet.create({
     button: {
         margin: 16,
     },
-    listContainer: {
+    list: {
         width: "100%",
-        flexDirection: "row",
     },
     backdrop: {
         backgroundColor: "rgba(0, 0, 0, 0.5)",
+    },
+    spinner: {
+        alignSelf: "center",
+        margin: 16,
     },
 });
