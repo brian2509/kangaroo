@@ -1,6 +1,6 @@
 import { Module } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
-import { PublicFile } from "./files/entities/file.entity";
+import { PrivateFile } from "./files/entities/file.entity";
 import { FilesModule } from "./files/files.module";
 import { Sticker } from "./stickers/entities/sticker.entity";
 import { StickersModule } from "./stickers/stickers.module";
@@ -12,7 +12,7 @@ import { UserModule } from "./users/user.module";
     TypeOrmModule.forRoot({
       type: "sqlite",
       database: "database.sqlite",
-      entities: [User, Sticker, PublicFile],
+      entities: [User, Sticker, PrivateFile],
       synchronize: true,
     }),
     UserModule,

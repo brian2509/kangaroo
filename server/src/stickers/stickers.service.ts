@@ -25,6 +25,7 @@ export class StickersService {
       file.buffer,
       file.originalname
     );
+    // TODO: Add image/file validation.
     const sticker = this.stickerRepository.create({
       author: user,
       name: createStickerDto.name,
@@ -35,14 +36,18 @@ export class StickersService {
     return {
       id: savedSticker.id,
       name: savedSticker.name,
-      url: savedSticker.file.url,
+      url: savedSticker.file.fileUrl(),
     };
   }
 
   async findAll(): Promise<StickerRo[]> {
     const stickers = await this.stickerRepository.find();
     return stickers.map((sticker) => {
-      return { id: sticker.id, name: sticker.name, url: sticker.file.url };
+      return {
+        id: sticker.id,
+        name: sticker.name,
+        url: sticker.file.fileUrl(),
+      };
     });
   }
 
@@ -56,7 +61,7 @@ export class StickersService {
     return {
       id: sticker.id,
       name: sticker.name,
-      url: sticker.file.url,
+      url: sticker.file.fileUrl(),
     };
   }
 
@@ -75,8 +80,21 @@ export class StickersService {
   }
 
   async remove(id: string): Promise<StickerRo> {
-    const sticker = await this.findOne(id);
+    const sticker = await this.stickerRepository.findOne({
+      where: { id },
+    });
+    if (!sticker) {
+      throw new NotFoundException();
+    }
+
+    // TODO: Reverse these actions/use transactions.
     await this.stickerRepository.delete(id);
-    return sticker;
+    await this.filesService.deleteFile(sticker.file.fileName);
+
+    return {
+      id: sticker.id,
+      name: sticker.name,
+      url: sticker.file.fileUrl(),
+    };
   }
 }

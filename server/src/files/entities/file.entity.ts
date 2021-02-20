@@ -1,3 +1,4 @@
+import { PATH_METADATA } from "@nestjs/common/constants";
 import {
   Column,
   CreateDateColumn,
@@ -7,9 +8,11 @@ import {
   UpdateDateColumn,
 } from "typeorm";
 import { Sticker } from "../../stickers/entities/sticker.entity";
+import { FilesController } from "../files.controller";
+import "reflect-metadata";
 
 @Entity("file")
-export class PublicFile {
+export class PrivateFile {
   @PrimaryGeneratedColumn("uuid")
   id: string;
 
@@ -19,9 +22,6 @@ export class PublicFile {
   @Column()
   fileName: string;
 
-  @Column()
-  url: string;
-
   @OneToMany(() => Sticker, (sticker) => sticker.file)
   stickers?: Sticker[];
 
@@ -30,4 +30,9 @@ export class PublicFile {
 
   @UpdateDateColumn()
   updatedAt: Date;
+
+  fileUrl(): string {
+    // TODO: Make this more robust.
+    return `${process.env.DOMAIN_NAME}/api/files/${this.fileName}`;
+  }
 }

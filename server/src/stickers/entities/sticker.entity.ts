@@ -6,7 +6,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
-import { PublicFile } from "../../files/entities/file.entity";
+import { PrivateFile } from "../../files/entities/file.entity";
 import { User } from "../../users/entities/user.entity";
 
 @Entity("sticker")
@@ -20,8 +20,8 @@ export class Sticker {
   @ManyToOne(() => User, (user) => user.stickers)
   author: User;
 
-  @ManyToOne(() => PublicFile, (file) => file.stickers, { eager: true })
-  file: PublicFile;
+  @ManyToOne(() => PrivateFile, (file) => file.stickers, { eager: true })
+  file: PrivateFile;
 
   @CreateDateColumn()
   createdAt: Date;
