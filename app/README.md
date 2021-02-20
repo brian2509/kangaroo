@@ -23,7 +23,7 @@ Builds your app and starts it on a connected Android emulator or device.
 
 Usage:
 ```
-npm start run-android
+npm run android
 ```
 
 ### run-ios
@@ -32,7 +32,7 @@ Builds your app and starts it on iOS simulator.
 
 Usage:
 ```
-npm start run-ios
+npm run ios
 ```
 
 ### start
