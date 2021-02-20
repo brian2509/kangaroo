@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
+import { FilesService } from "../files/files.service";
 import { UsersService } from "../users/user.service";
 import { CreateStickerDto } from "./dto/create-sticker.dto";
 import { StickerRo } from "./dto/response-sticker.dto";
@@ -11,26 +12,37 @@ import { Sticker } from "./entities/sticker.entity";
 export class StickersService {
   constructor(
     @InjectRepository(Sticker) private stickerRepository: Repository<Sticker>,
-    private usersService: UsersService
+    private usersService: UsersService,
+    private filesService: FilesService
   ) {}
 
-  async create(createStickerDto: CreateStickerDto): Promise<StickerRo> {
+  async create(
+    createStickerDto: CreateStickerDto,
+    file: any
+  ): Promise<StickerRo> {
     const user = await this.usersService.mockUser();
+    const uploadedFile = await this.filesService.uploadFile(
+      file.buffer,
+      file.originalname
+    );
     const sticker = this.stickerRepository.create({
       author: user,
       name: createStickerDto.name,
+      file: uploadedFile,
     });
+
     const savedSticker = await this.stickerRepository.save(sticker);
     return {
       id: savedSticker.id,
       name: savedSticker.name,
+      url: savedSticker.file.url,
     };
   }
 
   async findAll(): Promise<StickerRo[]> {
     const stickers = await this.stickerRepository.find();
     return stickers.map((sticker) => {
-      return { id: sticker.id, name: sticker.name };
+      return { id: sticker.id, name: sticker.name, url: sticker.file.url };
     });
   }
 
@@ -44,6 +56,7 @@ export class StickersService {
     return {
       id: sticker.id,
       name: sticker.name,
+      url: sticker.file.url,
     };
   }
 
@@ -57,6 +70,7 @@ export class StickersService {
     return {
       id: saved.id,
       name: saved.name,
+      url: saved.url,
     };
   }
 

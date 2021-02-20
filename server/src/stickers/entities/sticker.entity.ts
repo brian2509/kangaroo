@@ -20,7 +20,7 @@ export class Sticker {
   @ManyToOne(() => User, (user) => user.stickers)
   author: User;
 
-  @ManyToOne(() => PublicFile, (file) => file.stickers)
+  @ManyToOne(() => PublicFile, (file) => file.stickers, { eager: true })
   file: PublicFile;
 
   @CreateDateColumn()

@@ -7,5 +7,6 @@ import { FilesService } from "./files.service";
 @Module({
   imports: [TypeOrmModule.forFeature([Sticker, PublicFile])],
   providers: [FilesService],
+  exports: [FilesService],
 })
 export class FilesModule {}

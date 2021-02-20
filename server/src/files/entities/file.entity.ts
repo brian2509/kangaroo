@@ -2,13 +2,11 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
 import { Sticker } from "../../stickers/entities/sticker.entity";
-import { User } from "../../users/entities/user.entity";
 
 @Entity("file")
 export class PublicFile {
@@ -18,8 +16,11 @@ export class PublicFile {
   @Column()
   bucketName: string;
 
-  @ManyToOne(() => User, (user) => user.stickers)
+  @Column()
   fileName: string;
+
+  @Column()
+  url: string;
 
   @OneToMany(() => Sticker, (sticker) => sticker.file)
   stickers?: Sticker[];

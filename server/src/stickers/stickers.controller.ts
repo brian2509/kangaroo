@@ -6,7 +6,10 @@ import {
   Param,
   Post,
   Put,
+  UploadedFile,
+  UseInterceptors,
 } from "@nestjs/common";
+import { FileInterceptor } from "@nestjs/platform-express";
 import { ApiTags } from "@nestjs/swagger";
 import { CreateStickerDto } from "./dto/create-sticker.dto";
 import { StickerRo } from "./dto/response-sticker.dto";
@@ -19,8 +22,12 @@ export class StickersController {
   constructor(private readonly stickersService: StickersService) {}
 
   @Post()
-  create(@Body() createStickerDto: CreateStickerDto): Promise<StickerRo> {
-    return this.stickersService.create(createStickerDto);
+  @UseInterceptors(FileInterceptor("file"))
+  create(
+    @Body() createStickerDto: CreateStickerDto,
+    @UploadedFile() file
+  ): Promise<StickerRo> {
+    return this.stickersService.create(createStickerDto, file);
   }
 
   @Get()
