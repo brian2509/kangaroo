@@ -17,19 +17,21 @@ export class StickersService {
   ) {}
 
   async create(
+    stickerPackId: string,
     createStickerDto: CreateStickerDto,
-    file: any
+    file: any,
+    userId: string
   ): Promise<StickerRo> {
-    const user = await this.usersService.mockUser();
     const uploadedFile = await this.filesService.uploadFile(
       file.buffer,
       file.originalname
     );
     // TODO: Add image/file validation.
     const sticker = this.stickerRepository.create({
-      author: user,
+      author: { id: userId },
       name: createStickerDto.name,
       file: uploadedFile,
+      stickerPack: { id: stickerPackId },
     });
 
     const savedSticker = await this.stickerRepository.save(sticker);

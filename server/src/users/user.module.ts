@@ -5,7 +5,6 @@ import { UsersService } from "./user.service";
 
 @Module({
   imports: [TypeOrmModule.forFeature([User])],
-  controllers: [],
   providers: [UsersService],
   exports: [UsersService],
 })
