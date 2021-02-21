@@ -23,7 +23,7 @@ const BottomTabBar = ({ navigation, state }: MaterialTopTabBarProps) => (
 
 const TabNavigator = () => (
     <Navigator
-        tabBarPosition="bottom"
+        swipeVelocityImpact={0.4}
         tabBar={(props: MaterialTopTabBarProps) => <BottomTabBar {...props} />}>
         <Screen name="Home" component={HomeScreen} />
         <Screen name="Auth" component={AuthScreen} />

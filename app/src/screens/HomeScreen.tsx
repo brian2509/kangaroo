@@ -121,8 +121,8 @@ export const HomeScreen = (props: Props) => {
                     data={stickers}
                     ItemSeparatorComponent={Divider}
                     renderItem={renderItem}
-                    ListFooterComponent={loading ? <Spinner size="giant" /> : null}
-                    ListFooterComponentStyle={styles.spinner}
+                    refreshing={loading}
+                    onRefresh={getStickers}
                 />
             </Layout>
         </SafeAreaView>
