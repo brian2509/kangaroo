@@ -27,10 +27,21 @@ async function bootstrap() {
   // Set-up Swagger code generation.
   if (process.env.NODE_ENV === "development") {
     const config = new DocumentBuilder()
-      .setTitle("Giraffe API")
-      .setDescription("The description of the Giraffe REST API")
-      .setVersion("0.1")
+      .setTitle("Giraffe Server")
+      .setDescription(
+        "In order to interact with the API from this documentation alone follow the following steps:\n" +
+          "1. Register at the register route.\n" +
+          "2. Login using the credentials at the login route.\n" +
+          "3. Get the `access_token` from the response and enter it in the Authorization formk.\n"
+      )
+      .setVersion("1.0")
+      .addSecurity("bearer", {
+        bearerFormat: "JWT",
+        type: "http",
+        scheme: "bearer",
+      })
       .build();
+
     const document = SwaggerModule.createDocument(app, config);
     SwaggerModule.setup("api", app, document);
   }

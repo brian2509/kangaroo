@@ -132,11 +132,6 @@ export class StickerPacksService {
     return await this.stickersService.remove(stickerId);
   }
 
-  copySticker(id: string, stickerId: string, userId: string) {
-    // TODO: Not implemented.
-    return `This action returns a #${id} stickerPack`;
-  }
-
   async findAllPublicPacks(): Promise<StickerPackRo[]> {
     const stickerPacks = await this.stickerPackRepository.find({
       where: { private: false },

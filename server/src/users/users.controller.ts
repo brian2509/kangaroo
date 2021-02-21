@@ -1,17 +1,21 @@
 import { Controller, Get, UseGuards } from "@nestjs/common";
-import { ApiTags } from "@nestjs/swagger";
+import { ApiBearerAuth, ApiOperation, ApiTags } from "@nestjs/swagger";
 import { User } from "../auth/decorators/user.decorator";
 import { JwtAuthGuard } from "../auth/guards/jwt.guard";
 import { StickerPackRo } from "../sticker-packs/dto/sticker-pack-ro.dto";
 import { UserRo } from "./dto/response-user.dto";
 import { UsersService } from "./user.service";
 
+@ApiBearerAuth()
 @ApiTags("user")
 @UseGuards(JwtAuthGuard)
 @Controller()
 export class UsersController {
   constructor(private usersService: UsersService) {}
 
+  @ApiOperation({
+    summary: "Get all owned and joined sticker packs of logged in user.",
+  })
   @Get("/me/sticker-packs")
   async getOwnAndJoinedStickerPacks(
     @User() user: UserRo
@@ -19,11 +23,17 @@ export class UsersController {
     return this.usersService.getOwnedAndJoinedStickerPacks(user.id);
   }
 
+  @ApiOperation({
+    summary: "Get all owned sticker packs of logged in user.",
+  })
   @Get("/me/sticker-packs/owned")
   async getOwnStickerPacks(@User() user: UserRo): Promise<StickerPackRo[]> {
     return this.usersService.getOwnedStickerPacks(user.id);
   }
 
+  @ApiOperation({
+    summary: "Get all joined sticker packs of logged in user.",
+  })
   @Get("/me/sticker-packs/joined")
   async getJoinedStickerPacks(@User() user: UserRo): Promise<StickerPackRo[]> {
     return this.usersService.getJoinedStickerPacks(user.id);
