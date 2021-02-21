@@ -10,25 +10,24 @@ import {
   UseGuards,
   UseInterceptors,
 } from "@nestjs/common";
-import {FileInterceptor} from "@nestjs/platform-express";
-import {ApiBearerAuth, ApiOperation, ApiTags} from "@nestjs/swagger";
-import {User} from "../auth/decorators/user.decorator";
-import {JwtAuthGuard} from "../auth/guards/jwt.guard";
-import {CreateStickerDto} from "../stickers/dto/create-sticker.dto";
-import {StickerRo} from "../stickers/dto/response-sticker.dto";
-import {UserRo} from "../users/dto/response-user.dto";
-import {CreateStickerPackDto} from "./dto/create-sticker-pack.dto";
-import {StickerPackRo} from "./dto/sticker-pack-ro.dto";
-import {UpdateStickerPackDto} from "./dto/update-sticker-pack.dto";
-import {StickerPacksService} from "./sticker-packs.service";
+import { FileInterceptor } from "@nestjs/platform-express";
+import { ApiBearerAuth, ApiOperation, ApiTags } from "@nestjs/swagger";
+import { User } from "../auth/decorators/user.decorator";
+import { JwtAuthGuard } from "../auth/guards/jwt.guard";
+import { CreateStickerDto } from "../stickers/dto/create-sticker.dto";
+import { StickerRo } from "../stickers/dto/response-sticker.dto";
+import { UserRo } from "../users/dto/response-user.dto";
+import { CreateStickerPackDto } from "./dto/create-sticker-pack.dto";
+import { StickerPackRo } from "./dto/sticker-pack-ro.dto";
+import { UpdateStickerPackDto } from "./dto/update-sticker-pack.dto";
+import { StickerPacksService } from "./sticker-packs.service";
 
 @UseGuards(JwtAuthGuard)
 @ApiTags("sticker-packs")
 @ApiBearerAuth()
 @Controller("sticker-packs")
 export class StickerPacksController {
-  constructor(private readonly stickerPacksService: StickerPacksService) {
-  }
+  constructor(private readonly stickerPacksService: StickerPacksService) {}
 
   @ApiOperation({
     summary: "Create a sticker pack (without stickers).",
@@ -140,9 +139,19 @@ export class StickerPacksController {
   @ApiOperation({
     summary: "Register a view for a sticker pack.",
   })
-  @Get(":id/actions/view")
-  async viewStickerPack(@Param("id") id: string) {
+  @Get(":id/actions/registerView")
+  @Get(":id/actions/registerView")
+  async registerView(@Param("id") id: string) {
     await this.stickerPacksService.registerView(id);
+    return;
+  }
+
+  @ApiOperation({
+    summary: "Register a click for a sticker pack.",
+  })
+  @Get(":id/actions/registerLike")
+  async registerLike(@Param("id") id: string) {
+    await this.stickerPacksService.registerClick(id);
     return;
   }
 }

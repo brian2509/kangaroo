@@ -220,4 +220,15 @@ export class StickerPacksService {
     stickerPack.views = stickerPack.views + 1;
     await this.stickerPackRepository.save(stickerPack);
   }
+
+  async registerClick(id: string) {
+    const stickerPack = await this.stickerPackRepository.findOne({
+      where: { id },
+    });
+    if (!stickerPack) {
+      throw new NotFoundException();
+    }
+    stickerPack.clicks = stickerPack.clicks + 1;
+    await this.stickerPackRepository.save(stickerPack);
+  }
 }

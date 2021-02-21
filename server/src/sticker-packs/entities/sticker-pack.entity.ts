@@ -40,6 +40,9 @@ export class StickerPack {
   @Column({ default: 0 })
   views: number;
 
+  @Column({ default: 0 })
+  clicks: number;
+
   @UpdateDateColumn()
   updatedAt: Date;
 
@@ -53,6 +56,7 @@ export class StickerPack {
         : this.stickers.map((sticker) => sticker.toRO()),
       members: !this.members ? [] : this.members.map((member) => member.toRo()),
       views: this.views,
+      clicks: this.clicks,
     };
   }
 
