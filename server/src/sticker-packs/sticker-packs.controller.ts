@@ -22,7 +22,7 @@ import { StickerPackRo } from "./dto/sticker-pack-ro.dto";
 import { UpdateStickerPackDto } from "./dto/update-sticker-pack.dto";
 import { StickerPacksService } from "./sticker-packs.service";
 
-@ApiTags("auth")
+@ApiTags("sticker-packs")
 @UseGuards(JwtAuthGuard)
 @Controller("sticker-packs")
 export class StickerPacksController {
@@ -79,16 +79,6 @@ export class StickerPacksController {
     return this.stickerPacksService.removeSticker(id, stickerId, user.id);
   }
 
-  // TODO: Make this route.
-  @Post(":id/stickers/actions/copySticker")
-  copySticker(
-    @Param("id") id: string,
-    @Param("stickerId") stickerId: string,
-    @User() user: UserRo
-  ) {
-    return this.stickerPacksService.findAllPublicPacks();
-  }
-
   @Get()
   findAllPublicPacks(): Promise<StickerPackRo[]> {
     return this.stickerPacksService.findAllPublicPacks();
@@ -109,6 +99,7 @@ export class StickerPacksController {
   ): Promise<StickerPackRo> {
     return this.stickerPacksService.joinStickerPack(id, user.id);
   }
+
   @Post(":id/actions/leave")
   async leaveStickerPack(
     @Param("id") id: string,

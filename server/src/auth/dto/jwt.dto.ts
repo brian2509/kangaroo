@@ -1,8 +1,13 @@
-export type JwtPayload = {
+export class JwtPayload {
   sub: string;
   username: string;
-};
+}
 
-export type JwtToken = {
+export class JwtToken {
   access_token: string;
-};
+}
+
+export class AuthenticatedCheckDto {
+  authenticated: boolean;
+}
+
