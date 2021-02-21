@@ -6,7 +6,8 @@ import {
 } from "@react-navigation/material-top-tabs";
 
 import { HomeScreen } from "../screens/HomeScreen";
-import { AuthScreen } from "../screens/AuthScreen";
+import { RegisterScreen } from "../screens/RegisterScreen";
+import { LoginScreen } from "../screens/LoginScreen";
 import { TopNavigationBar } from "../common/TopNavigationBar";
 import { BottomNavigation, BottomNavigationTab } from "@ui-kitten/components";
 
@@ -17,7 +18,8 @@ const BottomTabBar = ({ navigation, state }: MaterialTopTabBarProps) => (
         selectedIndex={state.index}
         onSelect={(index) => navigation.navigate(state.routeNames[index])}>
         <BottomNavigationTab title="HOME" />
-        <BottomNavigationTab title="AUTH" />
+        <BottomNavigationTab title="REGISTER" />
+        <BottomNavigationTab title="LOGIN" />
     </BottomNavigation>
 );
 
@@ -26,7 +28,8 @@ const TabNavigator = () => (
         swipeVelocityImpact={0.4}
         tabBar={(props: MaterialTopTabBarProps) => <BottomTabBar {...props} />}>
         <Screen name="Home" component={HomeScreen} />
-        <Screen name="Auth" component={AuthScreen} />
+        <Screen name="Register" component={RegisterScreen} />
+        <Screen name="Login" component={LoginScreen} />
     </Navigator>
 );
 
