@@ -1,4 +1,4 @@
-import { PATH_METADATA } from "@nestjs/common/constants";
+import "reflect-metadata";
 import {
   Column,
   CreateDateColumn,
@@ -8,8 +8,6 @@ import {
   UpdateDateColumn,
 } from "typeorm";
 import { Sticker } from "../../stickers/entities/sticker.entity";
-import { FilesController } from "../files.controller";
-import "reflect-metadata";
 
 @Entity("file")
 export class PrivateFile {

@@ -1,5 +1,6 @@
 import { Module } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
+import { AuthModule } from "./auth/auth.module";
 import { PrivateFile } from "./files/entities/file.entity";
 import { FilesModule } from "./files/files.module";
 import { StickerPack } from "./sticker-packs/entities/sticker-pack.entity";
@@ -21,6 +22,7 @@ import { UserModule } from "./users/user.module";
     StickersModule,
     FilesModule,
     StickerPacksModule,
+    AuthModule,
   ],
   controllers: [],
   providers: [],
