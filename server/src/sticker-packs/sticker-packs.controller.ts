@@ -10,6 +10,7 @@ import {
   UseInterceptors,
 } from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express";
+import { ApiTags } from "@nestjs/swagger";
 import { CreateStickerDto } from "../stickers/dto/create-sticker.dto";
 import { StickerRo } from "../stickers/dto/response-sticker.dto";
 import { UsersService } from "../users/user.service";
@@ -18,6 +19,7 @@ import { StickerPackRo } from "./dto/sticker-pack-ro.dto";
 import { UpdateStickerPackDto } from "./dto/update-sticker-pack.dto";
 import { StickerPacksService } from "./sticker-packs.service";
 
+@ApiTags("auth")
 @Controller("sticker-packs")
 export class StickerPacksController {
   constructor(
