@@ -1,0 +1,7 @@
+notebook==6.1.6
+jupyter==1.0.0
+ipython==7.19.0
+pandas==1.2.0
+numpy==1.19.5
+opencv-python==4.5.1.48
+matplotlib==3.3.4
