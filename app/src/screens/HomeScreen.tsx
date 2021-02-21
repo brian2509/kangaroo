@@ -9,14 +9,23 @@ import {
     Spinner,
     Icon,
 } from "@ui-kitten/components";
-import { SafeAreaView, StyleSheet } from "react-native";
+import { Image, Platform, SafeAreaView, StyleSheet } from "react-native";
 import axios from "../api/axios";
+import DocumentPicker from "react-native-document-picker";
 
 interface Props {}
 
 interface Sticker {
     id: string;
     name: string;
+    url: string;
+}
+
+interface StickerPack {
+    id: string;
+    name: string;
+    private: boolean;
+    stickers: Sticker[];
 }
 
 const generateName = (): string => {
@@ -24,26 +33,34 @@ const generateName = (): string => {
 };
 
 export const HomeScreen = (props: Props) => {
-    const [stickers, setStickers] = useState<Sticker[]>([]);
+    const [stickerPacks, setStickerPacks] = useState<StickerPack[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
 
     useEffect(() => {
-        getStickers();
+        getStickerPacks();
     }, []); // [] means it only execute once at the start
 
-    const getStickers = async () => {
+    const getStickerPacks = async () => {
         setLoading(true);
 
         axios
-            .get("stickers")
+            .get("sticker-packs")
             .then((res: any) => {
-                const stickerResults: Sticker[] = res.data.map((entry: any) => {
+                const stickerResults: StickerPack[] = res.data.map((entry: any) => {
                     return {
                         id: entry.id,
                         name: entry.name,
+                        private: entry.private,
+                        stickers: entry.stickers.map((stickerEntry: any) => {
+                            return {
+                                id: stickerEntry.id,
+                                name: stickerEntry.name,
+                                url: stickerEntry.url,
+                            };
+                        }),
                     };
                 });
-                setStickers(stickerResults);
+                setStickerPacks(stickerResults);
             })
             .catch((err) => {
                 console.log(err);
@@ -53,26 +70,76 @@ export const HomeScreen = (props: Props) => {
             });
     };
 
-    const addSticker = async () => {
+    const addStickerPack = async () => {
         setLoading(true);
 
+        const body = { name: generateName(), private: true };
+
         axios
-            .post("stickers", { name: generateName() })
-            .then(getStickers)
+            .post("sticker-packs", body)
+            .then(getStickerPacks)
             .catch((err) => {
                 console.log(err);
             })
             .then(() => {
                 setLoading(false);
             });
+    };
+
+    const uploadSticker = async (id: string) => {
+        // TODO: fix file reading, image.uri is "content://..." but should be something like "file://..."
+        return;
+
+        setLoading(true);
+
+        try {
+            const image = await DocumentPicker.pick({
+                type: [DocumentPicker.types.images],
+            });
+
+            var formData = new FormData();
+
+            const stickerName = generateName();
+
+            formData.append("name", stickerName);
+            formData.append("file", {
+                uri: Platform.OS === "android" ? image.uri : "file://" + image.uri,
+                name: `${stickerName}.jpg`,
+                type: "image/*",
+            });
+
+            console.log({ formData });
+
+            axios
+                .post(`sticker-packs/${id}/stickers`, formData, {
+                    headers: {
+                        "Content-Type": "multipart/form-data",
+                    },
+                })
+                .then(getStickerPacks)
+                .catch((err) => {
+                    console.log(err);
+                })
+                .then(() => {
+                    setLoading(false);
+                });
+        } catch (err) {
+            if (DocumentPicker.isCancel(err)) {
+                setLoading(false);
+            } else {
+                console.log(err);
+            }
+        } finally {
+            setLoading(false);
+        }
     };
 
     const deleteSticker = async (id: string) => {
         setLoading(true);
 
         axios
-            .delete(`stickers/${id}`)
-            .then(getStickers)
+            .delete(`sticker-packs/${id}`)
+            .then(getStickerPacks)
             .catch((err) => {
                 console.log(err);
             })
@@ -81,26 +148,59 @@ export const HomeScreen = (props: Props) => {
             });
     };
 
-    const TrashIcon = (props: any) => <Icon {...props} name="trash" />;
+    const renderItemAccessory = (stickerPack: StickerPack) => {
+        const UploadIcon = (props: any) => <Icon {...props} name="upload" />;
+        const TrashIcon = (props: any) => <Icon {...props} name="trash" />;
 
-    const renderItemAccessory = (sticker: Sticker) => {
         return (
-            <Button
-                status="danger"
-                appearance="outline"
-                onPress={() => deleteSticker(sticker.id)}
-                accessoryLeft={TrashIcon}
-            />
+            <>
+                <Button
+                    style={styles.stickerPackActionButton}
+                    status="success"
+                    appearance="outline"
+                    onPress={() => uploadSticker(stickerPack.id)}
+                    accessoryLeft={UploadIcon}
+                />
+                <Button
+                    style={styles.stickerPackActionButton}
+                    status="danger"
+                    appearance="outline"
+                    onPress={() => deleteSticker(stickerPack.id)}
+                    accessoryLeft={TrashIcon}
+                />
+            </>
         );
     };
 
-    const renderItem = ({ item }: { item: Sticker }) => (
-        <ListItem
-            title={`${item.name}`}
-            description={`${item.id}`}
-            accessoryRight={() => renderItemAccessory(item)}
-        />
-    );
+    const renderItem = ({ item }: { item: StickerPack }) => {
+        const title = `${item.name}`;
+        const description = `${item.stickers.length} sticker${
+            item.stickers.length != 1 ? "s" : ""
+        } ${item.private ? "\nPrivate" : ""}`;
+
+        return (
+            <Layout>
+                <ListItem
+                    title={title}
+                    description={description}
+                    accessoryRight={() => renderItemAccessory(item)}
+                />
+                <Layout style={styles.stickerLayout}>
+                    {item.stickers.map((sticker) => {
+                        return (
+                            <Image
+                                style={styles.stickerImage}
+                                key={sticker.id}
+                                source={{
+                                    uri: sticker.url,
+                                }}
+                            />
+                        );
+                    })}
+                </Layout>
+            </Layout>
+        );
+    };
 
     return (
         <SafeAreaView style={{ flex: 1 }}>
@@ -109,20 +209,20 @@ export const HomeScreen = (props: Props) => {
                     Welcome! 🦒
                 </Text>
                 <Layout style={styles.buttonContainer}>
-                    <Button style={styles.button} appearance="outline" onPress={getStickers}>
-                        Fetch Stickers
+                    <Button style={styles.button} appearance="outline" onPress={getStickerPacks}>
+                        Fetch Sticker Packs
                     </Button>
-                    <Button style={styles.button} appearance="outline" onPress={addSticker}>
-                        Add Sticker
+                    <Button style={styles.button} appearance="outline" onPress={addStickerPack}>
+                        Add Sticker Pack
                     </Button>
                 </Layout>
                 <List
                     style={styles.list}
-                    data={stickers}
+                    data={stickerPacks}
                     ItemSeparatorComponent={Divider}
                     renderItem={renderItem}
                     refreshing={loading}
-                    onRefresh={getStickers}
+                    onRefresh={getStickerPacks}
                 />
             </Layout>
         </SafeAreaView>
@@ -144,6 +244,9 @@ const styles = StyleSheet.create({
     button: {
         margin: 16,
     },
+    stickerPackActionButton: {
+        marginHorizontal: 6,
+    },
     list: {
         width: "100%",
     },
@@ -153,5 +256,16 @@ const styles = StyleSheet.create({
     spinner: {
         alignSelf: "center",
         margin: 16,
+    },
+    stickerLayout: {
+        flexDirection: "row",
+        flexWrap: "wrap",
+    },
+    stickerImage: {
+        width: "21%",
+        paddingBottom: "21%",
+        marginHorizontal: "2%",
+        marginBottom: "2%",
+        borderRadius: 3,
     },
 });
