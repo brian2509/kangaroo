@@ -9,9 +9,8 @@ import { LocalStrategy } from "./strategies/local.strategy";
 
 @Module({
   imports: [
-    // TODO: secret
     JwtModule.register({
-      secret: "JWT_SECRET",
+      secret: `${process.env.JWT_SECRET_KEY}`,
       signOptions: { expiresIn: "1d" },
     }),
     PassportModule,

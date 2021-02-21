@@ -5,6 +5,11 @@ import * as dotenv from "dotenv";
 import { AppModule } from "./app.module";
 
 async function bootstrap() {
+  // Load environment variables.
+  dotenv.config();
+  console.log(process.env.JWT_SECRET);
+
+  // Setup Nest.
   const app = await NestFactory.create(AppModule);
   app.setGlobalPrefix("api");
 
@@ -13,9 +18,6 @@ async function bootstrap() {
       transform: true,
     })
   );
-
-  // Load environment variables.
-  dotenv.config();
 
   // Enable CORS.
   if (process.env.NODE_ENV === "development") {
