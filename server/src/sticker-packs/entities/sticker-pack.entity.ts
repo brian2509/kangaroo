@@ -37,6 +37,9 @@ export class StickerPack {
   @CreateDateColumn()
   createdAt: Date;
 
+  @Column({ default: 0 })
+  views: number;
+
   @UpdateDateColumn()
   updatedAt: Date;
 
@@ -49,6 +52,7 @@ export class StickerPack {
         ? []
         : this.stickers.map((sticker) => sticker.toRO()),
       members: !this.members ? [] : this.members.map((member) => member.toRo()),
+      views: this.views,
     };
   }
 

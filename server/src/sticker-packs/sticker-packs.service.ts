@@ -209,4 +209,15 @@ export class StickerPacksService {
     }
     throw new ForbiddenException("You are not a member of this sticker pack.");
   }
+
+  async registerView(id: string) {
+    const stickerPack = await this.stickerPackRepository.findOne({
+      where: { id },
+    });
+    if (!stickerPack) {
+      throw new NotFoundException();
+    }
+    stickerPack.views = stickerPack.views + 1;
+    await this.stickerPackRepository.save(stickerPack);
+  }
 }

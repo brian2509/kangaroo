@@ -7,4 +7,5 @@ export class StickerPackRo {
   private: boolean;
   stickers: StickerRo[];
   members: UserRo[];
+  views: number;
 }
