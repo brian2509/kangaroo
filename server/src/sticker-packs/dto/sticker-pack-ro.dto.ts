@@ -8,5 +8,5 @@ export class StickerPackRo {
   stickers: StickerRo[];
   members: UserRo[];
   views: number;
-  clicks: number;
+  likes: number;
 }

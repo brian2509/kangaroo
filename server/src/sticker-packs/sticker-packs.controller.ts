@@ -140,7 +140,6 @@ export class StickerPacksController {
     summary: "Register a view for a sticker pack.",
   })
   @Get(":id/actions/registerView")
-  @Get(":id/actions/registerView")
   async registerView(@Param("id") id: string) {
     await this.stickerPacksService.registerView(id);
     return;
@@ -149,9 +148,27 @@ export class StickerPacksController {
   @ApiOperation({
     summary: "Register a click for a sticker pack.",
   })
-  @Get(":id/actions/registerLike")
+  @Get(":id/actions/registerClick")
   async registerLike(@Param("id") id: string) {
     await this.stickerPacksService.registerClick(id);
+    return;
+  }
+
+  @ApiOperation({
+    summary: "Register a like for a sticker pack.",
+  })
+  @Get(":id/actions/like")
+  async likeStickerPack(@Param("id") id: string, @User() user: UserRo) {
+    await this.stickerPacksService.likeStickerPack(id, user.id);
+    return;
+  }
+
+  @ApiOperation({
+    summary: "Register a unlike for a sticker pack.",
+  })
+  @Get(":id/actions/unlike")
+  async unlikeStickerPack(@Param("id") id: string, @User() user: UserRo) {
+    await this.stickerPacksService.unlikeStickerPack(id, user.id);
     return;
   }
 }

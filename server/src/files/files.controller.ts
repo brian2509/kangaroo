@@ -4,7 +4,6 @@ import { Response } from "express";
 import { JwtAuthGuard } from "../auth/guards/jwt.guard";
 import { FilesService } from "./files.service";
 
-@ApiBearerAuth()
 @ApiTags("files")
 @Controller("files")
 export class FilesController {

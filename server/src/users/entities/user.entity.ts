@@ -34,6 +34,9 @@ export class User {
   @ManyToMany(() => StickerPack, (stickerPack) => stickerPack.members)
   joinedStickerPacks: StickerPack[];
 
+  @ManyToMany(() => StickerPack, (stickerPack) => stickerPack.likedBy)
+  liked: StickerPack[]
+
   @BeforeInsert()
   async hashPassword() {
     this.password = await bcrypt.hash(this.password, 10);

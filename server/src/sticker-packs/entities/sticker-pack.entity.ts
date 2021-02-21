@@ -1,3 +1,4 @@
+import { Injectable } from "@nestjs/common";
 import {
   Column,
   CreateDateColumn,
@@ -31,6 +32,10 @@ export class StickerPack {
   @JoinTable()
   members: User[];
 
+  @ManyToMany(() => User, (user) => user.liked)
+  @JoinTable()
+  likedBy: User[];
+
   @OneToMany(() => Sticker, (sticker) => sticker.stickerPack, { eager: true })
   stickers: Sticker[];
 
@@ -42,6 +47,9 @@ export class StickerPack {
 
   @Column({ default: 0 })
   clicks: number;
+
+  @Column({ default: 0 })
+  likes: number;
 
   @UpdateDateColumn()
   updatedAt: Date;
@@ -56,7 +64,7 @@ export class StickerPack {
         : this.stickers.map((sticker) => sticker.toRO()),
       members: !this.members ? [] : this.members.map((member) => member.toRo()),
       views: this.views,
-      clicks: this.clicks,
+      likes: this.likes,
     };
   }
 

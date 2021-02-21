@@ -7,7 +7,6 @@ import { AppModule } from "./app.module";
 async function bootstrap() {
   // Load environment variables.
   dotenv.config();
-  console.log(process.env.JWT_SECRET);
 
   // Setup Nest.
   const app = await NestFactory.create(AppModule);

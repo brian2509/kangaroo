@@ -14,6 +14,8 @@ import { StickerPack } from "./entities/sticker-pack.entity";
 
 @Injectable()
 export class StickerPacksService {
+  async;
+
   constructor(
     @InjectRepository(StickerPack)
     private stickerPackRepository: Repository<StickerPack>,
@@ -230,5 +232,65 @@ export class StickerPacksService {
     }
     stickerPack.clicks = stickerPack.clicks + 1;
     await this.stickerPackRepository.save(stickerPack);
+  }
+
+  async likeStickerPack(id: string, userId: string) {
+    const stickerPack = await this.stickerPackRepository.findOne({
+      where: { id },
+    });
+    if (!stickerPack) {
+      throw new NotFoundException();
+    }
+
+    const like = await this.stickerPackRepository
+      .createQueryBuilder("stickerpack")
+      .leftJoinAndSelect("stickerpack.likedBy", "likedByUser")
+      .where("likedByUser.id = :id", { id: userId })
+      .getOne();
+
+    if (like) {
+      throw new ForbiddenException("You already liked this sticker pack.");
+    }
+
+    await this.stickerPackRepository
+      .createQueryBuilder("stickerpack")
+      .relation(StickerPack, "likedBy")
+      .of(stickerPack)
+      .add(userId);
+
+    stickerPack.likes = stickerPack.likes + 1;
+    await this.stickerPackRepository.save(stickerPack);
+
+    return;
+  }
+
+  async unlikeStickerPack(id: string, userId: string) {
+    const stickerPack = await this.stickerPackRepository.findOne({
+      where: { id },
+    });
+    if (!stickerPack) {
+      throw new NotFoundException();
+    }
+
+    const like = await this.stickerPackRepository
+      .createQueryBuilder("stickerpack")
+      .leftJoinAndSelect("stickerpack.likedBy", "likedByUser")
+      .where("likedByUser.id = :id", { id: userId })
+      .getOne();
+
+    if (!like) {
+      throw new ForbiddenException("You have not liked this pack.");
+    }
+
+    await this.stickerPackRepository
+      .createQueryBuilder("stickerpack")
+      .relation(StickerPack, "likedBy")
+      .of(stickerPack)
+      .remove(userId);
+
+    stickerPack.likes = Math.max(0, stickerPack.likes - 1);
+    await this.stickerPackRepository.save(stickerPack);
+
+    return;
   }
 }

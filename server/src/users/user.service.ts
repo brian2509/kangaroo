@@ -41,7 +41,10 @@ export class UsersService {
   async getJoinedStickerPacks(userId: string) {
     const stickerPacks = await this.stickerPackRepository
       .createQueryBuilder("stickerpack")
+      .leftJoinAndSelect("stickerpack.author", "author")
       .leftJoinAndSelect("stickerpack.members", "member")
+      .leftJoinAndSelect("stickerpack.stickers", "sticker")
+      .leftJoinAndSelect("sticker.file", "stickerFile")
       .where("member.id = :id", { id: userId })
       .getMany();
 
@@ -53,6 +56,8 @@ export class UsersService {
       .createQueryBuilder("stickerpack")
       .leftJoinAndSelect("stickerpack.author", "author")
       .leftJoinAndSelect("stickerpack.members", "member")
+      .leftJoinAndSelect("stickerpack.stickers", "sticker")
+      .leftJoinAndSelect("sticker.file", "stickerFile")
       .where("member.id = :id", { id: userId })
       .orWhere("author.id =:id", { id: userId })
       .getMany();
