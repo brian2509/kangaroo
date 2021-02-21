@@ -10,6 +10,7 @@ export class FilesController {
   @Get(":fileName")
   @UseGuards(JwtAuthGuard)
   async getFile(@Param("fileName") fileName: string, @Res() res: Response) {
+    // TODO: Add security to this if needed.
     const file = await this.filesService.getFile(fileName);
     file.stream.pipe(res);
   }

@@ -53,7 +53,7 @@ export class StickerPack {
   }
 
   isOwner(userId: string) {
-    return this.author.id !== userId;
+    return this.author.id === userId;
   }
 
   isMember(userId: string) {
