@@ -17,6 +17,7 @@ export class UsersService {
     if (users.length === 0) {
       const user = this.userRepository.create({
         email: "mock@email.com",
+        username: "mock_username",
       });
       await this.userRepository.save(user);
     }
@@ -29,5 +30,22 @@ export class UsersService {
       relations: ["author"],
     });
     return stickerPacks.map((stickerPack) => stickerPack.toRO());
+  }
+
+  async findByUsername(username: string) {
+    const user = await this.userRepository.findOne({ where: { username } });
+    if (!user) {
+      return null;
+    }
+    return user;
+  }
+
+  async create(
+    username: string,
+    email: string,
+    password: string
+  ): Promise<User> {
+    const user = this.userRepository.create({ username, email, password });
+    return this.userRepository.save(user);
   }
 }

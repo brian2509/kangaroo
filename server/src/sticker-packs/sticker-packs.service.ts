@@ -130,6 +130,7 @@ export class StickerPacksService {
   }
 
   copySticker(id: string, stickerId: string, userId: string) {
+    // TODO: Not implemented.
     return `This action returns a #${id} stickerPack`;
   }
 
