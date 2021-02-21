@@ -86,12 +86,12 @@ export class StickerPacksController {
     @Param("stickerId") stickerId: string,
     @User() user: UserRo
   ) {
-    return this.stickerPacksService.findAll();
+    return this.stickerPacksService.findAllPublicPacks();
   }
 
   @Get()
-  findAll(): Promise<StickerPackRo[]> {
-    return this.stickerPacksService.findAll();
+  findAllPublicPacks(): Promise<StickerPackRo[]> {
+    return this.stickerPacksService.findAllPublicPacks();
   }
 
   @Get(":id")
@@ -100,5 +100,20 @@ export class StickerPacksController {
     @User() user: UserRo
   ): Promise<StickerPackRo> {
     return this.stickerPacksService.findOne(id, user.id);
+  }
+
+  @Post(":id/actions/join")
+  async joinStickerPack(
+    @Param("id") id: string,
+    @User() user: UserRo
+  ): Promise<StickerPackRo> {
+    return this.stickerPacksService.joinStickerPack(id, user.id);
+  }
+  @Post(":id/actions/leave")
+  async leaveStickerPack(
+    @Param("id") id: string,
+    @User() user: UserRo
+  ): Promise<StickerPackRo> {
+    return this.stickerPacksService.leaveStickerPack(id, user.id);
   }
 }
