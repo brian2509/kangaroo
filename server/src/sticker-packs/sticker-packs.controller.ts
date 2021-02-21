@@ -11,6 +11,7 @@ import {
 } from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { CreateStickerDto } from "../stickers/dto/create-sticker.dto";
+import { StickerRo } from "../stickers/dto/response-sticker.dto";
 import { UsersService } from "../users/user.service";
 import { CreateStickerPackDto } from "./dto/create-sticker-pack.dto";
 import { StickerPackRo } from "./dto/sticker-pack-ro.dto";
@@ -42,7 +43,7 @@ export class StickerPacksController {
   }
 
   @Delete(":id")
-  async remove(@Param("id") id: string) {
+  async remove(@Param("id") id: string): Promise<StickerPackRo> {
     const user = await this.usersService.mockUser();
     return this.stickerPacksService.remove(id, user.id);
   }
@@ -53,7 +54,7 @@ export class StickerPacksController {
     @Param("id") id: string,
     @Body() createStickerDto: CreateStickerDto,
     @UploadedFile() file
-  ) {
+  ): Promise<StickerRo> {
     const user = await this.usersService.mockUser();
     return this.stickerPacksService.addSticker(
       id,
@@ -67,7 +68,7 @@ export class StickerPacksController {
   async deleteSticker(
     @Param("id") id: string,
     @Param("stickerId") stickerId: string
-  ) {
+  ): Promise<StickerRo> {
     const user = await this.usersService.mockUser();
     return this.stickerPacksService.removeSticker(id, stickerId, user.id);
   }
@@ -84,7 +85,7 @@ export class StickerPacksController {
   }
 
   @Get(":id")
-  async findOne(@Param("id") id: string) {
+  async findOne(@Param("id") id: string): Promise<StickerPackRo> {
     const user = await this.usersService.mockUser();
     return this.stickerPacksService.findOne(id, user.id);
   }
