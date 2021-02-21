@@ -7,46 +7,50 @@ import {
   Post,
   Put,
   UploadedFile,
+  UseGuards,
   UseInterceptors,
 } from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { ApiTags } from "@nestjs/swagger";
+import { User } from "../auth/decorators/user.decorator";
+import { JwtAuthGuard } from "../auth/guards/jwt.guard";
 import { CreateStickerDto } from "../stickers/dto/create-sticker.dto";
 import { StickerRo } from "../stickers/dto/response-sticker.dto";
-import { UsersService } from "../users/user.service";
+import { UserRo } from "../users/dto/response-user.dto";
 import { CreateStickerPackDto } from "./dto/create-sticker-pack.dto";
 import { StickerPackRo } from "./dto/sticker-pack-ro.dto";
 import { UpdateStickerPackDto } from "./dto/update-sticker-pack.dto";
 import { StickerPacksService } from "./sticker-packs.service";
 
 @ApiTags("auth")
+@UseGuards(JwtAuthGuard)
 @Controller("sticker-packs")
 export class StickerPacksController {
-  constructor(
-    private readonly stickerPacksService: StickerPacksService,
-    private usersService: UsersService
-  ) {}
+  constructor(private readonly stickerPacksService: StickerPacksService) {}
 
+  @UseGuards(JwtAuthGuard)
   @Post()
   async create(
-    @Body() createStickerPackDto: CreateStickerPackDto
+    @Body() createStickerPackDto: CreateStickerPackDto,
+    @User() user: UserRo
   ): Promise<StickerPackRo> {
-    const user = await this.usersService.mockUser();
     return this.stickerPacksService.create(createStickerPackDto, user.id);
   }
 
   @Put(":id")
   async update(
     @Param("id") id: string,
-    @Body() updateStickerPackDto: UpdateStickerPackDto
+    @Body() updateStickerPackDto: UpdateStickerPackDto,
+    @User() user: UserRo
   ): Promise<StickerPackRo> {
-    const user = await this.usersService.mockUser();
     return this.stickerPacksService.update(id, updateStickerPackDto, user.id);
   }
 
   @Delete(":id")
-  async remove(@Param("id") id: string): Promise<StickerPackRo> {
-    const user = await this.usersService.mockUser();
+  async remove(
+    @Param("id") id: string,
+    @User() user: UserRo
+  ): Promise<StickerPackRo> {
     return this.stickerPacksService.remove(id, user.id);
   }
 
@@ -55,9 +59,9 @@ export class StickerPacksController {
   async addSticker(
     @Param("id") id: string,
     @Body() createStickerDto: CreateStickerDto,
-    @UploadedFile() file
+    @UploadedFile() file,
+    @User() user: UserRo
   ): Promise<StickerRo> {
-    const user = await this.usersService.mockUser();
     return this.stickerPacksService.addSticker(
       id,
       createStickerDto,
@@ -69,15 +73,19 @@ export class StickerPacksController {
   @Delete(":id/stickers/:stickerId")
   async deleteSticker(
     @Param("id") id: string,
-    @Param("stickerId") stickerId: string
+    @Param("stickerId") stickerId: string,
+    @User() user: UserRo
   ): Promise<StickerRo> {
-    const user = await this.usersService.mockUser();
     return this.stickerPacksService.removeSticker(id, stickerId, user.id);
   }
 
   // TODO: Make this route.
   @Post(":id/stickers/actions/copySticker")
-  copySticker(@Param("id") id: string, @Param("stickerId") stickerId: string) {
+  copySticker(
+    @Param("id") id: string,
+    @Param("stickerId") stickerId: string,
+    @User() user: UserRo
+  ) {
     return this.stickerPacksService.findAll();
   }
 
@@ -87,8 +95,10 @@ export class StickerPacksController {
   }
 
   @Get(":id")
-  async findOne(@Param("id") id: string): Promise<StickerPackRo> {
-    const user = await this.usersService.mockUser();
+  async findOne(
+    @Param("id") id: string,
+    @User() user: UserRo
+  ): Promise<StickerPackRo> {
     return this.stickerPacksService.findOne(id, user.id);
   }
 }
