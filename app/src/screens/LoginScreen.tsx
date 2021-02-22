@@ -31,6 +31,25 @@ export const LoginScreen = (props: Props) => {
             });
     };
 
+    const logout = async () => {
+        setAccessToken(undefined);
+    };
+
+    const authCheck = async () => {
+        axios
+            .get("/auth/authenticated")
+            .then((res) => {
+                if (res.data.authenticated == true) {
+                    setStatus("Authenticated!");
+                } else {
+                    setStatus("Not authenticated!");
+                }
+            })
+            .catch((e) => {
+                setStatus("Not authenticated!");
+            });
+    };
+
     return (
         <SafeAreaView style={{ flex: 1 }}>
             <Layout style={styles.container}>
@@ -54,6 +73,17 @@ export const LoginScreen = (props: Props) => {
                         onChangeText={setPassword}></Input>
                     <Button style={styles.button} size="large" onPress={login}>
                         Login
+                    </Button>
+                    <Button style={styles.button} status="danger" size="large" onPress={logout}>
+                        Logout
+                    </Button>
+                    <Button
+                        style={styles.button}
+                        appearance="outline"
+                        status="basic"
+                        size="small"
+                        onPress={authCheck}>
+                        Check auth
                     </Button>
                     <Text style={styles.text} category="h5">
                         {status}
