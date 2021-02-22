@@ -11,7 +11,7 @@ import {
   UseInterceptors,
 } from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express";
-import { ApiTags } from "@nestjs/swagger";
+import { ApiBearerAuth, ApiOperation, ApiTags } from "@nestjs/swagger";
 import { User } from "../auth/decorators/user.decorator";
 import { JwtAuthGuard } from "../auth/guards/jwt.guard";
 import { CreateStickerDto } from "../stickers/dto/create-sticker.dto";
@@ -22,13 +22,16 @@ import { StickerPackRo } from "./dto/sticker-pack-ro.dto";
 import { UpdateStickerPackDto } from "./dto/update-sticker-pack.dto";
 import { StickerPacksService } from "./sticker-packs.service";
 
-@ApiTags("auth")
 @UseGuards(JwtAuthGuard)
+@ApiTags("sticker-packs")
+@ApiBearerAuth()
 @Controller("sticker-packs")
 export class StickerPacksController {
   constructor(private readonly stickerPacksService: StickerPacksService) {}
 
-  @UseGuards(JwtAuthGuard)
+  @ApiOperation({
+    summary: "Create a sticker pack (without stickers).",
+  })
   @Post()
   async create(
     @Body() createStickerPackDto: CreateStickerPackDto,
@@ -37,6 +40,9 @@ export class StickerPacksController {
     return this.stickerPacksService.create(createStickerPackDto, user.id);
   }
 
+  @ApiOperation({
+    summary: "Update a sticker pack.",
+  })
   @Put(":id")
   async update(
     @Param("id") id: string,
@@ -46,6 +52,9 @@ export class StickerPacksController {
     return this.stickerPacksService.update(id, updateStickerPackDto, user.id);
   }
 
+  @ApiOperation({
+    summary: "Delete a sticker pack.",
+  })
   @Delete(":id")
   async remove(
     @Param("id") id: string,
@@ -55,6 +64,9 @@ export class StickerPacksController {
   }
 
   @UseInterceptors(FileInterceptor("file"))
+  @ApiOperation({
+    summary: "Add a sticker to a sticker pack you own or a member of.",
+  })
   @Post(":id/stickers")
   async addSticker(
     @Param("id") id: string,
@@ -70,6 +82,9 @@ export class StickerPacksController {
     );
   }
 
+  @ApiOperation({
+    summary: "Remove a sticker to a sticker pack you own or a member of.",
+  })
   @Delete(":id/stickers/:stickerId")
   async deleteSticker(
     @Param("id") id: string,
@@ -79,26 +94,81 @@ export class StickerPacksController {
     return this.stickerPacksService.removeSticker(id, stickerId, user.id);
   }
 
-  // TODO: Make this route.
-  @Post(":id/stickers/actions/copySticker")
-  copySticker(
-    @Param("id") id: string,
-    @Param("stickerId") stickerId: string,
-    @User() user: UserRo
-  ) {
-    return this.stickerPacksService.findAll();
-  }
-
+  @ApiOperation({
+    summary: "Get a list of all sticker packs which are public.",
+  })
   @Get()
-  findAll(): Promise<StickerPackRo[]> {
-    return this.stickerPacksService.findAll();
+  findAllPublicPacks(): Promise<StickerPackRo[]> {
+    return this.stickerPacksService.findAllPublicPacks();
   }
 
+  @ApiOperation({
+    summary:
+      "Get a sticker pick which is public or which you own or which you are a member of.",
+  })
   @Get(":id")
   async findOne(
     @Param("id") id: string,
     @User() user: UserRo
   ): Promise<StickerPackRo> {
     return this.stickerPacksService.findOne(id, user.id);
+  }
+
+  @ApiOperation({
+    summary: "Join a sticker pack which is public.",
+  })
+  @Post(":id/actions/join")
+  async joinStickerPack(
+    @Param("id") id: string,
+    @User() user: UserRo
+  ): Promise<StickerPackRo> {
+    return this.stickerPacksService.joinStickerPack(id, user.id);
+  }
+
+  @ApiOperation({
+    summary: "Leave a sticker pack which you are a member of.",
+  })
+  @Post(":id/actions/leave")
+  async leaveStickerPack(
+    @Param("id") id: string,
+    @User() user: UserRo
+  ): Promise<StickerPackRo> {
+    return this.stickerPacksService.leaveStickerPack(id, user.id);
+  }
+
+  @ApiOperation({
+    summary: "Register a view for a sticker pack.",
+  })
+  @Get(":id/actions/registerView")
+  async registerView(@Param("id") id: string) {
+    await this.stickerPacksService.registerView(id);
+    return;
+  }
+
+  @ApiOperation({
+    summary: "Register a click for a sticker pack.",
+  })
+  @Get(":id/actions/registerClick")
+  async registerLike(@Param("id") id: string) {
+    await this.stickerPacksService.registerClick(id);
+    return;
+  }
+
+  @ApiOperation({
+    summary: "Register a like for a sticker pack.",
+  })
+  @Get(":id/actions/like")
+  async likeStickerPack(@Param("id") id: string, @User() user: UserRo) {
+    await this.stickerPacksService.likeStickerPack(id, user.id);
+    return;
+  }
+
+  @ApiOperation({
+    summary: "Register a unlike for a sticker pack.",
+  })
+  @Get(":id/actions/unlike")
+  async unlikeStickerPack(@Param("id") id: string, @User() user: UserRo) {
+    await this.stickerPacksService.unlikeStickerPack(id, user.id);
+    return;
   }
 }

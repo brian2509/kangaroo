@@ -12,26 +12,6 @@ export class UsersService {
     private stickerPackRepository: Repository<StickerPack>
   ) {}
 
-  async mockUser(): Promise<User> {
-    const users = await this.userRepository.find();
-    if (users.length === 0) {
-      const user = this.userRepository.create({
-        email: "mock@email.com",
-        username: "mock_username",
-      });
-      await this.userRepository.save(user);
-    }
-    return (await this.userRepository.find())[0];
-  }
-
-  async getOwnStickerPacks(userId: string) {
-    const stickerPacks = await this.stickerPackRepository.find({
-      where: { author: { id: userId } },
-      relations: ["author"],
-    });
-    return stickerPacks.map((stickerPack) => stickerPack.toRO());
-  }
-
   async findByUsername(username: string) {
     const user = await this.userRepository.findOne({ where: { username } });
     if (!user) {
@@ -47,5 +27,41 @@ export class UsersService {
   ): Promise<User> {
     const user = this.userRepository.create({ username, email, password });
     return this.userRepository.save(user);
+  }
+
+  async getOwnedStickerPacks(userId: string) {
+    const stickerPacks = await this.stickerPackRepository.find({
+      where: { author: { id: userId } },
+      relations: ["author"],
+    });
+
+    return stickerPacks.map((stickerPack) => stickerPack.toRO());
+  }
+
+  async getJoinedStickerPacks(userId: string) {
+    const stickerPacks = await this.stickerPackRepository
+      .createQueryBuilder("stickerpack")
+      .leftJoinAndSelect("stickerpack.author", "author")
+      .leftJoinAndSelect("stickerpack.members", "member")
+      .leftJoinAndSelect("stickerpack.stickers", "sticker")
+      .leftJoinAndSelect("sticker.file", "stickerFile")
+      .where("member.id = :id", { id: userId })
+      .getMany();
+
+    return stickerPacks.map((stickerPack) => stickerPack.toRO());
+  }
+
+  async getOwnedAndJoinedStickerPacks(userId: string) {
+    const stickerPacks = await this.stickerPackRepository
+      .createQueryBuilder("stickerpack")
+      .leftJoinAndSelect("stickerpack.author", "author")
+      .leftJoinAndSelect("stickerpack.members", "member")
+      .leftJoinAndSelect("stickerpack.stickers", "sticker")
+      .leftJoinAndSelect("sticker.file", "stickerFile")
+      .where("member.id = :id", { id: userId })
+      .orWhere("author.id =:id", { id: userId })
+      .getMany();
+
+    return stickerPacks.map((stickerPack) => stickerPack.toRO());
   }
 }

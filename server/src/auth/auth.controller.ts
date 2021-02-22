@@ -1,9 +1,9 @@
 import { Body, Controller, Get, Post, Req, UseGuards } from "@nestjs/common";
-import { ApiTags } from "@nestjs/swagger";
+import { ApiBearerAuth, ApiOperation, ApiTags } from "@nestjs/swagger";
 import { UserRo } from "../users/dto/response-user.dto";
 import { AuthService } from "./auth.service";
-import { JwtToken } from "./dto/jwt.dto";
-import { RegisterUserDto } from "./dto/register-user-dto";
+import { AuthenticatedCheckDto, JwtToken } from "./dto/jwt.dto";
+import { RegisterUserDto } from "./dto/register-user.dto";
 import { JwtAuthGuard } from "./guards/jwt.guard";
 import { LocalAuthGuard } from "./guards/local-auth.guard";
 
@@ -19,19 +19,31 @@ export class AuthController {
   }
 
   @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @ApiOperation({
+    summary: "Receive a new JWT token upon providing a valid JWT token.",
+  })
   @Get("refresh")
   refresh(@Req() req): JwtToken {
     return this.authService.createJwtToken(req.user);
   }
 
+  @ApiOperation({
+    summary: "Register a new account.",
+  })
   @Post("register")
   async register(@Body() registerUserDto: RegisterUserDto): Promise<UserRo> {
     return this.authService.register(registerUserDto);
   }
 
   @UseGuards(JwtAuthGuard)
-  @Get("test")
-  testAuth(@Req() req) {
+  @ApiBearerAuth()
+  @ApiOperation({
+    summary:
+      "Simple authentication check upon providing a valid JWT token (may be removed later).",
+  })
+  @Get("authenticated")
+  testAuth(@Req() req): AuthenticatedCheckDto {
     return { authenticated: true };
   }
 }

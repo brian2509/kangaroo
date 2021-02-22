@@ -1,20 +1,19 @@
-import {ForbiddenException, Injectable} from "@nestjs/common";
-import {JwtService} from "@nestjs/jwt";
-import {UserRo} from "../users/dto/response-user.dto";
-import {UsersService} from "../users/user.service";
-import {JwtPayload, JwtToken} from "./dto/jwt.dto";
-import {RegisterUserDto} from "./dto/register-user-dto";
+import { ForbiddenException, Injectable } from "@nestjs/common";
+import { JwtService } from "@nestjs/jwt";
+import { UserRo } from "../users/dto/response-user.dto";
+import { UsersService } from "../users/user.service";
+import { JwtPayload, JwtToken } from "./dto/jwt.dto";
+import { RegisterUserDto } from "./dto/register-user.dto";
 
 @Injectable()
 export class AuthService {
   constructor(
     private usersService: UsersService,
     private jwtService: JwtService
-  ) {
-  }
+  ) {}
 
   createJwtToken(user: UserRo): JwtToken {
-    const payload: JwtPayload = {username: user.username, sub: user.id};
+    const payload: JwtPayload = { username: user.username, sub: user.id };
     return {
       access_token: this.jwtService.sign(payload),
     };
