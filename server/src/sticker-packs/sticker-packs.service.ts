@@ -5,6 +5,7 @@ import {
 } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
+import { MulterFile } from "../files/file.validation";
 import { CreateStickerDto } from "../stickers/dto/create-sticker.dto";
 import { StickersService } from "../stickers/stickers.service";
 import { CreateStickerPackDto } from "./dto/create-sticker-pack.dto";
@@ -14,8 +15,6 @@ import { StickerPack } from "./entities/sticker-pack.entity";
 
 @Injectable()
 export class StickerPacksService {
-  async;
-
   constructor(
     @InjectRepository(StickerPack)
     private stickerPackRepository: Repository<StickerPack>,
@@ -50,11 +49,10 @@ export class StickerPacksService {
     if (!stickerPack.isOwner(userId)) {
       throw new ForbiddenException("Not the owner of the pack.");
     }
-    const updatedSticker = await this.stickerPackRepository.save({
+    await this.stickerPackRepository.save({
       ...stickerPack,
       ...updateStickerPackDto,
     });
-
     // TODO: make this faster.
     return (await this.stickerPackRepository.findOne(stickerPack.id)).toRO();
   }
@@ -89,7 +87,7 @@ export class StickerPacksService {
   async addSticker(
     id: string,
     createStickerDto: CreateStickerDto,
-    file: any,
+    file: MulterFile,
     userId: string
   ) {
     const stickerPack = await this.stickerPackRepository.findOne({
