@@ -16,7 +16,7 @@ npm install
 
 ### Configuration
 
-- Rename ```src/types/env.d.ts.template``` to ```src/types/env.d.ts```
+- Rename ```*.env.sample``` to ```.env```
 - Replace the default config values
 
 ### iOS only
