@@ -1,17 +1,9 @@
 import React, { useEffect, useState } from "react";
-import {
-    Divider,
-    Layout,
-    List,
-    ListItem,
-    Text,
-    Button,
-    Spinner,
-    Icon,
-} from "@ui-kitten/components";
+import { Divider, Layout, List, ListItem, Text, Button, Icon } from "@ui-kitten/components";
 import { Image, Platform, SafeAreaView, StyleSheet } from "react-native";
 import axios from "../api/axios";
 import DocumentPicker from "react-native-document-picker";
+import { AccessTokenContext } from "../contexts/AccessTokenContext";
 
 interface Props {}
 
@@ -33,18 +25,20 @@ const generateName = (): string => {
 };
 
 export const HomeScreen = (props: Props) => {
+    const { accessToken, setAccessToken } = React.useContext(AccessTokenContext);
+
     const [stickerPacks, setStickerPacks] = useState<StickerPack[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
 
     useEffect(() => {
         getStickerPacks();
-    }, []); // [] means it only execute once at the start
+    }, [accessToken]);
 
     const getStickerPacks = async () => {
         setLoading(true);
 
         axios
-            .get("sticker-packs")
+            .get("me/sticker-packs")
             .then((res: any) => {
                 const stickerResults: StickerPack[] = res.data.map((entry: any) => {
                     return {
@@ -63,7 +57,12 @@ export const HomeScreen = (props: Props) => {
                 setStickerPacks(stickerResults);
             })
             .catch((err) => {
-                console.log(err);
+                if (err.response.status == 401) {
+                    // Unauthorized
+                    setStickerPacks([]);
+                } else {
+                    console.log("Error", { response: err.response });
+                }
             })
             .then(() => {
                 setLoading(false);
@@ -79,14 +78,14 @@ export const HomeScreen = (props: Props) => {
             .post("sticker-packs", body)
             .then(getStickerPacks)
             .catch((err) => {
-                console.log(err);
+                console.log("Error", { response: err.response });
             })
             .then(() => {
                 setLoading(false);
             });
     };
 
-    const uploadSticker = async (id: string) => {
+    const uploadSticker = async (stickerPackId: string) => {
         // TODO: fix file reading, image.uri is "content://..." but should be something like "file://..."
         return;
 
@@ -111,7 +110,7 @@ export const HomeScreen = (props: Props) => {
             console.log({ formData });
 
             axios
-                .post(`sticker-packs/${id}/stickers`, formData, {
+                .post(`sticker-packs/${stickerPackId}/stickers`, formData, {
                     headers: {
                         "Content-Type": "multipart/form-data",
                     },
@@ -134,11 +133,11 @@ export const HomeScreen = (props: Props) => {
         }
     };
 
-    const deleteSticker = async (id: string) => {
+    const deleteStickerPack = async (stickerPackId: string) => {
         setLoading(true);
 
         axios
-            .delete(`sticker-packs/${id}`)
+            .delete(`sticker-packs/${stickerPackId}`)
             .then(getStickerPacks)
             .catch((err) => {
                 console.log(err);
@@ -165,7 +164,7 @@ export const HomeScreen = (props: Props) => {
                     style={styles.stickerPackActionButton}
                     status="danger"
                     appearance="outline"
-                    onPress={() => deleteSticker(stickerPack.id)}
+                    onPress={() => deleteStickerPack(stickerPack.id)}
                     accessoryLeft={TrashIcon}
                 />
             </>
@@ -193,6 +192,9 @@ export const HomeScreen = (props: Props) => {
                                 key={sticker.id}
                                 source={{
                                     uri: sticker.url,
+                                    headers: {
+                                        Authorization: "Bearer " + accessToken,
+                                    },
                                 }}
                             />
                         );

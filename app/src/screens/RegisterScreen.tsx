@@ -14,6 +14,7 @@ export const RegisterScreen = (props: Props) => {
     const [password, setPassword] = React.useState("password123");
 
     const [status, setStatus] = React.useState("");
+    const [errors, setErrors] = React.useState([]);
 
     const register = async () => {
         const body = {
@@ -24,18 +25,32 @@ export const RegisterScreen = (props: Props) => {
 
         axios
             .post("/auth/register", body)
-            .then(() => setStatus("Registered!"))
+            .then(() => {
+                setStatus("Registered!");
+                setErrors([]);
+            })
             .catch((e) => {
-                console.log(e);
-                setStatus("Failed!");
+                console.log("Error", { response: e.response });
+                if (e.response.status == 400) {
+                    setStatus("");
+                    setErrors(
+                        e.response.data.message.map((errorMessage: string) => {
+                            return errorMessage.charAt(0).toUpperCase() + errorMessage.slice(1);
+                        }),
+                    );
+                } else if (e.response.status == 403) {
+                    setStatus(e.response.data.message);
+                    setErrors([]);
+                } else {
+                    setStatus("Failed!");
+                    setErrors([]);
+                }
             });
     };
 
     return (
         <SafeAreaView style={{ flex: 1 }}>
             <Layout style={styles.container}>
-                <Text style={styles.text}>Token: {!accessToken ? "undefined" : accessToken}</Text>
-
                 <Layout style={styles.registerContainer}>
                     <Text style={styles.text} category="h3">
                         Register
@@ -64,6 +79,20 @@ export const RegisterScreen = (props: Props) => {
                     <Text style={styles.text} category="h5">
                         {status}
                     </Text>
+                    <Layout>
+                        {errors.map((error, i) => {
+                            return (
+                                <Text
+                                    key={i}
+                                    status="danger"
+                                    appearance="hint"
+                                    style={styles.errorText}
+                                    category="s1">
+                                    {error}
+                                </Text>
+                            );
+                        })}
+                    </Layout>
                 </Layout>
             </Layout>
         </SafeAreaView>
@@ -79,6 +108,10 @@ const styles = StyleSheet.create({
     },
     text: {
         textAlign: "center",
+    },
+    errorText: {
+        textAlign: "center",
+        marginVertical: 2,
     },
     registerContainer: {
         width: "100%",

@@ -24,37 +24,26 @@ export const LoginScreen = (props: Props) => {
             .post("/auth/login", body)
             .then((res) => {
                 setAccessToken(res.data.access_token);
+                setStatus("Logged in!");
             })
             .catch((e) => {
-                console.log(e);
-                setStatus("Failed!");
+                console.log("Error", { response: e.response });
+                if (e.response.status == 401) {
+                    setStatus("Invalid password, please try again.");
+                } else {
+                    setStatus("Login failed!");
+                }
             });
     };
 
     const logout = async () => {
         setAccessToken(undefined);
-    };
-
-    const authCheck = async () => {
-        axios
-            .get("/auth/authenticated")
-            .then((res) => {
-                if (res.data.authenticated == true) {
-                    setStatus("Authenticated!");
-                } else {
-                    setStatus("Not authenticated!");
-                }
-            })
-            .catch((e) => {
-                setStatus("Not authenticated!");
-            });
+        setStatus("");
     };
 
     return (
         <SafeAreaView style={{ flex: 1 }}>
             <Layout style={styles.container}>
-                <Text style={styles.text}>Token: {!accessToken ? "undefined" : accessToken}</Text>
-
                 <Layout style={styles.registerContainer}>
                     <Text style={styles.text} category="h3">
                         Login
@@ -76,14 +65,6 @@ export const LoginScreen = (props: Props) => {
                     </Button>
                     <Button style={styles.button} status="danger" size="large" onPress={logout}>
                         Logout
-                    </Button>
-                    <Button
-                        style={styles.button}
-                        appearance="outline"
-                        status="basic"
-                        size="small"
-                        onPress={authCheck}>
-                        Check auth
                     </Button>
                     <Text style={styles.text} category="h5">
                         {status}
