@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const instance = axios.create({
-    baseURL: "http://192.168.1.150:5000/api/",
+    baseURL: `${process.env.DOMAIN_NAME}:${process.env.PORT}/api/`,
 });
 
 export default instance;

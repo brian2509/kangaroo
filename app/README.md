@@ -14,6 +14,11 @@ Next, install other dependencies:
 npm install
 ```
 
+### Configuration
+
+- Rename ```*.env.sample``` to ```.env```
+- Replace the default config values
+
 ### iOS only
 
 Install dependencies:
