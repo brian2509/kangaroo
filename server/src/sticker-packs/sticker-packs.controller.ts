@@ -14,6 +14,12 @@ import { FileInterceptor } from "@nestjs/platform-express";
 import { ApiBearerAuth, ApiOperation, ApiTags } from "@nestjs/swagger";
 import { User } from "../auth/decorators/user.decorator";
 import { JwtAuthGuard } from "../auth/guards/jwt.guard";
+import {
+  MulterFile,
+  STICKER_ALL_FILETYPES_ALLOWED,
+  STICKER_MAX_FILE_SIZE_BYTES,
+  STICKER_VALIDATION_MULTER_ALL,
+} from "../files/file.validation";
 import { CreateStickerDto } from "../stickers/dto/create-sticker.dto";
 import { StickerRo } from "../stickers/dto/response-sticker.dto";
 import { UserRo } from "../users/dto/response-user.dto";
@@ -63,15 +69,17 @@ export class StickerPacksController {
     return this.stickerPacksService.remove(id, user.id);
   }
 
-  @UseInterceptors(FileInterceptor("file"))
+  @UseInterceptors(FileInterceptor("file", STICKER_VALIDATION_MULTER_ALL))
   @ApiOperation({
-    summary: "Add a sticker to a sticker pack you own or a member of.",
+    summary: `Add a sticker to a sticker pack you own or a member of. The file must be less than ${
+      STICKER_MAX_FILE_SIZE_BYTES / 1024 / 1024
+    }MB and be of type ${STICKER_ALL_FILETYPES_ALLOWED}.`,
   })
   @Post(":id/stickers")
   async addSticker(
     @Param("id") id: string,
     @Body() createStickerDto: CreateStickerDto,
-    @UploadedFile() file,
+    @UploadedFile() file: MulterFile,
     @User() user: UserRo
   ): Promise<StickerRo> {
     return this.stickerPacksService.addSticker(

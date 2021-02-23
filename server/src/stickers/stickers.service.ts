@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
+import { MulterFile } from "../files/file.validation";
 import { FilesService } from "../files/files.service";
 import { UsersService } from "../users/user.service";
 import { CreateStickerDto } from "./dto/create-sticker.dto";
@@ -19,7 +20,7 @@ export class StickersService {
   async create(
     stickerPackId: string,
     createStickerDto: CreateStickerDto,
-    file: any,
+    file: MulterFile,
     userId: string
   ): Promise<StickerRo> {
     const uploadedFile = await this.filesService.uploadFile(
