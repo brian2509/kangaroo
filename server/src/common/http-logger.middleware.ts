@@ -25,7 +25,11 @@ export class HTTPLoggerMiddleware implements NestMiddleware {
         1
       )}`;
 
-      this.logger.log(message);
+      if (statusCode >= 200 && statusCode <= 299) {
+        this.logger.log(message);
+      } else {
+        this.logger.warn(message);
+      }
     });
 
     next();
