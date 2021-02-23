@@ -14,8 +14,8 @@ import { UserModule } from "./users/user.module";
 @Module({
   imports: [
     TypeOrmModule.forRoot({
-      type: "sqlite",
-      database: "database.sqlite",
+      type: "postgres",
+      url: `postgres://${process.env.POSTGRES_USER}:${process.env.POSTGRES_PASSWORD}@postgres:5432/${process.env.POSTGRES_DB}`,
       entities: [User, Sticker, PrivateFile, StickerPack],
       synchronize: true,
     }),
