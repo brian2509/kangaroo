@@ -1,8 +1,7 @@
 import axios from "axios";
-import { PORT, PUBLIC_IP } from "@env"
 
 const instance = axios.create({
-    baseURL: `http://${PUBLIC_IP}:${PORT}/api/`,
+    baseURL: "http://192.168.1.150:5000/api/",
 });
 
 export default instance;
