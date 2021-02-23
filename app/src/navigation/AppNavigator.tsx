@@ -1,41 +1,24 @@
 import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
-import {
-    createMaterialTopTabNavigator,
-    MaterialTopTabBarProps,
-} from "@react-navigation/material-top-tabs";
-
-import { HomeScreen } from "../screens/HomeScreen";
-import { RegisterScreen } from "../screens/RegisterScreen";
+import { createStackNavigator } from "@react-navigation/stack";
 import { LoginScreen } from "../screens/LoginScreen";
-import { TopNavigationBar } from "../common/TopNavigationBar";
-import { BottomNavigation, BottomNavigationTab } from "@ui-kitten/components";
+import { RegisterScreen } from "../screens/RegisterScreen";
+import { HomeScreen } from "../screens/HomeScreen";
 
-const { Navigator, Screen } = createMaterialTopTabNavigator();
+const { Navigator, Screen } = createStackNavigator();
 
-const BottomTabBar = ({ navigation, state }: MaterialTopTabBarProps) => (
-    <BottomNavigation
-        selectedIndex={state.index}
-        onSelect={(index) => navigation.navigate(state.routeNames[index])}>
-        <BottomNavigationTab title="HOME" />
-        <BottomNavigationTab title="REGISTER" />
-        <BottomNavigationTab title="LOGIN" />
-    </BottomNavigation>
-);
-
-const TabNavigator = () => (
-    <Navigator
-        swipeVelocityImpact={0.4}
-        tabBar={(props: MaterialTopTabBarProps) => <BottomTabBar {...props} />}>
-        <Screen name="Home" component={HomeScreen} />
-        <Screen name="Register" component={RegisterScreen} />
-        <Screen name="Login" component={LoginScreen} />
-    </Navigator>
-);
+export type RootStackParamList = {
+    Register: undefined;
+    Login: undefined;
+    Homescreen: undefined;
+};
 
 export const AppNavigator = () => (
     <NavigationContainer>
-        <TopNavigationBar />
-        <TabNavigator />
+        <Navigator initialRouteName="Register">
+            <Screen name="Register" options={{ headerShown: false }} component={RegisterScreen} />
+            <Screen name="Login" options={{ headerShown: false }} component={LoginScreen} />
+            <Screen name="Homescreen" options={{ headerShown: false }} component={HomeScreen} />
+        </Navigator>
     </NavigationContainer>
 );

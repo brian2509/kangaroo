@@ -3,10 +3,12 @@ import { Layout, Text, Button, Input } from "@ui-kitten/components";
 import { SafeAreaView, StyleSheet } from "react-native";
 import axios from "../api/axios";
 import { AccessTokenContext } from "../contexts/AccessTokenContext";
+import { StackScreenProps } from "@react-navigation/stack";
+import { RootStackParamList } from "../navigation/AppNavigator";
 
-interface Props {}
+type Props = StackScreenProps<RootStackParamList, "Login">;
 
-export const LoginScreen = (props: Props) => {
+export const LoginScreen = ({ navigation }: Props) => {
     const { accessToken, setAccessToken } = React.useContext(AccessTokenContext);
 
     const [username, setUsername] = React.useState("username2");
@@ -24,7 +26,7 @@ export const LoginScreen = (props: Props) => {
             .post("/auth/login", body)
             .then((res) => {
                 setAccessToken(res.data.access_token);
-                setStatus("Logged in!");
+                navigation.replace("Homescreen");
             })
             .catch((e) => {
                 console.log("Error", { response: e.response });
@@ -34,11 +36,6 @@ export const LoginScreen = (props: Props) => {
                     setStatus("Login failed!");
                 }
             });
-    };
-
-    const logout = async () => {
-        setAccessToken(undefined);
-        setStatus("");
     };
 
     return (
@@ -63,8 +60,13 @@ export const LoginScreen = (props: Props) => {
                     <Button style={styles.button} size="large" onPress={login}>
                         Login
                     </Button>
-                    <Button style={styles.button} status="danger" size="large" onPress={logout}>
-                        Logout
+                    <Button
+                        style={styles.button}
+                        appearance="outline"
+                        status="basic"
+                        size="small"
+                        onPress={() => navigation.replace("Register")}>
+                        Register
                     </Button>
                     <Text style={styles.text} category="h5">
                         {status}

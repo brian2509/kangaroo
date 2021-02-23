@@ -4,8 +4,10 @@ import { Image, Platform, SafeAreaView, StyleSheet } from "react-native";
 import axios from "../api/axios";
 import DocumentPicker from "react-native-document-picker";
 import { AccessTokenContext } from "../contexts/AccessTokenContext";
+import { StackScreenProps } from "@react-navigation/stack";
+import { RootStackParamList } from "../navigation/AppNavigator";
 
-interface Props {}
+type Props = StackScreenProps<RootStackParamList, "Homescreen">;
 
 interface Sticker {
     id: string;
@@ -24,7 +26,7 @@ const generateName = (): string => {
     return Date.now().toString();
 };
 
-export const HomeScreen = (props: Props) => {
+export const HomeScreen = ({ navigation }: Props) => {
     const { accessToken, setAccessToken } = React.useContext(AccessTokenContext);
 
     const [stickerPacks, setStickerPacks] = useState<StickerPack[]>([]);
@@ -33,6 +35,11 @@ export const HomeScreen = (props: Props) => {
     useEffect(() => {
         getStickerPacks();
     }, [accessToken]);
+
+    const logout = async () => {
+        setAccessToken(undefined);
+        navigation.replace("Login");
+    };
 
     const getStickerPacks = async () => {
         setLoading(true);
@@ -210,11 +217,19 @@ export const HomeScreen = (props: Props) => {
                 <Text style={styles.text} category="h1">
                     Welcome! 🦒
                 </Text>
+                <Button
+                    style={styles.button}
+                    appearance="outline"
+                    status="danger"
+                    size="small"
+                    onPress={logout}>
+                    Logout
+                </Button>
                 <Layout style={styles.buttonContainer}>
-                    <Button style={styles.button} appearance="outline" onPress={getStickerPacks}>
+                    <Button style={styles.button} onPress={getStickerPacks}>
                         Fetch Sticker Packs
                     </Button>
-                    <Button style={styles.button} appearance="outline" onPress={addStickerPack}>
+                    <Button style={styles.button} onPress={addStickerPack}>
                         Add Sticker Pack
                     </Button>
                 </Layout>

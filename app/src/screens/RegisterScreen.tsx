@@ -3,10 +3,12 @@ import { Layout, Text, Button, Input } from "@ui-kitten/components";
 import { SafeAreaView, StyleSheet } from "react-native";
 import axios from "../api/axios";
 import { AccessTokenContext } from "../contexts/AccessTokenContext";
+import { StackScreenProps } from "@react-navigation/stack";
+import { RootStackParamList } from "../navigation/AppNavigator";
 
-interface Props {}
+type Props = StackScreenProps<RootStackParamList, "Register">;
 
-export const RegisterScreen = (props: Props) => {
+export const RegisterScreen = ({ navigation }: Props) => {
     const { accessToken, setAccessToken } = React.useContext(AccessTokenContext);
 
     const [email, setEmail] = React.useState("test_email@gmail.com");
@@ -26,8 +28,9 @@ export const RegisterScreen = (props: Props) => {
         axios
             .post("/auth/register", body)
             .then(() => {
-                setStatus("Registered!");
+                setStatus("");
                 setErrors([]);
+                navigation.replace("Login");
             })
             .catch((e) => {
                 console.log("Error", { response: e.response });
@@ -75,6 +78,14 @@ export const RegisterScreen = (props: Props) => {
                         onChangeText={setPassword}></Input>
                     <Button style={styles.button} size="large" onPress={register}>
                         Register
+                    </Button>
+                    <Button
+                        style={styles.button}
+                        appearance="outline"
+                        status="basic"
+                        size="small"
+                        onPress={() => navigation.replace("Login")}>
+                        I already have an account
                     </Button>
                     <Text style={styles.text} category="h5">
                         {status}
