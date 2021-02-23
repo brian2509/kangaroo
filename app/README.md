@@ -14,6 +14,11 @@ Next, install other dependencies:
 npm install
 ```
 
+### Configuration
+
+- Rename ```src/types/env.d.ts.template``` to ```src/types/env.d.ts```
+- Replace the default config values
+
 ### iOS only
 
 Install dependencies:
