@@ -14,6 +14,21 @@ Next, install other dependencies:
 npm install
 ```
 
+### iOS only
+
+Install dependencies:
+
+```
+(in ios folder)
+sudo gem install cocoapods
+pod install
+```
+
+If this returns an error, try:
+```
+sudo xcode-select --switch /Applications/Xcode.app
+pod install
+```
 
 ## Starting the app
 
@@ -32,6 +47,7 @@ Builds your app and starts it on iOS simulator.
 
 Usage:
 ```
+(in main folder)
 npm run ios
 ```
 
