@@ -1,7 +1,9 @@
 import axios from "axios";
 
+import { DOMAIN_NAME, PORT } from "@env";
+
 const instance = axios.create({
-    baseURL: `${process.env.DOMAIN_NAME}:${process.env.PORT}/api/`,
+    baseURL: `${DOMAIN_NAME}:${PORT}/api/`,
 });
 
 export default instance;
