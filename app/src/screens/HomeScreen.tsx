@@ -102,7 +102,7 @@ export const HomeScreen = ({ navigation }: Props) => {
                 type: [DocumentPicker.types.images],
             });
 
-            var formData = new FormData();
+            const formData = new FormData();
 
             const stickerName = generateName();
 
