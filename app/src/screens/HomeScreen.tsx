@@ -5,9 +5,9 @@ import axios from "../api/axios";
 import DocumentPicker from "react-native-document-picker";
 import { AccessTokenContext } from "../contexts/AccessTokenContext";
 import { StackScreenProps } from "@react-navigation/stack";
-import { RootStackParamList } from "../navigation/AppNavigator";
+import { HomeStackParamList } from "../navigation/AppNavigator";
 
-type Props = StackScreenProps<RootStackParamList, "Homescreen">;
+type Props = StackScreenProps<HomeStackParamList, "Homescreen">;
 
 interface Sticker {
     id: string;
