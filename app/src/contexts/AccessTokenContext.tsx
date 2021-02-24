@@ -6,15 +6,18 @@ import axios from "../api/axios";
 export interface AccessTokenContextProps {
     accessToken: string | undefined;
     setAccessToken: (token: string | undefined) => void;
+    isAuthenticated: boolean | undefined;
 }
 
 export const AccessTokenContext = React.createContext<AccessTokenContextProps>({
     accessToken: undefined,
     setAccessToken: (token: string | undefined) => {},
+    isAuthenticated: undefined,
 });
 
 export const AccessTokenProvider = ({ children }: any): React.ReactElement => {
     const [accessToken, setAccessToken] = React.useState<string | undefined>(undefined);
+    const [isAuthenticated, setIsAuthenticated] = React.useState<boolean | undefined>(undefined);
 
     useEffect(() => {
         const setStoredToken = async () => {
@@ -23,12 +26,32 @@ export const AccessTokenProvider = ({ children }: any): React.ReactElement => {
             );
             if (storedToken == null || storedToken == "") {
                 // Store undefined if no valid token is found in storage
-                return setAccessToken(undefined);
+                setAccessToken(undefined);
+                return;
             }
             storeAccessToken(storedToken);
         };
         setStoredToken();
     }, []);
+
+    useEffect(() => {
+        const updateAuthenticated = () => {
+            axios
+                .get("/auth/authenticated")
+                .then((res) => {
+                    if (res.data.authenticated == true) {
+                        setIsAuthenticated(true);
+                    } else {
+                        setIsAuthenticated(false);
+                    }
+                })
+                .catch((e) => {
+                    setIsAuthenticated(false);
+                });
+        };
+
+        updateAuthenticated();
+    }, [accessToken]);
 
     const storeAccessToken = (newToken: string | undefined) => {
         // Set access token state
@@ -48,7 +71,8 @@ export const AccessTokenProvider = ({ children }: any): React.ReactElement => {
     };
 
     return (
-        <AccessTokenContext.Provider value={{ accessToken, setAccessToken: storeAccessToken }}>
+        <AccessTokenContext.Provider
+            value={{ accessToken, setAccessToken: storeAccessToken, isAuthenticated }}>
             {children}
         </AccessTokenContext.Provider>
     );

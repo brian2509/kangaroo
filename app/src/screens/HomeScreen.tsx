@@ -34,11 +34,10 @@ export const HomeScreen = ({ navigation }: Props) => {
 
     useEffect(() => {
         getStickerPacks();
-    }, [accessToken]);
+    }, []);
 
     const logout = async () => {
         setAccessToken(undefined);
-        navigation.replace("Login");
     };
 
     const getStickerPacks = async () => {

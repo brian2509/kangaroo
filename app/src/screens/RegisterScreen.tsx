@@ -4,9 +4,9 @@ import { SafeAreaView, StyleSheet } from "react-native";
 import axios from "../api/axios";
 import { AccessTokenContext } from "../contexts/AccessTokenContext";
 import { StackScreenProps } from "@react-navigation/stack";
-import { RootStackParamList } from "../navigation/AppNavigator";
+import { AuthStackParamList } from "../navigation/AppNavigator";
 
-type Props = StackScreenProps<RootStackParamList, "Register">;
+type Props = StackScreenProps<AuthStackParamList, "Register">;
 
 export const RegisterScreen = ({ navigation }: Props) => {
     const { accessToken, setAccessToken } = React.useContext(AccessTokenContext);
@@ -30,7 +30,7 @@ export const RegisterScreen = ({ navigation }: Props) => {
             .then(() => {
                 setStatus("");
                 setErrors([]);
-                navigation.replace("Login");
+                navigation.pop();
             })
             .catch((e) => {
                 console.log("Error", { response: e.response });
@@ -84,8 +84,12 @@ export const RegisterScreen = ({ navigation }: Props) => {
                         appearance="outline"
                         status="basic"
                         size="small"
-                        onPress={() => navigation.replace("Login")}>
-                        I already have an account
+                        onPress={() => {
+                            setStatus("");
+                            setErrors([]);
+                            navigation.pop();
+                        }}>
+                        Login
                     </Button>
                     <Text style={styles.text} category="h5">
                         {status}
