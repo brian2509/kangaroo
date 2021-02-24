@@ -4,9 +4,10 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { LoginScreen } from "../screens/LoginScreen";
 import { RegisterScreen } from "../screens/RegisterScreen";
 import { HomeScreen } from "../screens/HomeScreen";
+import { StickerDetailScreen } from "../screens/StickerDetailScreen"
 import { AccessTokenContext } from "../contexts/AccessTokenContext";
 import { Layout, Text } from "@ui-kitten/components";
-
+import { StickerPack } from "../common/StickerPack"
 export type AuthStackParamList = {
     Login: undefined;
     Register: undefined;
@@ -17,28 +18,32 @@ export const AuthStackScreen = () => (
         <AuthStack.Screen
             name="Login"
             component={LoginScreen}
-            // options={{ headerShown: false }}
+        // options={{ headerShown: false }}
         />
         <AuthStack.Screen
             name="Register"
             component={RegisterScreen}
-            // options={{ headerShown: false }}
+        // options={{ headerShown: false }}
         />
     </AuthStack.Navigator>
 );
 
 export type HomeStackParamList = {
     Homescreen: undefined;
+    StickerDetailScreen: {
+        'stickerPack': StickerPack
+    };
 };
+
 const HomeStack = createStackNavigator();
 const HomeStackScreen = () => (
     <HomeStack.Navigator>
         <HomeStack.Screen
             name="Homescreen"
             component={HomeScreen}
-            // options={{ headerShown: false }}
+            options={{ title: 'Sticker Packs' }}
         />
-        {/* Add Sticker Pack Details screen here */}
+        <HomeStack.Screen name="StickerDetailScreen" component={StickerDetailScreen} options={{ title: 'Details' }} />
     </HomeStack.Navigator>
 );
 
@@ -55,14 +60,14 @@ const RootStackScreen = ({ isAuthenticated }: RootProps) => (
                 }}
             />
         ) : (
-            <RootStack.Screen
-                name="Auth"
-                component={AuthStackScreen}
-                options={{
-                    animationEnabled: false,
-                }}
-            />
-        )}
+                <RootStack.Screen
+                    name="Auth"
+                    component={AuthStackScreen}
+                    options={{
+                        animationEnabled: false,
+                    }}
+                />
+            )}
     </RootStack.Navigator>
 );
 
