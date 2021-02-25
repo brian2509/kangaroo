@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from "react";
-import { Divider, Layout, List, ListItem, Text, Button, Icon } from "@ui-kitten/components";
-import { Image, Platform, SafeAreaView, StyleSheet } from "react-native";
-import { AccessTokenContext } from "../contexts/AccessTokenContext";
+import React from "react";
+import { Layout, Text } from "@ui-kitten/components";
+import { SafeAreaView } from "react-native";
 import { StackScreenProps } from "@react-navigation/stack";
 import { HomeStackParamList } from "../navigation/AppNavigator";
 import tailwind from "tailwind-rn";

@@ -6,7 +6,7 @@ import DocumentPicker from "react-native-document-picker";
 import { AccessTokenContext } from "../contexts/AccessTokenContext";
 import { StackScreenProps } from "@react-navigation/stack";
 import { HomeStackParamList } from "../navigation/AppNavigator";
-import { StickerPack } from "../common/StickerPack"
+import { StickerPack } from "../common/StickerPack";
 
 type Props = StackScreenProps<HomeStackParamList, "Homescreen">;
 
@@ -178,9 +178,9 @@ export const HomeScreen = ({ navigation }: Props) => {
                     description={description}
                     accessoryRight={() => renderItemAccessory(item)}
                     onPress={() => {
-                        navigation.navigate('StickerDetailScreen', {
-                            'stickerPack': item
-                        })
+                        navigation.navigate("StickerDetailScreen", {
+                            stickerPack: item,
+                        });
                     }}
                 />
                 <Layout style={styles.stickerLayout}>
