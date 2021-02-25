@@ -1,10 +1,12 @@
 import React from "react";
-import { Layout, Text, Button, Input } from "@ui-kitten/components";
+import { Layout, Text, Button, Input, Spinner } from "@ui-kitten/components";
 import { SafeAreaView, StyleSheet } from "react-native";
-import axios from "../api/axios";
 import { AccessTokenContext } from "../contexts/AccessTokenContext";
 import { StackScreenProps } from "@react-navigation/stack";
 import { AuthStackParamList } from "../navigation/AppNavigator";
+import * as authApi from "../api/authApi";
+import { useMutation } from "react-query";
+import { logErrorResponse } from "../util/logging";
 
 type Props = StackScreenProps<AuthStackParamList, "Login">;
 
@@ -14,28 +16,14 @@ export const LoginScreen = ({ navigation }: Props) => {
     const [username, setUsername] = React.useState("username2");
     const [password, setPassword] = React.useState("password123");
 
-    const [status, setStatus] = React.useState("");
-
-    const login = async () => {
-        const body = {
-            username,
-            password,
-        };
-
-        axios
-            .post("/auth/login", body)
-            .then((res) => {
-                setAccessToken(res.data.access_token);
-            })
-            .catch((e) => {
-                console.log("Error", { response: e.response });
-                if (e.response.status == 401) {
-                    setStatus("Invalid password, please try again.");
-                } else {
-                    setStatus("Login failed!");
-                }
-            });
-    };
+    const loginMutation = useMutation(authApi.login, {
+        onSuccess: (res) => {
+            setAccessToken(res.access_token);
+        },
+        onError: (e: any) => {
+            logErrorResponse(e);
+        },
+    });
 
     return (
         <SafeAreaView style={{ flex: 1 }}>
@@ -56,7 +44,10 @@ export const LoginScreen = ({ navigation }: Props) => {
                         label="Password"
                         value={password}
                         onChangeText={setPassword}></Input>
-                    <Button style={styles.button} size="large" onPress={login}>
+                    <Button
+                        style={styles.button}
+                        size="large"
+                        onPress={() => loginMutation.mutate({ username, password })}>
                         Login
                     </Button>
                     <Button
@@ -65,14 +56,21 @@ export const LoginScreen = ({ navigation }: Props) => {
                         status="basic"
                         size="small"
                         onPress={() => {
-                            setStatus("");
                             navigation.push("Register");
                         }}>
                         Register
                     </Button>
                     <Text style={styles.text} category="h5">
-                        {status}
+                        {loginMutation.error &&
+                            (loginMutation.error.response?.status == 401
+                                ? "Invalid password, please try again."
+                                : "Login failed!")}
                     </Text>
+                    {loginMutation.isLoading && (
+                        <Layout style={styles.spinnerContainer}>
+                            <Spinner size="giant" />
+                        </Layout>
+                    )}
                 </Layout>
             </Layout>
         </SafeAreaView>
@@ -99,5 +97,8 @@ const styles = StyleSheet.create({
     },
     button: {
         marginVertical: 16,
+    },
+    spinnerContainer: {
+        alignSelf: "center",
     },
 });

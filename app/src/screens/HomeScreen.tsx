@@ -8,22 +8,13 @@ import { HomeStackParamList } from "../navigation/AppNavigator";
 import * as stickerPackApi from "../api/stickerPacksApi";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { StickerPack } from "../api/apiTypes";
-import { QUERY_KEYS } from "../constants/reactQueryKeys";
+import { QUERY_KEYS } from "../constants/ReactQueryKeys";
+import { logErrorResponse } from "../util/logging";
 
 type Props = StackScreenProps<HomeStackParamList, "Homescreen">;
 
 const generateName = (): string => {
     return Date.now().toString();
-};
-
-const logErrorResponse = (e: any) => {
-    console.log("Logging error response");
-
-    if (e.response) {
-        console.log("Error:", { response: e.response });
-    } else {
-        console.log(e);
-    }
 };
 
 export const HomeScreen = ({ navigation }: Props) => {
