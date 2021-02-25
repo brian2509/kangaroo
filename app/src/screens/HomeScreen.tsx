@@ -1,156 +1,84 @@
 import React, { useEffect, useState } from "react";
 import { Divider, Layout, List, ListItem, Text, Button, Icon } from "@ui-kitten/components";
 import { Image, Platform, SafeAreaView, StyleSheet } from "react-native";
-import axios from "../api/axios";
 import DocumentPicker from "react-native-document-picker";
-import { AccessTokenContext } from "../contexts/AccessTokenContext";
+import { AuthContext } from "../contexts/AuthContext";
 import { StackScreenProps } from "@react-navigation/stack";
 import { HomeStackParamList } from "../navigation/AppNavigator";
+import API from "../api/api";
+import { useMutation, useQuery, useQueryClient } from "react-query";
+import { StickerPack } from "../api/apiTypes";
+import { QUERY_KEYS } from "../constants/ReactQueryKeys";
+import { logErrorResponse } from "../util/logging";
 
 type Props = StackScreenProps<HomeStackParamList, "Homescreen">;
-
-interface Sticker {
-    id: string;
-    name: string;
-    url: string;
-}
-
-interface StickerPack {
-    id: string;
-    name: string;
-    private: boolean;
-    stickers: Sticker[];
-}
 
 const generateName = (): string => {
     return Date.now().toString();
 };
 
-export const HomeScreen = ({ navigation }: Props) => {
-    const { accessToken, setAccessToken } = React.useContext(AccessTokenContext);
+export const HomeScreen = ({ navigation }: Props): JSX.Element => {
+    const { accessToken, logout } = React.useContext(AuthContext);
 
-    const [stickerPacks, setStickerPacks] = useState<StickerPack[]>([]);
-    const [loading, setLoading] = useState<boolean>(false);
+    const queryClient = useQueryClient();
 
     useEffect(() => {
-        getStickerPacks();
-    }, []);
+        () => queryClient.invalidateQueries(QUERY_KEYS.myStickerPacks);
+    }, [accessToken]);
 
-    const logout = async () => {
-        setAccessToken(undefined);
-    };
+    const myStickerPacksQuery = useQuery(QUERY_KEYS.myStickerPacks, API.fetchMyStickerPacks, {
+        onError: logErrorResponse,
+    });
 
-    const getStickerPacks = async () => {
-        setLoading(true);
+    const addStickerPackMutation = useMutation(API.addStickerPack, {
+        onSuccess: (data) => {
+            if (myStickerPacksQuery.data) {
+                queryClient.setQueryData(QUERY_KEYS.myStickerPacks, [
+                    ...myStickerPacksQuery.data,
+                    data,
+                ]);
+            }
+        },
+        onError: logErrorResponse,
+    });
 
-        axios
-            .get("me/sticker-packs")
-            .then((res: any) => {
-                const stickerResults: StickerPack[] = res.data.map((entry: any) => {
-                    return {
-                        id: entry.id,
-                        name: entry.name,
-                        private: entry.private,
-                        stickers: entry.stickers.map((stickerEntry: any) => {
-                            return {
-                                id: stickerEntry.id,
-                                name: stickerEntry.name,
-                                url: stickerEntry.url,
-                            };
-                        }),
-                    };
-                });
-                setStickerPacks(stickerResults);
-            })
-            .catch((err) => {
-                if (err.response.status == 401) {
-                    // Unauthorized
-                    setStickerPacks([]);
-                } else {
-                    console.log("Error", { response: err.response });
-                }
-            })
-            .then(() => {
-                setLoading(false);
-            });
-    };
+    const deleteStickerPackMutation = useMutation(API.deleteStickerPack, {
+        onSuccess: () => queryClient.invalidateQueries(QUERY_KEYS.myStickerPacks),
+        onError: logErrorResponse,
+    });
 
-    const addStickerPack = async () => {
-        setLoading(true);
+    const uploadStickerMutation = useMutation(API.uploadSticker, {
+        onSuccess: () => queryClient.invalidateQueries(QUERY_KEYS.myStickerPacks),
+        onError: logErrorResponse,
+    });
 
-        const body = { name: generateName(), private: true };
-
-        axios
-            .post("sticker-packs", body)
-            .then(getStickerPacks)
-            .catch((err) => {
-                console.log("Error", { response: err.response });
-            })
-            .then(() => {
-                setLoading(false);
-            });
-    };
-
-    const uploadSticker = async (stickerPackId: string) => {
-        // TODO: fix file reading, image.uri is "content://..." but should be something like "file://..."
+    const pickAndUploadSticker = async (stickerPackId: string) => {
+        // TODO: fix file reading, on Android image.uri is "content://..." but should be something like "file://..."
         return;
 
-        setLoading(true);
-
         try {
+            const stickerName = generateName();
+
             const image = await DocumentPicker.pick({
                 type: [DocumentPicker.types.images],
             });
 
             const formData = new FormData();
-
-            const stickerName = generateName();
-
             formData.append("name", stickerName);
-            formData.append("file", {
+            const fileData = {
                 uri: Platform.OS === "android" ? image.uri : "file://" + image.uri,
                 name: `${stickerName}.jpg`,
                 type: "image/*",
-            });
+            };
 
-            console.log({ formData });
+            formData.append("file", fileData);
 
-            axios
-                .post(`sticker-packs/${stickerPackId}/stickers`, formData, {
-                    headers: {
-                        "Content-Type": "multipart/form-data",
-                    },
-                })
-                .then(getStickerPacks)
-                .catch((err) => {
-                    console.log(err);
-                })
-                .then(() => {
-                    setLoading(false);
-                });
+            uploadStickerMutation.mutate({ stickerPackId, formData });
         } catch (err) {
-            if (DocumentPicker.isCancel(err)) {
-                setLoading(false);
-            } else {
-                console.log(err);
+            if (!DocumentPicker.isCancel(err)) {
+                logErrorResponse(err);
             }
-        } finally {
-            setLoading(false);
         }
-    };
-
-    const deleteStickerPack = async (stickerPackId: string) => {
-        setLoading(true);
-
-        axios
-            .delete(`sticker-packs/${stickerPackId}`)
-            .then(getStickerPacks)
-            .catch((err) => {
-                console.log(err);
-            })
-            .then(() => {
-                setLoading(false);
-            });
     };
 
     const renderItemAccessory = (stickerPack: StickerPack) => {
@@ -163,14 +91,14 @@ export const HomeScreen = ({ navigation }: Props) => {
                     style={styles.stickerPackActionButton}
                     status="success"
                     appearance="outline"
-                    onPress={() => uploadSticker(stickerPack.id)}
+                    onPress={() => pickAndUploadSticker(stickerPack.id)}
                     accessoryLeft={UploadIcon}
                 />
                 <Button
                     style={styles.stickerPackActionButton}
                     status="danger"
                     appearance="outline"
-                    onPress={() => deleteStickerPack(stickerPack.id)}
+                    onPress={() => deleteStickerPackMutation.mutate({ id: stickerPack.id })}
                     accessoryLeft={TrashIcon}
                 />
             </>
@@ -189,6 +117,11 @@ export const HomeScreen = ({ navigation }: Props) => {
                     title={title}
                     description={description}
                     accessoryRight={() => renderItemAccessory(item)}
+                    onPress={() => {
+                        navigation.navigate("StickerDetailScreen", {
+                            stickerPack: item,
+                        });
+                    }}
                 />
                 <Layout style={styles.stickerLayout}>
                     {item.stickers.map((sticker) => {
@@ -198,9 +131,6 @@ export const HomeScreen = ({ navigation }: Props) => {
                                 key={sticker.id}
                                 source={{
                                     uri: sticker.url,
-                                    headers: {
-                                        Authorization: "Bearer " + accessToken,
-                                    },
                                 }}
                             />
                         );
@@ -225,20 +155,33 @@ export const HomeScreen = ({ navigation }: Props) => {
                     Logout
                 </Button>
                 <Layout style={styles.buttonContainer}>
-                    <Button style={styles.button} onPress={getStickerPacks}>
+                    <Button
+                        style={styles.button}
+                        onPress={() => queryClient.invalidateQueries(QUERY_KEYS.myStickerPacks)}>
                         Fetch Sticker Packs
                     </Button>
-                    <Button style={styles.button} onPress={addStickerPack}>
+                    <Button
+                        style={styles.button}
+                        onPress={() =>
+                            addStickerPackMutation.mutate({
+                                name: generateName(),
+                                private: true,
+                            })
+                        }>
                         Add Sticker Pack
                     </Button>
                 </Layout>
                 <List
                     style={styles.list}
-                    data={stickerPacks}
+                    data={myStickerPacksQuery.data}
                     ItemSeparatorComponent={Divider}
                     renderItem={renderItem}
-                    refreshing={loading}
-                    onRefresh={getStickerPacks}
+                    refreshing={
+                        myStickerPacksQuery.isLoading ||
+                        addStickerPackMutation.isLoading ||
+                        deleteStickerPackMutation.isLoading
+                    }
+                    onRefresh={() => queryClient.invalidateQueries(QUERY_KEYS.myStickerPacks)}
                 />
             </Layout>
         </SafeAreaView>

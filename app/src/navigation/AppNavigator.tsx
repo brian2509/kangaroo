@@ -4,15 +4,17 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { LoginScreen } from "../screens/LoginScreen";
 import { RegisterScreen } from "../screens/RegisterScreen";
 import { HomeScreen } from "../screens/HomeScreen";
-import { AccessTokenContext } from "../contexts/AccessTokenContext";
+import { StickerDetailScreen } from "../screens/StickerDetailScreen";
+import { AuthContext } from "../contexts/AuthContext";
 import { Layout, Text } from "@ui-kitten/components";
+import { StickerPack } from "../api/apiTypes";
 
 export type AuthStackParamList = {
     Login: undefined;
     Register: undefined;
 };
 const AuthStack = createStackNavigator();
-export const AuthStackScreen = () => (
+export const AuthStackScreen = (): JSX.Element => (
     <AuthStack.Navigator>
         <AuthStack.Screen
             name="Login"
@@ -29,16 +31,24 @@ export const AuthStackScreen = () => (
 
 export type HomeStackParamList = {
     Homescreen: undefined;
+    StickerDetailScreen: {
+        stickerPack: StickerPack;
+    };
 };
+
 const HomeStack = createStackNavigator();
 const HomeStackScreen = () => (
     <HomeStack.Navigator>
         <HomeStack.Screen
             name="Homescreen"
             component={HomeScreen}
-            // options={{ headerShown: false }}
+            options={{ title: "Sticker Packs" }}
         />
-        {/* Add Sticker Pack Details screen here */}
+        <HomeStack.Screen
+            name="StickerDetailScreen"
+            component={StickerDetailScreen}
+            options={{ title: "Details" }}
+        />
     </HomeStack.Navigator>
 );
 
@@ -66,8 +76,8 @@ const RootStackScreen = ({ isAuthenticated }: RootProps) => (
     </RootStack.Navigator>
 );
 
-export const AppNavigator = () => {
-    const { isAuthenticated } = React.useContext(AccessTokenContext);
+export const AppNavigator = (): React.ReactElement => {
+    const { isAuthenticated } = React.useContext(AuthContext);
 
     if (isAuthenticated == undefined) {
         // TODO: Create loading page
