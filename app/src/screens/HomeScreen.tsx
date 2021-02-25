@@ -35,7 +35,6 @@ export const HomeScreen = ({ navigation }: Props): JSX.Element => {
             .get("me/sticker-packs")
             .then((res: any) => {
                 const stickerResults: StickerPack[] = res.data.map((entry: any) => {
-                    console.log(entry.id);
                     return {
                         id: entry.id,
                         name: entry.name,
