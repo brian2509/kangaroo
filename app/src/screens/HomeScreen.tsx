@@ -6,27 +6,15 @@ import DocumentPicker from "react-native-document-picker";
 import { AccessTokenContext } from "../contexts/AccessTokenContext";
 import { StackScreenProps } from "@react-navigation/stack";
 import { HomeStackParamList } from "../navigation/AppNavigator";
+import { StickerPack } from "../common/StickerPack";
 
 type Props = StackScreenProps<HomeStackParamList, "Homescreen">;
-
-interface Sticker {
-    id: string;
-    name: string;
-    url: string;
-}
-
-interface StickerPack {
-    id: string;
-    name: string;
-    private: boolean;
-    stickers: Sticker[];
-}
 
 const generateName = (): string => {
     return Date.now().toString();
 };
 
-export const HomeScreen = ({ navigation }: Props) => {
+export const HomeScreen = ({ navigation }: Props): JSX.Element => {
     const { accessToken, setAccessToken } = React.useContext(AccessTokenContext);
 
     const [stickerPacks, setStickerPacks] = useState<StickerPack[]>([]);
@@ -189,6 +177,11 @@ export const HomeScreen = ({ navigation }: Props) => {
                     title={title}
                     description={description}
                     accessoryRight={() => renderItemAccessory(item)}
+                    onPress={() => {
+                        navigation.navigate("StickerDetailScreen", {
+                            stickerPack: item,
+                        });
+                    }}
                 />
                 <Layout style={styles.stickerLayout}>
                     {item.stickers.map((sticker) => {
@@ -198,9 +191,6 @@ export const HomeScreen = ({ navigation }: Props) => {
                                 key={sticker.id}
                                 source={{
                                     uri: sticker.url,
-                                    headers: {
-                                        Authorization: "Bearer " + accessToken,
-                                    },
                                 }}
                             />
                         );

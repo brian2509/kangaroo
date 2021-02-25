@@ -6,15 +6,17 @@ import * as eva from "@eva-design/eva";
 import { AppNavigator } from "./src/navigation/AppNavigator";
 import { AccessTokenProvider } from "./src/contexts/AccessTokenContext";
 
-export default (): React.ReactFragment => {
+export default function App(): React.ReactFragment {
     return (
         <>
             <IconRegistry icons={EvaIconsPack} />
-            <ApplicationProvider {...eva} theme={eva.dark}>
+            <ApplicationProvider {...eva} theme={eva.light}>
                 <AccessTokenProvider>
                     <AppNavigator />
                 </AccessTokenProvider>
             </ApplicationProvider>
         </>
     );
-};
+}
+
+App.Hello = "Kangaroo";
