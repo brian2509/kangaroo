@@ -4,26 +4,26 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { LoginScreen } from "../screens/LoginScreen";
 import { RegisterScreen } from "../screens/RegisterScreen";
 import { HomeScreen } from "../screens/HomeScreen";
-import { StickerDetailScreen } from "../screens/StickerDetailScreen"
+import { StickerDetailScreen } from "../screens/StickerDetailScreen";
 import { AccessTokenContext } from "../contexts/AccessTokenContext";
 import { Layout, Text } from "@ui-kitten/components";
-import { StickerPack } from "../common/StickerPack"
+import { StickerPack } from "../common/StickerPack";
 export type AuthStackParamList = {
     Login: undefined;
     Register: undefined;
 };
 const AuthStack = createStackNavigator();
-export const AuthStackScreen = () => (
+export const AuthStackScreen = (): JSX.Element => (
     <AuthStack.Navigator>
         <AuthStack.Screen
             name="Login"
             component={LoginScreen}
-        // options={{ headerShown: false }}
+            // options={{ headerShown: false }}
         />
         <AuthStack.Screen
             name="Register"
             component={RegisterScreen}
-        // options={{ headerShown: false }}
+            // options={{ headerShown: false }}
         />
     </AuthStack.Navigator>
 );
@@ -31,7 +31,7 @@ export const AuthStackScreen = () => (
 export type HomeStackParamList = {
     Homescreen: undefined;
     StickerDetailScreen: {
-        'stickerPack': StickerPack
+        stickerPack: StickerPack;
     };
 };
 
@@ -41,9 +41,13 @@ const HomeStackScreen = () => (
         <HomeStack.Screen
             name="Homescreen"
             component={HomeScreen}
-            options={{ title: 'Sticker Packs' }}
+            options={{ title: "Sticker Packs" }}
         />
-        <HomeStack.Screen name="StickerDetailScreen" component={StickerDetailScreen} options={{ title: 'Details' }} />
+        <HomeStack.Screen
+            name="StickerDetailScreen"
+            component={StickerDetailScreen}
+            options={{ title: "Details" }}
+        />
     </HomeStack.Navigator>
 );
 
@@ -60,18 +64,18 @@ const RootStackScreen = ({ isAuthenticated }: RootProps) => (
                 }}
             />
         ) : (
-                <RootStack.Screen
-                    name="Auth"
-                    component={AuthStackScreen}
-                    options={{
-                        animationEnabled: false,
-                    }}
-                />
-            )}
+            <RootStack.Screen
+                name="Auth"
+                component={AuthStackScreen}
+                options={{
+                    animationEnabled: false,
+                }}
+            />
+        )}
     </RootStack.Navigator>
 );
 
-export const AppNavigator = () => {
+export const AppNavigator = (): Element => {
     const { isAuthenticated } = React.useContext(AccessTokenContext);
 
     if (isAuthenticated == undefined) {

@@ -8,7 +8,7 @@ import tailwind from "tailwind-rn";
 
 type Props = StackScreenProps<HomeStackParamList, "StickerDetailScreen">;
 
-export const StickerDetailScreen = ({ route }: Props): Element => {
+export const StickerDetailScreen = ({ route }: Props): JSX.Element => {
     const stickerPack = route.params.stickerPack;
 
     return (
