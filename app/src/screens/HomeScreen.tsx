@@ -14,7 +14,7 @@ const generateName = (): string => {
     return Date.now().toString();
 };
 
-export const HomeScreen = ({ navigation }: Props) => {
+export const HomeScreen = ({ navigation }: Props): JSX.Element => {
     const { accessToken, setAccessToken } = React.useContext(AccessTokenContext);
 
     const [stickerPacks, setStickerPacks] = useState<StickerPack[]>([]);
@@ -35,6 +35,7 @@ export const HomeScreen = ({ navigation }: Props) => {
             .get("me/sticker-packs")
             .then((res: any) => {
                 const stickerResults: StickerPack[] = res.data.map((entry: any) => {
+                    console.log(entry.id);
                     return {
                         id: entry.id,
                         name: entry.name,
@@ -191,9 +192,6 @@ export const HomeScreen = ({ navigation }: Props) => {
                                 key={sticker.id}
                                 source={{
                                     uri: sticker.url,
-                                    headers: {
-                                        Authorization: "Bearer " + accessToken,
-                                    },
                                 }}
                             />
                         );

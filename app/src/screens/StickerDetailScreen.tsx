@@ -1,6 +1,6 @@
 import React from "react";
 import { Icon, Layout, Text } from "@ui-kitten/components";
-import { Image, SafeAreaView, StyleProp, TextStyle } from "react-native";
+import { SafeAreaView } from "react-native";
 import { StackScreenProps } from "@react-navigation/stack";
 import { HomeStackParamList } from "../navigation/AppNavigator";
 import tailwind from "tailwind-rn";
