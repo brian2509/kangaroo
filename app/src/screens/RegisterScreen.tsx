@@ -1,7 +1,7 @@
 import React from "react";
 import { Layout, Text, Button, Input } from "@ui-kitten/components";
 import { SafeAreaView, StyleSheet } from "react-native";
-import * as authApi from "../api/authApi";
+import { API } from "../api/api";
 import { StackScreenProps } from "@react-navigation/stack";
 import { AuthStackParamList } from "../navigation/AppNavigator";
 import { useMutation } from "react-query";
@@ -14,7 +14,7 @@ export const RegisterScreen = ({ navigation }: Props) => {
     const [username, setUsername] = React.useState("username2");
     const [password, setPassword] = React.useState("password123");
 
-    const registerMutation = useMutation(authApi.register, {
+    const registerMutation = useMutation(API.register, {
         onSuccess: (res) => {
             navigation.pop();
         },
@@ -73,7 +73,7 @@ export const RegisterScreen = ({ navigation }: Props) => {
                         {registerMutation.error?.response?.status == 400
                             ? "Invalid details"
                             : registerMutation.error?.response?.status == 403
-                            ? // Forbidden, example: user with that username already exists
+                            ? // 403 Forbidden. Example: user with that username already exists
                               registerMutation.error?.response?.data.message
                             : ""}
                     </Text>

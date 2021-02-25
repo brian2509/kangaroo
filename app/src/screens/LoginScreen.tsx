@@ -4,7 +4,7 @@ import { SafeAreaView, StyleSheet } from "react-native";
 import { AccessTokenContext } from "../contexts/AccessTokenContext";
 import { StackScreenProps } from "@react-navigation/stack";
 import { AuthStackParamList } from "../navigation/AppNavigator";
-import * as authApi from "../api/authApi";
+import { API } from "../api/api";
 import { useMutation } from "react-query";
 import { logErrorResponse } from "../util/logging";
 
@@ -16,7 +16,7 @@ export const LoginScreen = ({ navigation }: Props) => {
     const [username, setUsername] = React.useState("username2");
     const [password, setPassword] = React.useState("password123");
 
-    const loginMutation = useMutation(authApi.login, {
+    const loginMutation = useMutation(API.login, {
         onSuccess: (res) => {
             setAccessToken(res.access_token);
         },

@@ -5,7 +5,7 @@ import DocumentPicker from "react-native-document-picker";
 import { AccessTokenContext } from "../contexts/AccessTokenContext";
 import { StackScreenProps } from "@react-navigation/stack";
 import { HomeStackParamList } from "../navigation/AppNavigator";
-import * as stickerPackApi from "../api/stickerPacksApi";
+import { API } from "../api/api";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { StickerPack } from "../api/apiTypes";
 import { QUERY_KEYS } from "../constants/ReactQueryKeys";
@@ -30,15 +30,11 @@ export const HomeScreen = ({ navigation }: Props) => {
         setAccessToken(undefined);
     };
 
-    const myStickerPacksQuery = useQuery(
-        QUERY_KEYS.myStickerPacks,
-        stickerPackApi.fetchMyStickerPacks,
-        {
-            onError: logErrorResponse,
-        },
-    );
+    const myStickerPacksQuery = useQuery(QUERY_KEYS.myStickerPacks, API.fetchMyStickerPacks, {
+        onError: logErrorResponse,
+    });
 
-    const addStickerPackMutation = useMutation(stickerPackApi.addStickerPack, {
+    const addStickerPackMutation = useMutation(API.addStickerPack, {
         onSuccess: (data) => {
             if (myStickerPacksQuery.data) {
                 queryClient.setQueryData(QUERY_KEYS.myStickerPacks, [
@@ -50,12 +46,12 @@ export const HomeScreen = ({ navigation }: Props) => {
         onError: logErrorResponse,
     });
 
-    const deleteStickerPackMutation = useMutation(stickerPackApi.deleteStickerPack, {
+    const deleteStickerPackMutation = useMutation(API.deleteStickerPack, {
         onSuccess: () => queryClient.invalidateQueries(QUERY_KEYS.myStickerPacks),
         onError: logErrorResponse,
     });
 
-    const uploadStickerMutation = useMutation(stickerPackApi.uploadSticker, {
+    const uploadStickerMutation = useMutation(API.uploadSticker, {
         onSuccess: () => queryClient.invalidateQueries(QUERY_KEYS.myStickerPacks),
         onError: logErrorResponse,
     });

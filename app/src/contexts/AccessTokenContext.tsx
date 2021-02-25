@@ -2,7 +2,7 @@ import AsyncStorage from "@react-native-community/async-storage";
 import React, { useEffect } from "react";
 import { STORAGE_KEYS } from "../constants/StorageKeys";
 import axios from "../api/axios";
-import * as authApi from "../api/authApi";
+import { API } from "../api/api";
 
 export interface AccessTokenContextProps {
     accessToken: string | undefined;
@@ -36,8 +36,7 @@ export const AccessTokenProvider = ({ children }: any): React.ReactElement => {
     }, []);
 
     useEffect(() => {
-        authApi
-            .isAuthenticated()
+        API.isAuthenticated()
             .then(() => setIsAuthenticated(true))
             .catch(() => setIsAuthenticated(false));
     }, [accessToken]);
