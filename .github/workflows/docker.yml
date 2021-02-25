@@ -17,7 +17,7 @@ jobs:
         uses: crazy-max/ghaction-docker-meta@v1
         with:
           images: ghcr.io/brian2509/kangaroo-server
-          tag-match: "v(.*)"
+          tag-match: "v([^a-zA-Z]+)"
           tag-match-group: "1"
           tag-sha: true
           
