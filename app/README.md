@@ -16,8 +16,9 @@ npm install
 
 ### Configuration
 
-- Rename ```*.env.sample``` to ```.env```
-- Replace the default config values
+-   Rename `*.env.sample` to `.env`
+-   Replace the default config values
+-   Run `react-native link react-native-vector-icons` to import icons
 
 ### iOS only
 
@@ -30,6 +31,7 @@ pod install
 ```
 
 If this returns an error, try:
+
 ```
 sudo xcode-select --switch /Applications/Xcode.app
 pod install
@@ -42,6 +44,7 @@ pod install
 Builds your app and starts it on a connected Android emulator or device.
 
 Usage:
+
 ```
 npm run android
 ```
@@ -51,6 +54,7 @@ npm run android
 Builds your app and starts it on iOS simulator.
 
 Usage:
+
 ```
 (in main folder)
 npm run ios
@@ -61,6 +65,7 @@ npm run ios
 Starts the server that communicates with connected devices.
 
 Usage:
+
 ```
 npm start
 ```

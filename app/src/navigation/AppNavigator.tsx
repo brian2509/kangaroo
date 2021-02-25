@@ -75,7 +75,7 @@ const RootStackScreen = ({ isAuthenticated }: RootProps) => (
     </RootStack.Navigator>
 );
 
-export const AppNavigator = (): Element => {
+export const AppNavigator = (): JSX.Element => {
     const { isAuthenticated } = React.useContext(AccessTokenContext);
 
     if (isAuthenticated == undefined) {
