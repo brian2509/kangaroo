@@ -1,5 +1,1 @@
-# Giraffe
-
-Management:
-- Rowdy
-- Paul
+The monorepo for the Kangaroo app
