@@ -1,28 +1,38 @@
-## Description
+# Giraffe Server
+Kangaroo backend using the [Nest](https://github.com/nestjs/nest) framework and Postgres.
 
-Giraffe backend using the [Nest](https://github.com/nestjs/nest) framework.
+- **Docker containers** available in the private registry for easy deployment.
+- **Swagger API documentation** is available at `/api` when application is run in development mode.
 
-Swagger documentation available at `/api` when application is run in development mode.
+## Development
 
-## Installation
+- Local images (no registry login needed)
+- Hot reloading from file system
+```bash
+$ npm run docker:dev
+```
+
+## Development (no-docker)
+- Have a Postgres server running with the credentials set in `.env`.
 
 ```bash
 $ npm install
+$ npm run start:dev (development)
+or
+$ npm run start (production)
 ```
 
-## Running the app
+## Useful Scripts
+```bash
+# Access Postgres database
+$ docker exec -it postgres bash
+$ psql -U {{ POSTGRES_USER }} -W -d {{ POSTGRES_DB }}
+```
 
 ```bash
-Make sure to set-up the .env file using .env.sample.
+# Clear all database files (virtual volume)
+$ docker volume rm server_giraffe-db
 ```
 
-```bash
-# development
-$ npm run start
 
-# watch mode
-$ npm run start:dev
 
-# production mode
-$ npm run start:prod
-```
