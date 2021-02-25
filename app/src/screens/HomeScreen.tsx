@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Divider, Layout, List, ListItem, Text, Button, Icon } from "@ui-kitten/components";
 import { Image, Platform, SafeAreaView, StyleSheet } from "react-native";
 import DocumentPicker from "react-native-document-picker";
-import { AccessTokenContext } from "../contexts/AccessTokenContext";
+import { AuthContext } from "../contexts/AuthContext";
 import { StackScreenProps } from "@react-navigation/stack";
 import { HomeStackParamList } from "../navigation/AppNavigator";
 import API from "../api/api";
@@ -18,17 +18,13 @@ const generateName = (): string => {
 };
 
 export const HomeScreen = ({ navigation }: Props): JSX.Element => {
-    const { accessToken, setAccessToken } = React.useContext(AccessTokenContext);
+    const { accessToken, logout } = React.useContext(AuthContext);
 
     const queryClient = useQueryClient();
 
     useEffect(() => {
         () => queryClient.invalidateQueries(QUERY_KEYS.myStickerPacks);
     }, [accessToken]);
-
-    const logout = async () => {
-        setAccessToken(undefined);
-    };
 
     const myStickerPacksQuery = useQuery(QUERY_KEYS.myStickerPacks, API.fetchMyStickerPacks, {
         onError: logErrorResponse,

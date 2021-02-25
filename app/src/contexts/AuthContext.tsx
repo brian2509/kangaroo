@@ -4,19 +4,21 @@ import { STORAGE_KEYS } from "../constants/StorageKeys";
 import axios from "../api/axios";
 import API from "../api/api";
 
-export interface AccessTokenContextProps {
+export interface AuthContextProps {
     accessToken: string | undefined;
-    setAccessToken: (token: string | undefined) => void;
     isAuthenticated: boolean | undefined;
+    login: (token: string) => void;
+    logout: () => void;
 }
 
-export const AccessTokenContext = React.createContext<AccessTokenContextProps>({
+export const AuthContext = React.createContext<AuthContextProps>({
     accessToken: undefined,
-    setAccessToken: (token: string | undefined) => {},
     isAuthenticated: undefined,
+    login: (token: string) => {},
+    logout: () => {},
 });
 
-export const AccessTokenProvider = ({ children }: any): React.ReactElement => {
+export const AuthContextProvider = ({ children }: any): React.ReactElement => {
     const [accessToken, setAccessToken] = React.useState<string | undefined>(undefined);
     const [isAuthenticated, setIsAuthenticated] = React.useState<boolean | undefined>(undefined);
 
@@ -42,9 +44,6 @@ export const AccessTokenProvider = ({ children }: any): React.ReactElement => {
     }, [accessToken]);
 
     const storeAccessToken = (newToken: string | undefined) => {
-        // Set access token state
-        setAccessToken(newToken);
-
         // Store/remove token on device
         if (newToken != undefined) {
             AsyncStorage.setItem(STORAGE_KEYS.accessTokenKey, newToken);
@@ -56,16 +55,28 @@ export const AccessTokenProvider = ({ children }: any): React.ReactElement => {
         axios.defaults.headers.common["Authorization"] = newToken
             ? "Bearer " + newToken
             : undefined;
+
+        // Set access token state
+        setAccessToken(newToken);
+    };
+
+    const logout = () => {
+        storeAccessToken(undefined);
+    };
+
+    const login = (accessToken: string) => {
+        storeAccessToken(accessToken);
     };
 
     return (
-        <AccessTokenContext.Provider
+        <AuthContext.Provider
             value={{
                 accessToken,
-                setAccessToken: storeAccessToken,
                 isAuthenticated,
+                logout,
+                login,
             }}>
             {children}
-        </AccessTokenContext.Provider>
+        </AuthContext.Provider>
     );
 };

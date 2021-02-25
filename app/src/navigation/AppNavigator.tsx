@@ -5,7 +5,7 @@ import { LoginScreen } from "../screens/LoginScreen";
 import { RegisterScreen } from "../screens/RegisterScreen";
 import { HomeScreen } from "../screens/HomeScreen";
 import { StickerDetailScreen } from "../screens/StickerDetailScreen";
-import { AccessTokenContext } from "../contexts/AccessTokenContext";
+import { AuthContext } from "../contexts/AuthContext";
 import { Layout, Text } from "@ui-kitten/components";
 import { StickerPack } from "../api/apiTypes";
 
@@ -77,7 +77,7 @@ const RootStackScreen = ({ isAuthenticated }: RootProps) => (
 );
 
 export const AppNavigator = (): React.ReactElement => {
-    const { isAuthenticated } = React.useContext(AccessTokenContext);
+    const { isAuthenticated } = React.useContext(AuthContext);
 
     if (isAuthenticated == undefined) {
         // TODO: Create loading page

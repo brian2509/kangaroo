@@ -1,7 +1,7 @@
 import React from "react";
 import { Layout, Text, Button, Input, Spinner } from "@ui-kitten/components";
 import { SafeAreaView, StyleSheet } from "react-native";
-import { AccessTokenContext } from "../contexts/AccessTokenContext";
+import { AuthContext } from "../contexts/AuthContext";
 import { StackScreenProps } from "@react-navigation/stack";
 import { AuthStackParamList } from "../navigation/AppNavigator";
 import API from "../api/api";
@@ -11,14 +11,14 @@ import { logErrorResponse } from "../util/logging";
 type Props = StackScreenProps<AuthStackParamList, "Login">;
 
 export const LoginScreen = ({ navigation }: Props) => {
-    const { accessToken, setAccessToken } = React.useContext(AccessTokenContext);
+    const { login } = React.useContext(AuthContext);
 
     const [username, setUsername] = React.useState("username2");
     const [password, setPassword] = React.useState("password123");
 
     const loginMutation = useMutation(API.login, {
         onSuccess: (res) => {
-            setAccessToken(res.access_token);
+            login(res.access_token);
         },
         onError: (e: any) => {
             logErrorResponse(e);
