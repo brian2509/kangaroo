@@ -1,55 +1,27 @@
 import React from "react";
 import { Layout, Text, Button, Input } from "@ui-kitten/components";
 import { SafeAreaView, StyleSheet } from "react-native";
-import axios from "../api/axios";
-import { AccessTokenContext } from "../contexts/AccessTokenContext";
+import API from "../api/api";
 import { StackScreenProps } from "@react-navigation/stack";
 import { AuthStackParamList } from "../navigation/AppNavigator";
+import { useMutation } from "react-query";
+import { logErrorResponse } from "../util/logging";
 
 type Props = StackScreenProps<AuthStackParamList, "Register">;
 
 export const RegisterScreen = ({ navigation }: Props) => {
-    const { accessToken, setAccessToken } = React.useContext(AccessTokenContext);
-
     const [email, setEmail] = React.useState("test_email@gmail.com");
     const [username, setUsername] = React.useState("username2");
     const [password, setPassword] = React.useState("password123");
 
-    const [status, setStatus] = React.useState("");
-    const [errors, setErrors] = React.useState([]);
-
-    const register = async () => {
-        const body = {
-            email,
-            username,
-            password,
-        };
-
-        axios
-            .post("/auth/register", body)
-            .then(() => {
-                setStatus("");
-                setErrors([]);
-                navigation.pop();
-            })
-            .catch((e) => {
-                console.log("Error", { response: e.response });
-                if (e.response.status == 400) {
-                    setStatus("");
-                    setErrors(
-                        e.response.data.message.map((errorMessage: string) => {
-                            return errorMessage.charAt(0).toUpperCase() + errorMessage.slice(1);
-                        }),
-                    );
-                } else if (e.response.status == 403) {
-                    setStatus(e.response.data.message);
-                    setErrors([]);
-                } else {
-                    setStatus("Failed!");
-                    setErrors([]);
-                }
-            });
-    };
+    const registerMutation = useMutation(API.register, {
+        onSuccess: (res) => {
+            navigation.pop();
+        },
+        onError: (e: any) => {
+            logErrorResponse(e);
+        },
+    });
 
     return (
         <SafeAreaView style={{ flex: 1 }}>
@@ -76,7 +48,16 @@ export const RegisterScreen = ({ navigation }: Props) => {
                         label="Password"
                         value={password}
                         onChangeText={setPassword}></Input>
-                    <Button style={styles.button} size="large" onPress={register}>
+                    <Button
+                        style={styles.button}
+                        size="large"
+                        onPress={() =>
+                            registerMutation.mutate({
+                                email,
+                                username,
+                                password,
+                            })
+                        }>
                         Register
                     </Button>
                     <Button
@@ -84,29 +65,40 @@ export const RegisterScreen = ({ navigation }: Props) => {
                         appearance="outline"
                         status="basic"
                         size="small"
-                        onPress={() => {
-                            setStatus("");
-                            setErrors([]);
-                            navigation.pop();
-                        }}>
+                        onPress={() => navigation.pop()}>
                         Login
                     </Button>
+
                     <Text style={styles.text} category="h5">
-                        {status}
+                        {registerMutation.error?.response?.status == 400
+                            ? "Invalid details"
+                            : registerMutation.error?.response?.status == 403
+                            ? // 403 Forbidden. Example: user with that username already exists
+                              registerMutation.error?.response?.data.message
+                            : ""}
                     </Text>
+
+                    {/* Error messages if invalid details are given */}
                     <Layout>
-                        {errors.map((error, i) => {
-                            return (
-                                <Text
-                                    key={i}
-                                    status="danger"
-                                    appearance="hint"
-                                    style={styles.errorText}
-                                    category="s1">
-                                    {error}
-                                </Text>
-                            );
-                        })}
+                        {registerMutation.error?.response?.status == 400 &&
+                            registerMutation.error?.response?.data.message.map(
+                                (errorMessage: string) => {
+                                    const msg =
+                                        errorMessage.charAt(0).toUpperCase() +
+                                        errorMessage.slice(1);
+
+                                    return (
+                                        <Text
+                                            key={msg}
+                                            status="danger"
+                                            appearance="hint"
+                                            style={styles.errorText}
+                                            category="s1">
+                                            {msg}
+                                        </Text>
+                                    );
+                                },
+                            )}
                     </Layout>
                 </Layout>
             </Layout>
