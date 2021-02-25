@@ -41,3 +41,14 @@ export interface LoginRequest {
     username: string;
     password: string;
 }
+
+export interface RegisterResponse {
+    id: string;
+    username: string;
+}
+
+export interface RegisterRequest {
+    email: string;
+    username: string;
+    password: string;
+}
