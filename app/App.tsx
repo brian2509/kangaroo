@@ -13,11 +13,11 @@ YellowBox.ignoreWarnings(["Setting a timer"]);
 
 const queryClient = new QueryClient();
 
-export default (): React.ReactFragment => {
+export default function App(): React.ReactFragment {
     return (
         <>
             <IconRegistry icons={EvaIconsPack} />
-            <ApplicationProvider {...eva} theme={eva.dark}>
+            <ApplicationProvider {...eva} theme={eva.light}>
                 <QueryClientProvider client={queryClient}>
                     <AccessTokenProvider>
                         <AppNavigator />
@@ -26,4 +26,6 @@ export default (): React.ReactFragment => {
             </ApplicationProvider>
         </>
     );
-};
+}
+
+App.Hello = "Kangaroo";

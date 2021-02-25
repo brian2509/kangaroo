@@ -198,6 +198,14 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		33FD05401FE04F4CBE672776 /* Resources */ = {
+			isa = "PBXGroup";
+			children = (
+			);
+			name = Resources;
+			sourceTree = "<group>";
+			path = "";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */

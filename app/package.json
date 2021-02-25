@@ -48,6 +48,7 @@
 		"metro-react-native-babel-preset": "^0.58.0",
 		"prettier": "^2.0.2",
 		"react-test-renderer": "16.11.0",
+		"tailwind-rn": "^3.0.1",
 		"typescript": "^3.9.9"
 	},
 	"jest": {
