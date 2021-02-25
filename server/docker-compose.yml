@@ -2,19 +2,16 @@ version: "3.8"
 
 services:
   server:
-    build: .
+    image: ghcr.io/brian2509/kangaroo-server:latest
     container_name: server
     restart: unless-stopped
-    command: "npm run start:dev"
+    command: "npm run start:prod"
     depends_on:
       - postgres
     env_file:
       - .env
     ports:
       - "5000:5000"
-    volumes:
-      - ./:/app
-      - /app/node_modules
 
   postgres:
     image: postgres:13.2
@@ -25,7 +22,7 @@ services:
     ports:
     - "5432:5432"
     volumes:
-      - giraffe-db:/var/lib/postgresql/data
+      - kangaroo-db:/var/lib/postgresql/data
 
 volumes:
-  giraffe-db:
+  kangaroo-db:
