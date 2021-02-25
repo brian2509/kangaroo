@@ -7,7 +7,8 @@ import { HomeScreen } from "../screens/HomeScreen";
 import { StickerDetailScreen } from "../screens/StickerDetailScreen";
 import { AccessTokenContext } from "../contexts/AccessTokenContext";
 import { Layout, Text } from "@ui-kitten/components";
-import { StickerPack } from "../common/StickerPack";
+import { StickerPack } from "../api/apiTypes";
+
 export type AuthStackParamList = {
     Login: undefined;
     Register: undefined;
