@@ -12,7 +12,7 @@ import {
 } from "./apiTypes";
 import axios from "./axios";
 
-export namespace API {
+namespace API {
     export const fetchMyStickerPacks = async (): Promise<StickerPack[]> => {
         return axios.get("me/sticker-packs").then((res: any) => {
             return res.data.map((entry: any) => {
@@ -77,3 +77,5 @@ export namespace API {
         return res.data as IsAuthenticatedResponse;
     };
 }
+
+export default API;

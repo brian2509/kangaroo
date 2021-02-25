@@ -1,7 +1,7 @@
 import React from "react";
 import { Layout, Text, Button, Input } from "@ui-kitten/components";
 import { SafeAreaView, StyleSheet } from "react-native";
-import { API } from "../api/api";
+import API from "../api/api";
 import { StackScreenProps } from "@react-navigation/stack";
 import { AuthStackParamList } from "../navigation/AppNavigator";
 import { useMutation } from "react-query";

@@ -5,7 +5,7 @@ import DocumentPicker from "react-native-document-picker";
 import { AccessTokenContext } from "../contexts/AccessTokenContext";
 import { StackScreenProps } from "@react-navigation/stack";
 import { HomeStackParamList } from "../navigation/AppNavigator";
-import { API } from "../api/api";
+import API from "../api/api";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { StickerPack } from "../api/apiTypes";
 import { QUERY_KEYS } from "../constants/ReactQueryKeys";

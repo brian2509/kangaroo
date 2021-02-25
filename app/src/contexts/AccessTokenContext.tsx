@@ -2,7 +2,7 @@ import AsyncStorage from "@react-native-community/async-storage";
 import React, { useEffect } from "react";
 import { STORAGE_KEYS } from "../constants/StorageKeys";
 import axios from "../api/axios";
-import { API } from "../api/api";
+import API from "../api/api";
 
 export interface AccessTokenContextProps {
     accessToken: string | undefined;

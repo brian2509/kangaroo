@@ -4,7 +4,7 @@ import { SafeAreaView, StyleSheet } from "react-native";
 import { AccessTokenContext } from "../contexts/AccessTokenContext";
 import { StackScreenProps } from "@react-navigation/stack";
 import { AuthStackParamList } from "../navigation/AppNavigator";
-import { API } from "../api/api";
+import API from "../api/api";
 import { useMutation } from "react-query";
 import { logErrorResponse } from "../util/logging";
 
