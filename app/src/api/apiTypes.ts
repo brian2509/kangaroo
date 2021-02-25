@@ -52,3 +52,7 @@ export interface RegisterRequest {
     username: string;
     password: string;
 }
+
+export interface IsAuthenticatedResponse {
+    authenticated: boolean;
+}

@@ -2,6 +2,7 @@ import AsyncStorage from "@react-native-community/async-storage";
 import React, { useEffect } from "react";
 import { STORAGE_KEYS } from "../constants/StorageKeys";
 import axios from "../api/axios";
+import * as authApi from "../api/authApi";
 
 export interface AccessTokenContextProps {
     accessToken: string | undefined;
@@ -35,22 +36,10 @@ export const AccessTokenProvider = ({ children }: any): React.ReactElement => {
     }, []);
 
     useEffect(() => {
-        const updateAuthenticated = () => {
-            axios
-                .get("/auth/authenticated")
-                .then((res) => {
-                    if (res.data.authenticated == true) {
-                        setIsAuthenticated(true);
-                    } else {
-                        setIsAuthenticated(false);
-                    }
-                })
-                .catch((e) => {
-                    setIsAuthenticated(false);
-                });
-        };
-
-        updateAuthenticated();
+        authApi
+            .isAuthenticated()
+            .then(() => setIsAuthenticated(true))
+            .catch(() => setIsAuthenticated(false));
     }, [accessToken]);
 
     const storeAccessToken = (newToken: string | undefined) => {
@@ -72,7 +61,11 @@ export const AccessTokenProvider = ({ children }: any): React.ReactElement => {
 
     return (
         <AccessTokenContext.Provider
-            value={{ accessToken, setAccessToken: storeAccessToken, isAuthenticated }}>
+            value={{
+                accessToken,
+                setAccessToken: storeAccessToken,
+                isAuthenticated,
+            }}>
             {children}
         </AccessTokenContext.Provider>
     );
