@@ -16,14 +16,18 @@ export class HTTPLoggerMiddleware implements NestMiddleware {
       const body = request.body;
       const params = request.params;
 
-      const message = `${method} ${url} ${statusCode} ${contentLength} - ${userAgent} ${ip} \n${JSON.stringify(
-        {
-          params,
-          body,
-        },
-        null,
-        1
-      )}`;
+      const message = `${method} ${url} ${statusCode} ${contentLength} - ${userAgent} ${ip} ${
+        Object.keys(params).length === 0 && Object.keys(body).length === 0
+          ? ""
+          : `\n${JSON.stringify(
+              {
+                params,
+                body,
+              },
+              null,
+              1
+            )}`
+      }`;
 
       if (statusCode >= 200 && statusCode <= 299) {
         this.logger.log(message);

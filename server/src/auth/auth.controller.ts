@@ -3,6 +3,7 @@ import { ApiBearerAuth, ApiOperation, ApiTags } from "@nestjs/swagger";
 import { UserRo } from "../users/dto/response-user.dto";
 import { AuthService } from "./auth.service";
 import { AuthenticatedCheckDto, JwtToken } from "./dto/jwt.dto";
+import { LoginUserDto } from "./dto/login-user.dto";
 import { RegisterUserDto } from "./dto/register-user.dto";
 import { JwtAuthGuard } from "./guards/jwt.guard";
 import { LocalAuthGuard } from "./guards/local-auth.guard";
@@ -13,8 +14,11 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @UseGuards(LocalAuthGuard)
+  @ApiOperation({
+    summary: "Log into a registered account and receive a JWT token.",
+  })
   @Post("login")
-  login(@Req() req): JwtToken {
+  login(@Req() req, @Body() loginUserDto: LoginUserDto): JwtToken {
     return this.authService.createJwtToken(req.user);
   }
 
