@@ -14,10 +14,10 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @UseGuards(LocalAuthGuard)
-  @Post("login")
   @ApiOperation({
     summary: "Log into a registered account and receive a JWT token.",
   })
+  @Post("login")
   login(@Req() req, @Body() loginUserDto: LoginUserDto): JwtToken {
     return this.authService.createJwtToken(req.user);
   }
