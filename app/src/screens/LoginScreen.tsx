@@ -1,12 +1,13 @@
 import React from "react";
 import { Layout, Text, Button, Input, Spinner } from "@ui-kitten/components";
-import { SafeAreaView, StyleSheet } from "react-native";
+import { Image, SafeAreaView, StyleSheet } from "react-native";
 import { AuthContext } from "../contexts/AuthContext";
 import { StackScreenProps } from "@react-navigation/stack";
 import { AuthStackParamList } from "../navigation/AppNavigator";
 import API from "../api/api";
 import { useMutation } from "react-query";
 import { logErrorResponse } from "../util/logging";
+import tailwind from "tailwind-rn";
 
 type Props = StackScreenProps<AuthStackParamList, "Login">;
 
@@ -28,10 +29,13 @@ export const LoginScreen = ({ navigation }: Props) => {
     return (
         <SafeAreaView style={{ flex: 1 }}>
             <Layout style={styles.container}>
-                <Layout style={styles.registerContainer}>
-                    <Text style={styles.text} category="h3">
-                        Login
-                    </Text>
+                <Layout style={tailwind("p-2")}>
+                    <Image
+                        style={tailwind("w-32 h-32 m-14 mt-6 self-center rounded-full")}
+                        source={require("../images/logo.png")}
+                    />
+
+                    <Text style={tailwind("text-4xl font-bold pb-4")}>Sign In</Text>
                     <Input
                         style={styles.input}
                         size="medium"
@@ -44,22 +48,20 @@ export const LoginScreen = ({ navigation }: Props) => {
                         label="Password"
                         value={password}
                         onChangeText={setPassword}></Input>
-                    <Button
-                        style={styles.button}
-                        size="large"
-                        onPress={() => loginMutation.mutate({ username, password })}>
-                        Login
-                    </Button>
-                    <Button
-                        style={styles.button}
-                        appearance="outline"
-                        status="basic"
-                        size="small"
-                        onPress={() => {
-                            navigation.push("Register");
-                        }}>
-                        Register
-                    </Button>
+                    <Layout style={tailwind("flex-row items-center justify-between pt-3")}>
+                        <Text
+                            style={tailwind("pl-2 font-semibold text-blue-500")}
+                            onPress={() => {
+                                navigation.push("Register");
+                            }}>
+                            Register
+                        </Text>
+                        <Button
+                            style={tailwind("pl-10 pr-10")}
+                            onPress={() => loginMutation.mutate({ username, password })}>
+                            Sign in
+                        </Button>
+                    </Layout>
                     <Text style={styles.text} category="h5">
                         {loginMutation.error &&
                             (loginMutation.error.response?.status == 401

@@ -6,6 +6,7 @@ import { StackScreenProps } from "@react-navigation/stack";
 import { AuthStackParamList } from "../navigation/AppNavigator";
 import { useMutation } from "react-query";
 import { logErrorResponse } from "../util/logging";
+import tailwind from "tailwind-rn";
 
 type Props = StackScreenProps<AuthStackParamList, "Register">;
 
@@ -27,9 +28,7 @@ export const RegisterScreen = ({ navigation }: Props) => {
         <SafeAreaView style={{ flex: 1 }}>
             <Layout style={styles.container}>
                 <Layout style={styles.registerContainer}>
-                    <Text style={styles.text} category="h3">
-                        Register
-                    </Text>
+                    <Text style={tailwind("text-4xl font-bold pb-4")}>Register</Text>
                     <Input
                         style={styles.input}
                         size="medium"
@@ -48,26 +47,27 @@ export const RegisterScreen = ({ navigation }: Props) => {
                         label="Password"
                         value={password}
                         onChangeText={setPassword}></Input>
-                    <Button
-                        style={styles.button}
-                        size="large"
-                        onPress={() =>
-                            registerMutation.mutate({
-                                email,
-                                username,
-                                password,
-                            })
-                        }>
-                        Register
-                    </Button>
-                    <Button
-                        style={styles.button}
-                        appearance="outline"
-                        status="basic"
-                        size="small"
-                        onPress={() => navigation.pop()}>
-                        Login
-                    </Button>
+
+                    <Layout style={tailwind("flex-row items-center justify-between pt-3")}>
+                        <Text
+                            style={tailwind("pl-2 font-semibold text-blue-500")}
+                            onPress={() => {
+                                () => navigation.pop();
+                            }}>
+                            Back to Login
+                        </Text>
+                        <Button
+                            style={tailwind("pl-10 pr-10")}
+                            onPress={() =>
+                                registerMutation.mutate({
+                                    email,
+                                    username,
+                                    password,
+                                })
+                            }>
+                            Register
+                        </Button>
+                    </Layout>
 
                     <Text style={styles.text} category="h5">
                         {registerMutation.error?.response?.status == 400
