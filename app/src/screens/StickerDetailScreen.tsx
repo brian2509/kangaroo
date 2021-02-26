@@ -30,7 +30,7 @@ export const StickerDetailScreen = ({ route }: Props): JSX.Element => {
 
     const fetchStickerPackFront = (): JSX.Element => {
         const style = tw.style("w-16 h-16 mr-3 rounded-lg");
-        if (stickerPack.stickers.length == 0) {
+        if (stickerPack.stickers.length === 0) {
             return <Image style={style} source={require(defaultFrontStickerPath)} />;
         } else {
             const sticker = stickerPack.stickers[0];
