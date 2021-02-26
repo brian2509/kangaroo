@@ -82,7 +82,6 @@ export const HomeScreen = ({ navigation }: Props): JSX.Element => {
     };
 
     const renderItemAccessory = (stickerPack: StickerPack) => {
-        console.log(accessToken);
         const UploadIcon = (props: any) => <Icon {...props} name="upload" />;
         const TrashIcon = (props: any) => <Icon {...props} name="trash" />;
 
@@ -107,8 +106,6 @@ export const HomeScreen = ({ navigation }: Props): JSX.Element => {
     };
 
     const renderItem = ({ item }: { item: StickerPack }) => {
-        console.log(item.id);
-
         const title = `${item.name}`;
         const description = `${item.stickers.length} sticker${
             item.stickers.length != 1 ? "s" : ""
