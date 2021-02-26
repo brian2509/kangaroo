@@ -1,10 +1,11 @@
 import React from "react";
-import { Card, Icon, Layout, Text } from "@ui-kitten/components";
+import { Autocomplete, Icon, Layout, Text } from "@ui-kitten/components";
 import { Image, SafeAreaView, ScrollView } from "react-native";
 import { StackScreenProps } from "@react-navigation/stack";
 import { HomeStackParamList } from "../navigation/AppNavigator";
 import tailwind from "tailwind-rn";
 import { Sticker, StickerPack } from "src/api/apiTypes";
+import tw from "tailwind-react-native-classnames";
 
 type Props = StackScreenProps<HomeStackParamList, "StickerDetailScreen">;
 
@@ -27,13 +28,13 @@ export const StickerDetailScreen = ({ route }: Props): JSX.Element => {
         );
     };
 
-    const fetchStickerPackIcon = (): JSX.Element => {
+    const fetchStickerPackFront = (): JSX.Element => {
         if (stickerPack.stickers.length > 0) {
             const sticker = stickerPack.stickers[0];
             return (
                 <Image
                     key={sticker.id}
-                    style={tailwind("h-20 w-20 mr-3 rounded-lg")}
+                    style={tw.style("w-16 h-16 mr-3 rounded-lg")}
                     source={{
                         uri: sticker.url,
                     }}
@@ -42,7 +43,7 @@ export const StickerDetailScreen = ({ route }: Props): JSX.Element => {
         } else {
             return (
                 <Image
-                    style={tailwind("h-20 w-20 mr-3 rounded-lg")}
+                    style={tw`h-20 w-20 mr-3 rounded-lg`}
                     source={require("../placeholders/sticker_placeholder.png")}
                 />
             );
@@ -52,7 +53,7 @@ export const StickerDetailScreen = ({ route }: Props): JSX.Element => {
     const renderHeader = (): JSX.Element => {
         return (
             <Layout style={tailwind("flex-row justify-between p-4 pb-3 border-b border-gray-300")}>
-                {fetchStickerPackIcon()}
+                {fetchStickerPackFront()}
                 <Layout style={tailwind("flex-col flex-grow justify-between")}>
                     <Text style={tailwind("font-semibold text-lg")}>{stickerPack.name}</Text>
                     <Text style={tailwind("text-xs text-gray-500")}>
@@ -94,7 +95,14 @@ export const StickerDetailScreen = ({ route }: Props): JSX.Element => {
         return (
             <Image
                 key={sticker.id}
-                style={tailwind("h-20 w-20 mr-3 rounded-lg")}
+                style={tw.style("rounded-lg", {
+                    width: "21%",
+                    paddingBottom: "21%",
+                    marginHorizontal: "2%",
+                    marginBottom: "2%",
+                    borderRadius: 3,
+                })}
+                resizeMode="contain"
                 source={{
                     uri: sticker.url,
                 }}
@@ -102,31 +110,37 @@ export const StickerDetailScreen = ({ route }: Props): JSX.Element => {
         );
     };
 
+    const renderStickerAuthorView = (stickers: Sticker[]): JSX.Element => {
+        return (
+            <Layout style={tailwind("flex-col p-2")}>
+                <Layout style={tailwind("flex-row flex-grow justify-between items-baseline")}>
+                    <Text style={tailwind("font-semibold mr-4")}>
+                        Willem Alexander
+                        <Text style={tailwind("text-xs text-gray-500")}> ({stickers.length})</Text>
+                    </Text>
+                    <Text style={tailwind("text-gray-500 pt-3 text-xs")}>Wed 4:20</Text>
+                </Layout>
+                <Layout style={tw`flex-row flex-wrap pt-3`}>
+                    {stickers.map((sticker) => {
+                        return renderSticker(sticker);
+                    })}
+                </Layout>
+            </Layout>
+        );
+    };
+
     return (
         <SafeAreaView style={tailwind("flex-1")}>
             <Layout style={tailwind("flex-col flex-grow")}>
                 {renderHeader()}
-                <ScrollView style={tailwind("p-4 pt-5")}>
+                <ScrollView style={tailwind("p-4 pt-3")}>
                     <Layout style={tailwind("flex-row items-end items-baseline")}>
                         <Text style={tailwind("text-xl font-semibold mr-4")}>Stickers</Text>
                         <Text style={tailwind("text-gray-500 h-full pt-3 text-sm")}>
                             {stickerPack.stickers.length}/30
                         </Text>
                     </Layout>
-                    <Layout style={tailwind("flex-col p-2")}>
-                        <Layout
-                            style={tailwind("flex-row flex-grow justify-between items-baseline")}>
-                            <Text style={tailwind("font-semibold mr-4")}>Willem Alexander</Text>
-                            <Text style={tailwind("text-gray-500 pt-3 text-xs")}>
-                                Last updated Wed 4:20
-                            </Text>
-                        </Layout>
-                        <Layout style={tailwind("flex-row flex-wrap pt-3")}>
-                            {stickerPack.stickers.map((sticker) => {
-                                return renderSticker(sticker);
-                            })}
-                        </Layout>
-                    </Layout>
+                    {renderStickerAuthorView(stickerPack.stickers)}
                 </ScrollView>
             </Layout>
         </SafeAreaView>
