@@ -12,6 +12,11 @@ Kangaroo backend using the [Nest](https://github.com/nestjs/nest) framework and 
 $ npm run docker:dev
 ```
 
+**Note:** currently hot reload doesn't work on file additions, so stop and start if you have any.
+```bash
+$ npm run docker:dev:stop
+```
+
 ## Development (no-docker)
 - Have a Postgres server running with the credentials set in `.env`.
 
