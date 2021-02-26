@@ -1,5 +1,5 @@
 import React from "react";
-import { Autocomplete, Icon, Layout, Text } from "@ui-kitten/components";
+import { Icon, Layout, Text } from "@ui-kitten/components";
 import { Image, SafeAreaView, ScrollView } from "react-native";
 import { StackScreenProps } from "@react-navigation/stack";
 import { HomeStackParamList } from "../navigation/AppNavigator";
@@ -29,25 +29,51 @@ export const StickerDetailScreen = ({ route }: Props): JSX.Element => {
     };
 
     const fetchStickerPackFront = (): JSX.Element => {
-        if (stickerPack.stickers.length > 0) {
-            const sticker = stickerPack.stickers[0];
-            return (
-                <Image
-                    key={sticker.id}
-                    style={tw.style("w-16 h-16 mr-3 rounded-lg")}
-                    source={{
-                        uri: sticker.url,
-                    }}
-                />
-            );
+        const style = tw.style("w-16 h-16 mr-3 rounded-lg");
+        if (stickerPack.stickers.length == 0) {
+            return <Image style={style} source={require(defaultFrontStickerPath)} />;
         } else {
-            return (
-                <Image
-                    style={tw`h-20 w-20 mr-3 rounded-lg`}
-                    source={require("../placeholders/sticker_placeholder.png")}
-                />
-            );
+            const sticker = stickerPack.stickers[0];
+            return <Image style={style} source={{ uri: sticker.url }} />;
         }
+    };
+
+    const renderSticker = (sticker: Sticker): JSX.Element => {
+        return (
+            <Image
+                key={sticker.id}
+                style={tw.style("rounded-lg", {
+                    width: "21%",
+                    paddingBottom: "21%",
+                    marginHorizontal: "2%",
+                    marginBottom: "2%",
+                    borderRadius: 3,
+                })}
+                resizeMode="contain"
+                source={{
+                    uri: sticker.url,
+                }}
+            />
+        );
+    };
+
+    const renderStickerAuthorView = (stickers: Sticker[]): JSX.Element => {
+        return (
+            <Layout style={tailwind("flex-col p-2")}>
+                <Layout style={tailwind("flex-row flex-grow justify-between items-baseline")}>
+                    <Text style={tailwind("font-semibold mr-4")}>
+                        Willem Alexander
+                        <Text style={tailwind("text-xs text-gray-500")}> ({stickers.length})</Text>
+                    </Text>
+                    <Text style={tailwind("text-gray-500 pt-3 text-xs")}>Wed 4:20</Text>
+                </Layout>
+                <Layout style={tw`flex-row flex-wrap pt-3`}>
+                    {stickers.map((sticker) => {
+                        return renderSticker(sticker);
+                    })}
+                </Layout>
+            </Layout>
+        );
     };
 
     const renderHeader = (): JSX.Element => {
@@ -91,41 +117,17 @@ export const StickerDetailScreen = ({ route }: Props): JSX.Element => {
         );
     };
 
-    const renderSticker = (sticker: Sticker): JSX.Element => {
+    const renderBody = (): JSX.Element => {
         return (
-            <Image
-                key={sticker.id}
-                style={tw.style("rounded-lg", {
-                    width: "21%",
-                    paddingBottom: "21%",
-                    marginHorizontal: "2%",
-                    marginBottom: "2%",
-                    borderRadius: 3,
-                })}
-                resizeMode="contain"
-                source={{
-                    uri: sticker.url,
-                }}
-            />
-        );
-    };
-
-    const renderStickerAuthorView = (stickers: Sticker[]): JSX.Element => {
-        return (
-            <Layout style={tailwind("flex-col p-2")}>
-                <Layout style={tailwind("flex-row flex-grow justify-between items-baseline")}>
-                    <Text style={tailwind("font-semibold mr-4")}>
-                        Willem Alexander
-                        <Text style={tailwind("text-xs text-gray-500")}> ({stickers.length})</Text>
+            <ScrollView style={tailwind("p-4 pt-3")}>
+                <Layout style={tailwind("flex-row items-end items-baseline")}>
+                    <Text style={tailwind("text-xl font-semibold mr-4")}>Stickers</Text>
+                    <Text style={tailwind("text-gray-500 h-full pt-3 text-sm")}>
+                        {stickerPack.stickers.length}/30
                     </Text>
-                    <Text style={tailwind("text-gray-500 pt-3 text-xs")}>Wed 4:20</Text>
                 </Layout>
-                <Layout style={tw`flex-row flex-wrap pt-3`}>
-                    {stickers.map((sticker) => {
-                        return renderSticker(sticker);
-                    })}
-                </Layout>
-            </Layout>
+                {renderStickerAuthorView(stickerPack.stickers)}
+            </ScrollView>
         );
     };
 
@@ -133,15 +135,7 @@ export const StickerDetailScreen = ({ route }: Props): JSX.Element => {
         <SafeAreaView style={tailwind("flex-1")}>
             <Layout style={tailwind("flex-col flex-grow")}>
                 {renderHeader()}
-                <ScrollView style={tailwind("p-4 pt-3")}>
-                    <Layout style={tailwind("flex-row items-end items-baseline")}>
-                        <Text style={tailwind("text-xl font-semibold mr-4")}>Stickers</Text>
-                        <Text style={tailwind("text-gray-500 h-full pt-3 text-sm")}>
-                            {stickerPack.stickers.length}/30
-                        </Text>
-                    </Layout>
-                    {renderStickerAuthorView(stickerPack.stickers)}
-                </ScrollView>
+                {renderBody()}
             </Layout>
         </SafeAreaView>
     );
