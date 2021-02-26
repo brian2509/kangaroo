@@ -123,7 +123,7 @@ export class StickerPacksService {
       throw new NotFoundException();
     }
 
-    if (!stickerPack.isOwner(userId) || !stickerPack.isMember(userId)) {
+    if (!stickerPack.isOwner(userId) && !stickerPack.isMember(userId)) {
       throw new ForbiddenException(
         "You are not the author or a member of this sticker pack."
       );
@@ -150,7 +150,8 @@ export class StickerPacksService {
 
     if (
       stickerPack.private &&
-      (!stickerPack.isOwner(userId) || !stickerPack.isMember(userId))
+      !stickerPack.isOwner(userId) &&
+      !stickerPack.isMember(userId)
     ) {
       throw new ForbiddenException("This sticker pack is private.");
     }
