@@ -1203,10 +1203,10 @@
   "resolved" "https://registry.npmjs.org/@types/prop-types/-/prop-types-15.7.3.tgz"
   "version" "15.7.3"
 
-"@types/react-native@^0.62.18":
-  "integrity" "sha512-7QfU8EzIYxYqeXpPf8QNv2xi8hrePlgTbRATRo+plRSdVfJu7N6sAXqrFxKJp6bGLvp82GV1gczl93gqiAfXPA=="
-  "resolved" "https://registry.npmjs.org/@types/react-native/-/react-native-0.62.18.tgz"
-  "version" "0.62.18"
+"@types/react-native@^0.63.50":
+  "integrity" "sha512-jWxsHDG/AHEaOrqqcI0Cth0WdPsgyaJ1nel5pS0uCzpt2RjwtkvEUAfu39paPr4i+9oUUgbJq3vkVXaj7n8RdQ=="
+  "resolved" "https://registry.npmjs.org/@types/react-native/-/react-native-0.63.50.tgz"
+  "version" "0.63.50"
   dependencies:
     "@types/react" "*"
 

@@ -8,8 +8,8 @@ import { AuthContextProvider } from "./src/contexts/AuthContext";
 import { QueryClient, QueryClientProvider } from "react-query";
 
 // React query sets long timers for cache invalidation, we don't want to see these warnings
-import { YellowBox } from "react-native";
-YellowBox.ignoreWarnings(["Setting a timer"]);
+import { LogBox } from "react-native";
+LogBox.ignoreLogs(["Setting a timer"]);
 
 const queryClient = new QueryClient();
 
