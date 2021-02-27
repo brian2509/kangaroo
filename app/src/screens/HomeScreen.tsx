@@ -188,7 +188,7 @@ export const HomeScreen = ({ navigation }: Props): JSX.Element => {
                 </Layout>
                 <Input placeholder="Search" />
             </Layout>
-            <Layout>
+            <Layout style={tailwind("flex-1")}>
                 <List
                     style={styles.list}
                     data={myStickerPacksQuery.data}
