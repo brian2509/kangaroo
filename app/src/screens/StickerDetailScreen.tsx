@@ -49,7 +49,7 @@ class AuthorStickersView extends React.Component<StickerPackProps> {
 
     render() {
         return (
-            <Layout style={tailwind("flex-col p-2")}>
+            <Layout style={tailwind("flex-col p-2 pt-1")}>
                 <Layout style={tailwind("flex-row flex-grow justify-between items-baseline")}>
                     <Text style={tailwind("font-semibold mr-4")}>
                         Willem Alexander
@@ -107,8 +107,6 @@ class Header extends React.Component<StickerPackProps> {
 }
 
 type Props = StackScreenProps<HomeStackParamList, "StickerDetailScreen">;
-
-// class StickerDetailScreen = ({ route, navigation }: Props): JSX.Element => {
 export class StickerDetailScreen extends React.Component<Props> {
     private stickerPack: StickerPack;
 
