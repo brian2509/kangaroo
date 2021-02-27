@@ -1,13 +1,13 @@
+// Load environment variables.
+import * as dotenv from "dotenv";
+dotenv.config();
+
 import { ValidationPipe } from "@nestjs/common";
 import { NestFactory } from "@nestjs/core";
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
-import * as dotenv from "dotenv";
 import { AppModule } from "./app.module";
 
 async function bootstrap() {
-  // Load environment variables.
-  dotenv.config();
-
   // Setup Nest.
   const app = await NestFactory.create(AppModule);
   app.setGlobalPrefix("api");

@@ -6,15 +6,13 @@ Kangaroo backend using the [Nest](https://github.com/nestjs/nest) framework and 
 
 ## Development
 
-- Local images (no registry login needed)
-- Hot reloading from file system
+- Start the postgres docker (once)
 ```bash
-$ npm run docker:dev
+$ npm run docker:postgres
 ```
-
-**Note:** currently hot reload doesn't work on file additions, so stop and start if you have any.
+- Start the server in dev mode for hot reload
 ```bash
-$ npm run docker:dev:stop
+$ npm run start:dev
 ```
 
 ## Development (no-docker)
@@ -23,8 +21,6 @@ $ npm run docker:dev:stop
 ```bash
 $ npm install
 $ npm run start:dev (development)
-or
-$ npm run start (production)
 ```
 
 ## Useful Scripts
