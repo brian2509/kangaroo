@@ -38,7 +38,7 @@ const HomeStackScreen = () => (
         <HomeStack.Screen
             name="Homescreen"
             component={HomeScreen}
-            options={{ title: "Sticker Packs" }}
+            options={{ headerShown: false }}
         />
         <HomeStack.Screen
             name="StickerDetailScreen"

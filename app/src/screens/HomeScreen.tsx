@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Divider, Layout, List, ListItem, Text, Button, Icon } from "@ui-kitten/components";
+import { Divider, Layout, List, ListItem, Text, Button, Icon, Input } from "@ui-kitten/components";
 import { Image, Platform, SafeAreaView, StyleSheet } from "react-native";
 import DocumentPicker from "react-native-document-picker";
 import { AuthContext } from "../contexts/AuthContext";
@@ -10,6 +10,7 @@ import { useMutation, useQuery, useQueryClient } from "react-query";
 import { StickerPack } from "../api/apiTypes";
 import { QUERY_KEYS } from "../constants/ReactQueryKeys";
 import { logErrorResponse } from "../util/logging";
+import tailwind from "tailwind-rn";
 
 type Props = StackScreenProps<HomeStackParamList, "Homescreen">;
 
@@ -112,7 +113,7 @@ export const HomeScreen = ({ navigation }: Props): JSX.Element => {
         } ${item.private ? "\nPrivate" : ""}`;
 
         return (
-            <Layout>
+            <Layout style={tailwind("px-2")}>
                 <ListItem
                     title={title}
                     description={description}
@@ -140,37 +141,54 @@ export const HomeScreen = ({ navigation }: Props): JSX.Element => {
         );
     };
 
+    const AddIcon = (props: any) => (
+        <Icon
+            style={{
+                ...tailwind("w-8 h-8"),
+                ...{ tintColor: props.style.tintColor },
+            }}
+            name="plus"
+        />
+    );
+    const LogoutIcon = (props: any) => (
+        <Icon
+            style={{
+                ...tailwind("w-8 h-8"),
+                ...{ tintColor: props.style.tintColor },
+            }}
+            name="person-delete-outline"
+        />
+    );
+
     return (
-        <SafeAreaView style={{ flex: 1 }}>
-            <Layout style={styles.container}>
-                <Text style={styles.text} category="h1">
-                    Welcome! 🦒
-                </Text>
-                <Button
-                    style={styles.button}
-                    appearance="outline"
-                    status="danger"
-                    size="small"
-                    onPress={logout}>
-                    Logout
-                </Button>
-                <Layout style={styles.buttonContainer}>
-                    <Button
-                        style={styles.button}
-                        onPress={() => queryClient.invalidateQueries(QUERY_KEYS.myStickerPacks)}>
-                        Fetch Sticker Packs
-                    </Button>
-                    <Button
-                        style={styles.button}
-                        onPress={() =>
-                            addStickerPackMutation.mutate({
-                                name: generateName(),
-                                private: true,
-                            })
-                        }>
-                        Add Sticker Pack
-                    </Button>
+        <SafeAreaView style={tailwind("flex-1")}>
+            <Layout style={tailwind("p-4 pb-3 bg-gray-100")}>
+                <Layout
+                    style={tailwind("flex-row justify-between pt-2 bg-transparent items-center")}>
+                    <Text style={tailwind("text-4xl font-bold bg-transparent")}>Sticker Packs</Text>
+                    <Layout style={tailwind("flex-row items-center pr-2 bg-transparent")}>
+                        <Button
+                            appearance="ghost"
+                            style={tailwind("px-1")}
+                            onPress={() =>
+                                addStickerPackMutation.mutate({
+                                    name: generateName(),
+                                    private: true,
+                                })
+                            }
+                            accessoryLeft={AddIcon}
+                        />
+                        <Button
+                            appearance="ghost"
+                            status="danger"
+                            onPress={logout}
+                            accessoryLeft={LogoutIcon}
+                        />
+                    </Layout>
                 </Layout>
+                <Input placeholder="Search" />
+            </Layout>
+            <Layout>
                 <List
                     style={styles.list}
                     data={myStickerPacksQuery.data}
@@ -189,19 +207,8 @@ export const HomeScreen = ({ navigation }: Props): JSX.Element => {
 };
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        alignItems: "center",
-        paddingTop: 16,
-    },
     text: {
         textAlign: "center",
-    },
-    buttonContainer: {
-        flexDirection: "row",
-    },
-    button: {
-        margin: 16,
     },
     stickerPackActionButton: {
         marginHorizontal: 6,
