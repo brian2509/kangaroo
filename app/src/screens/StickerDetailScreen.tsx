@@ -28,7 +28,7 @@ export const StickerDetailScreen = ({ route }: Props): JSX.Element => {
         );
     };
 
-    const fetchStickerPackFront = (): JSX.Element => {
+    const renderFrontSticker = (): JSX.Element => {
         const style = tw.style("w-16 h-16 mr-3 rounded-lg");
         if (stickerPack.stickers.length === 0) {
             return <Image style={style} source={require(defaultFrontStickerPath)} />;
@@ -57,31 +57,36 @@ export const StickerDetailScreen = ({ route }: Props): JSX.Element => {
         );
     };
 
-    const renderStickerAuthorView = (stickers: Sticker[]): JSX.Element => {
-        return (
-            <Layout style={tailwind("flex-col p-2")}>
-                <Layout style={tailwind("flex-row flex-grow justify-between items-baseline")}>
-                    <Text style={tailwind("font-semibold mr-4")}>
-                        Willem Alexander
-                        <Text style={tailwind("text-xs text-gray-500")}> ({stickers.length})</Text>
-                    </Text>
-                    <Text style={tailwind("text-gray-500 pt-3 text-xs")}>Wed 4:20</Text>
+    class AuthorView extends React.Component {
+        render() {
+            return (
+                <Layout style={tailwind("flex-col p-2")}>
+                    <Layout style={tailwind("flex-row flex-grow justify-between items-baseline")}>
+                        <Text style={tailwind("font-semibold mr-4")}>
+                            Willem Alexander
+                            <Text style={tailwind("text-xs text-gray-500")}>
+                                {" "}
+                                ({stickerPack.stickers.length})
+                            </Text>
+                        </Text>
+                        <Text style={tailwind("text-gray-500 pt-3 text-xs")}>Wed 4:20</Text>
+                    </Layout>
+                    <Layout style={tw`flex-row flex-wrap pt-3`}>
+                        {stickerPack.stickers.map((sticker) => {
+                            return renderSticker(sticker);
+                        })}
+                    </Layout>
                 </Layout>
-                <Layout style={tw`flex-row flex-wrap pt-3`}>
-                    {stickers.map((sticker) => {
-                        return renderSticker(sticker);
-                    })}
-                </Layout>
-            </Layout>
-        );
-    };
+            );
+        }
+    }
 
     class Header extends React.Component {
         render() {
             return (
                 <Layout
                     style={tailwind("flex-row justify-between p-4 pb-3 border-b border-gray-300")}>
-                    {fetchStickerPackFront()}
+                    {renderFrontSticker()}
                     <Layout style={tailwind("flex-col flex-grow justify-between")}>
                         <Text style={tailwind("font-semibold text-lg")}>{stickerPack.name}</Text>
                         <Text style={tailwind("text-xs text-gray-500")}>
@@ -130,7 +135,7 @@ export const StickerDetailScreen = ({ route }: Props): JSX.Element => {
                             {stickerPack.stickers.length}/30
                         </Text>
                     </Layout>
-                    {renderStickerAuthorView(stickerPack.stickers)}
+                    <AuthorView />
                 </ScrollView>
             );
         }
