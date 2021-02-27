@@ -51,9 +51,7 @@ export const RegisterScreen = ({ navigation }: Props) => {
                     <Layout style={tailwind("flex-row items-center justify-between pt-3")}>
                         <Text
                             style={tailwind("pl-2 font-semibold text-blue-500")}
-                            onPress={() => {
-                                () => navigation.pop();
-                            }}>
+                            onPress={() => navigation.pop()}>
                             Back to Login
                         </Text>
                         <Button
