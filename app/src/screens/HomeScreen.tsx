@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { Divider, Layout, List, ListItem, Text, Button, Icon, Input } from "@ui-kitten/components";
-import { Image, Platform, SafeAreaView, StyleSheet } from "react-native";
-import DocumentPicker from "react-native-document-picker";
+import { SafeAreaView, StyleSheet, Image } from "react-native";
 import { AuthContext } from "../contexts/AuthContext";
 import { StackScreenProps } from "@react-navigation/stack";
 import { HomeStackParamList } from "../navigation/AppNavigator";
@@ -11,6 +10,7 @@ import { StickerPack } from "../api/apiTypes";
 import { QUERY_KEYS } from "../constants/ReactQueryKeys";
 import { logErrorResponse } from "../util/logging";
 import tailwind from "tailwind-rn";
+import ImagePicker, { Image as ImageData } from "react-native-image-crop-picker";
 
 type Props = StackScreenProps<HomeStackParamList, "Homescreen">;
 
@@ -54,31 +54,33 @@ export const HomeScreen = ({ navigation }: Props): JSX.Element => {
     });
 
     const pickAndUploadSticker = async (stickerPackId: string) => {
-        // TODO: fix file reading, on Android image.uri is "content://..." but should be something like "file://..."
-        return;
-
         try {
-            const stickerName = generateName();
+            ImagePicker.openPicker({
+                width: 512,
+                height: 512,
+                cropping: true,
+                mediaType: "photo",
+            }).then((image: ImageData) => {
+                const stickerName = generateName();
 
-            const image = await DocumentPicker.pick({
-                type: [DocumentPicker.types.images],
+                const formData = new FormData();
+                formData.append("name", stickerName);
+                formData.append("file", {
+                    name: image.path.split("/").slice(-1)[0],
+                    size: image.size,
+                    type: image.mime,
+                    uri: image.path,
+                    width: image.width,
+                    height: image.height,
+                });
+
+                // Leaving this in, we might need this uri for iOS:
+                // const uri = Platform.OS === "android" ? image.path : "file://" + image.path;
+
+                uploadStickerMutation.mutate({ stickerPackId, formData });
             });
-
-            const formData = new FormData();
-            formData.append("name", stickerName);
-            const fileData = {
-                uri: Platform.OS === "android" ? image.uri : "file://" + image.uri,
-                name: `${stickerName}.jpg`,
-                type: "image/*",
-            };
-
-            formData.append("file", fileData);
-
-            uploadStickerMutation.mutate({ stickerPackId, formData });
-        } catch (err) {
-            if (!DocumentPicker.isCancel(err)) {
-                logErrorResponse(err);
-            }
+        } catch (error) {
+            console.log(error);
         }
     };
 
