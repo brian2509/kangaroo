@@ -76,60 +76,65 @@ export const StickerDetailScreen = ({ route }: Props): JSX.Element => {
         );
     };
 
-    const Header = (): JSX.Element => {
-        return (
-            <Layout style={tailwind("flex-row justify-between p-4 pb-3 border-b border-gray-300")}>
-                {fetchStickerPackFront()}
-                <Layout style={tailwind("flex-col flex-grow justify-between")}>
-                    <Text style={tailwind("font-semibold text-lg")}>{stickerPack.name}</Text>
-                    <Text style={tailwind("text-xs text-gray-500")}>
-                        <Text style={tailwind("font-semibold text-xs")}>Admin</Text>: Willem
-                        Alexander
-                    </Text>
-                    <Layout style={tailwind("pt-1")}>
-                        {renderTextWithIcon(
-                            `${stickerPack.members.length} members`,
-                            "arrow-ios-forward-outline",
-                            "text-xs font-semibold",
-                        )}
+    class Header extends React.Component {
+        render() {
+            return (
+                <Layout
+                    style={tailwind("flex-row justify-between p-4 pb-3 border-b border-gray-300")}>
+                    {fetchStickerPackFront()}
+                    <Layout style={tailwind("flex-col flex-grow justify-between")}>
+                        <Text style={tailwind("font-semibold text-lg")}>{stickerPack.name}</Text>
+                        <Text style={tailwind("text-xs text-gray-500")}>
+                            <Text style={tailwind("font-semibold text-xs")}>Admin</Text>: Willem
+                            Alexander
+                        </Text>
+                        <Layout style={tailwind("pt-1")}>
+                            {renderTextWithIcon(
+                                `${stickerPack.members.length} members`,
+                                "arrow-ios-forward-outline",
+                                "text-xs font-semibold",
+                            )}
+                        </Layout>
+                        <Layout style={tailwind("pt-2 flex-row")}>
+                            {renderTextWithIcon(
+                                `${stickerPack.likes}`,
+                                "heart-outline",
+                                "text-xs pr-1 text-gray-500",
+                                true,
+                            )}
+                            {renderTextWithIcon(
+                                `${stickerPack.views}`,
+                                "eye-outline",
+                                "text-xs pr-1 text-gray-500",
+                                true,
+                            )}
+                        </Layout>
                     </Layout>
-                    <Layout style={tailwind("pt-2 flex-row")}>
-                        {renderTextWithIcon(
-                            `${stickerPack.likes}`,
-                            "heart-outline",
-                            "text-xs pr-1 text-gray-500",
-                            true,
-                        )}
-                        {renderTextWithIcon(
-                            `${stickerPack.views}`,
-                            "eye-outline",
-                            "text-xs pr-1 text-gray-500",
-                            true,
-                        )}
+                    <Layout style={tailwind("flex-col")}>
+                        <Text style={tailwind("text-gray-500")} category="p2">
+                            19:09
+                        </Text>
                     </Layout>
                 </Layout>
-                <Layout style={tailwind("flex-col")}>
-                    <Text style={tailwind("text-gray-500")} category="p2">
-                        19:09
-                    </Text>
-                </Layout>
-            </Layout>
-        );
-    };
+            );
+        }
+    }
 
-    const Body = (): JSX.Element => {
-        return (
-            <ScrollView style={tailwind("p-4 pt-3")}>
-                <Layout style={tailwind("flex-row items-end items-baseline")}>
-                    <Text style={tailwind("text-xl font-semibold mr-4")}>Stickers</Text>
-                    <Text style={tailwind("text-gray-500 h-full pt-3 text-sm")}>
-                        {stickerPack.stickers.length}/30
-                    </Text>
-                </Layout>
-                {renderStickerAuthorView(stickerPack.stickers)}
-            </ScrollView>
-        );
-    };
+    class Body extends React.Component {
+        render() {
+            return (
+                <ScrollView style={tailwind("p-4 pt-3")}>
+                    <Layout style={tailwind("flex-row items-end items-baseline")}>
+                        <Text style={tailwind("text-xl font-semibold mr-4")}>Stickers</Text>
+                        <Text style={tailwind("text-gray-500 h-full pt-3 text-sm")}>
+                            {stickerPack.stickers.length}/30
+                        </Text>
+                    </Layout>
+                    {renderStickerAuthorView(stickerPack.stickers)}
+                </ScrollView>
+            );
+        }
+    }
 
     return (
         <SafeAreaView style={tailwind("flex-1")}>
