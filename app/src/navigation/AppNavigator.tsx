@@ -47,7 +47,7 @@ const HomeStackScreen = () => (
         <HomeStack.Screen
             name="StickerDetailScreen"
             component={StickerDetailScreen}
-            options={{ title: "Details" }}
+            options={{ title: "Details", headerBackTitle: " " }}
         />
     </HomeStack.Navigator>
 );
