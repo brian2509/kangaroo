@@ -9,7 +9,7 @@ import tw from "tailwind-react-native-classnames";
 
 type Props = StackScreenProps<HomeStackParamList, "StickerDetailScreen">;
 
-export const StickerDetailScreen = ({ route }: Props): JSX.Element => {
+export const StickerDetailScreen = ({ route, navigation }: Props): JSX.Element => {
     const stickerPack: StickerPack = route.params.stickerPack;
     const defaultFrontStickerPath = "../placeholders/sticker_placeholder.png";
 
@@ -46,7 +46,7 @@ export const StickerDetailScreen = ({ route }: Props): JSX.Element => {
                     width: "21%",
                     paddingBottom: "21%",
                     marginHorizontal: "2%",
-                    marginBottom: "2%",
+                    marginBottom: "3.5%",
                     borderRadius: 3,
                 })}
                 resizeMode="contain"
@@ -57,7 +57,7 @@ export const StickerDetailScreen = ({ route }: Props): JSX.Element => {
         );
     };
 
-    class AuthorView extends React.Component {
+    class AuthorStickersView extends React.Component {
         render() {
             return (
                 <Layout style={tailwind("flex-col p-2")}>
@@ -135,7 +135,7 @@ export const StickerDetailScreen = ({ route }: Props): JSX.Element => {
                             {stickerPack.stickers.length}/30
                         </Text>
                     </Layout>
-                    <AuthorView />
+                    <AuthorStickersView />
                 </ScrollView>
             );
         }
