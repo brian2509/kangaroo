@@ -54,7 +54,7 @@ export const HomeScreen = ({ navigation }: Props): JSX.Element => {
 
     const pickAndUploadSticker = async (stickerPackId: string) => {
         // TODO: fix file reading, on Android image.uri is "content://..." but should be something like "file://..."
-        // return;
+        return;
 
         try {
             const stickerName = generateName();

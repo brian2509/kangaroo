@@ -76,7 +76,7 @@ export const StickerDetailScreen = ({ route }: Props): JSX.Element => {
         );
     };
 
-    const renderHeader = (): JSX.Element => {
+    const Header = (): JSX.Element => {
         return (
             <Layout style={tailwind("flex-row justify-between p-4 pb-3 border-b border-gray-300")}>
                 {fetchStickerPackFront()}
@@ -117,7 +117,7 @@ export const StickerDetailScreen = ({ route }: Props): JSX.Element => {
         );
     };
 
-    const renderBody = (): JSX.Element => {
+    const Body = (): JSX.Element => {
         return (
             <ScrollView style={tailwind("p-4 pt-3")}>
                 <Layout style={tailwind("flex-row items-end items-baseline")}>
@@ -134,8 +134,8 @@ export const StickerDetailScreen = ({ route }: Props): JSX.Element => {
     return (
         <SafeAreaView style={tailwind("flex-1")}>
             <Layout style={tailwind("flex-col flex-grow")}>
-                {renderHeader()}
-                {renderBody()}
+                <Header />
+                <Body />
             </Layout>
         </SafeAreaView>
     );
