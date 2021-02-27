@@ -16,15 +16,11 @@ export type AuthStackParamList = {
 const AuthStack = createStackNavigator();
 export const AuthStackScreen = (): JSX.Element => (
     <AuthStack.Navigator>
-        <AuthStack.Screen
-            name="Login"
-            component={LoginScreen}
-            // options={{ headerShown: false }}
-        />
+        <AuthStack.Screen name="Login" component={LoginScreen} options={{ headerShown: false }} />
         <AuthStack.Screen
             name="Register"
             component={RegisterScreen}
-            // options={{ headerShown: false }}
+            options={{ headerShown: false }}
         />
     </AuthStack.Navigator>
 );
@@ -47,7 +43,7 @@ const HomeStackScreen = () => (
         <HomeStack.Screen
             name="StickerDetailScreen"
             component={StickerDetailScreen}
-            options={{ title: "Details" }}
+            options={{ title: "Details", headerBackTitle: " " }}
         />
     </HomeStack.Navigator>
 );
