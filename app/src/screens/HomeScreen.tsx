@@ -211,7 +211,9 @@ export const HomeScreen = ({ navigation }: Props): JSX.Element => {
                         <CoverSticker stickerPack={item} />
                     </Layout>
                     <Layout
-                        style={tailwind("flex-col justify-between py-2 border-b border-gray-100")}>
+                        style={tailwind(
+                            "flex-col flex-grow py-2 justify-around border-b border-gray-100",
+                        )}>
                         <Text style={tailwind("text-base font-bold")}>{item.name}</Text>
                         <StickerPreviews stickers={item.stickers} />
                         <StickerPackStats stickerPack={item} />
