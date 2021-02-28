@@ -37,7 +37,8 @@ $ psql -U {{ POSTGRES_USER }} -W -d {{ POSTGRES_DB }}
 
 ```bash
 # Clear all database files (virtual volume)
-$ docker volume rm server_giraffe-db
+$ npm run docker:postgres:stop
+$ docker volume rm server_kangaroo-db
 ```
 
 
