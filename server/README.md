@@ -6,13 +6,13 @@ Kangaroo backend using the [Nest](https://github.com/nestjs/nest) framework and 
 
 ## Development
 
-- Start the postgres docker (once)
 ```bash
-$ npm run docker:postgres
+$ npm run docker:dev
 ```
-- Start the server in dev mode for hot reload
+
+- To manually stop the postges docker (might be running in background)
 ```bash
-$ npm run start:dev
+$ npm run docker:postgres:stop
 ```
 
 ## Development (no-docker)
@@ -21,6 +21,11 @@ $ npm run start:dev
 ```bash
 $ npm install
 $ npm run start:dev (development)
+```
+
+## Typescript-axios Client Generation
+```bash
+$ npm run task:client-gen
 ```
 
 ## Useful Scripts
