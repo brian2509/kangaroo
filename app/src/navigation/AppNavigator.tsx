@@ -6,6 +6,7 @@ import { RegisterScreen } from "../screens/RegisterScreen";
 import { HomeScreen } from "../screens/HomeScreen";
 import { StickerScreen } from "../screens/StickerScreen";
 import { StickerDetailScreen } from "../screens/StickerDetailScreen";
+import { StickerDetailManageScreen } from "../screens/StickerDetailManageScreen";
 import { AuthContext } from "../contexts/AuthContext";
 import { Layout, Text } from "@ui-kitten/components";
 import { Sticker, StickerPack } from "../api/apiTypes";
@@ -34,6 +35,9 @@ export type HomeStackParamList = {
     StickerScreen: {
         sticker: Sticker;
     };
+    StickerDetailManageScreen: {
+        stickerPack: StickerPack;
+    };
 };
 
 const HomeStack = createStackNavigator();
@@ -53,6 +57,11 @@ const HomeStackScreen = () => (
             name="StickerScreen"
             component={StickerScreen}
             options={{ title: "Sticker", headerBackTitle: " " }}
+        />
+        <HomeStack.Screen
+            name="StickerDetailManageScreen"
+            component={StickerDetailManageScreen}
+            options={{ title: "Group Members", headerBackTitle: " " }}
         />
     </HomeStack.Navigator>
 );

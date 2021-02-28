@@ -111,7 +111,7 @@ class Body extends React.Component<StickerPackProps> {
     }
 }
 
-class Header extends React.Component<StickerPackProps> {
+class ToolBar extends React.Component<StickerPackProps> {
     render() {
         return (
             <Layout style={tailwind("flex-col p-4 pt-2 pb-2 border-b-2 border-t border-gray-300")}>
@@ -156,10 +156,19 @@ export class StickerDetailScreen extends React.Component<Props> {
                         tw.style("w-9 h-9 mr-3 rounded-full"),
                         this.onStickerPress,
                     )}
-                    <Layout style={tw`flex-col`}>
-                        <Text>{this.stickerPack.name}</Text>
-                        <Text style={tw`text-gray-500 text-xs`}>Willem, Brian, Mika, Rowdy</Text>
-                    </Layout>
+                    <TouchableOpacity
+                        onPress={() =>
+                            this.props.navigation.navigate("StickerDetailManageScreen", {
+                                stickerPack: this.stickerPack,
+                            })
+                        }>
+                        <Layout style={tw`flex-col`}>
+                            <Text>{this.stickerPack.name}</Text>
+                            <Text style={tw`text-gray-500 text-xs`}>
+                                Willem, Brian, Mika, Rowdy
+                            </Text>
+                        </Layout>
+                    </TouchableOpacity>
                 </Layout>
             ),
             headerTitleAlign: "left",
@@ -177,7 +186,7 @@ export class StickerDetailScreen extends React.Component<Props> {
         return (
             <SafeAreaView style={tailwind("flex-1 bg-white")}>
                 <Body stickerPack={this.stickerPack} onStickerPress={this.onStickerPress} />
-                <Header stickerPack={this.stickerPack} />
+                <ToolBar stickerPack={this.stickerPack} />
             </SafeAreaView>
         );
     }

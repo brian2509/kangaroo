@@ -17,7 +17,7 @@ export class StickerScreen extends React.Component<Props> {
 
     componentDidMount(): void {
         this.props.navigation.setOptions({
-            headerTitle: this.sticker.name,
+            headerTitle: "Sticker",
             headerRight: () => (
                 <Layout style={tw`flex-row mr-4`}>
                     <TouchableOpacity activeOpacity={0.7}>
