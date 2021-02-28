@@ -225,7 +225,7 @@ export const HomeScreen = ({ navigation }: Props): JSX.Element => {
                             "flex-row flex-grow py-2 pr-4 border-b border-gray-100 justify-between",
                         )}>
                         <Layout style={tailwind("flex-col justify-around")}>
-                            <Text style={tailwind("text-base font-bold")}>{item.name}</Text>
+                            <Text style={tailwind("text-base font-semibold")}>{item.name}</Text>
                             <StickerPreviews stickers={item.stickers} />
                             <StickerPackStats stickerPack={item} />
                         </Layout>
