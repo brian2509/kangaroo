@@ -1,5 +1,5 @@
 import { StackScreenProps } from "@react-navigation/stack";
-import { Divider, Icon, Layout, List, ListItem } from "@ui-kitten/components";
+import { Button, Card, Divider, Icon, Layout, List, ListItem, Modal } from "@ui-kitten/components";
 import React from "react";
 import { SafeAreaView, Text, TouchableOpacity } from "react-native";
 import { StickerPack } from "src/api/apiTypes";
@@ -13,6 +13,13 @@ export class StickerDetailManageScreen extends React.Component<Props> {
     constructor(props: Props) {
         super(props);
         this.stickerPack = props.route.params.stickerPack;
+        this.state = {
+            visible: false,
+        };
+    }
+
+    setVisible(state: boolean): void {
+        this.setState({ visible: state });
     }
 
     componentDidMount(): void {
@@ -28,18 +35,13 @@ export class StickerDetailManageScreen extends React.Component<Props> {
         });
     }
 
-    renderItemAccessory = (): JSX.Element => (
-        <Text style={tw`text-gray-500 text-xs pr-3`}>Admin</Text>
-    );
-
-    renderItemIcon = (props) => <Icon {...props} name="person" />;
-
     renderItem = ({ item, index }) => (
         <ListItem
+            onPress={() => this.setVisible(true)}
             title={`${item.title}`}
             description={`${item.description}`}
-            accessoryLeft={this.renderItemIcon}
-            accessoryRight={this.renderItemAccessory}
+            accessoryLeft={(props) => <Icon {...props} name="person" />}
+            accessoryRight={() => <Text style={tw`text-gray-500 text-xs pr-3`}>Admin</Text>}
         />
     );
 
@@ -61,12 +63,18 @@ export class StickerDetailManageScreen extends React.Component<Props> {
 
         return (
             <SafeAreaView style={tw`flex justify-center h-full bg-white`}>
-                <List
-                    //   style={styles.container}
-                    data={data}
-                    ItemSeparatorComponent={Divider}
-                    renderItem={this.renderItem}
-                />
+                <List data={data} ItemSeparatorComponent={Divider} renderItem={this.renderItem} />
+                <Modal
+                    visible={this.state.visible}
+                    backdropStyle={{
+                        backgroundColor: "rgba(0, 0, 0, 0.5)",
+                    }}
+                    onBackdropPress={() => this.setVisible(false)}>
+                    <Card disabled={true}>
+                        <Text>Welcome to UI Kitten 😻</Text>
+                        <Button onPress={() => this.setVisible(false)}>DISMISS</Button>
+                    </Card>
+                </Modal>
             </SafeAreaView>
         );
     }
