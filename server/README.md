@@ -10,7 +10,7 @@ Kangaroo backend using the [Nest](https://github.com/nestjs/nest) framework and 
 $ npm run docker:dev
 ```
 
-- To manually stop the postges docker (might be running in background)
+- To manually stop the Postgres docker (might be running in background)
 ```bash
 $ npm run docker:postgres:stop
 ```
@@ -19,11 +19,11 @@ $ npm run docker:postgres:stop
 - Have a Postgres server running with the credentials set in `.env`.
 
 ```bash
-$ npm install
-$ npm run start:dev (development)
+$ npm run start:dev
 ```
 
-## Typescript-Axios Client Generation
+## OpenAPI Client Generation
+* Output folder of client is `/app/src/api/generated-typescript-api-client`
 ```bash
 $ npm run task:client-gen
 ```
