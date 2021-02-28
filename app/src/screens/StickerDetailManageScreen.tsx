@@ -14,7 +14,6 @@ import React from "react";
 import { SafeAreaView, TouchableOpacity, View } from "react-native";
 import { StickerPack } from "src/api/apiTypes";
 import { HomeStackParamList } from "src/navigation/AppNavigator";
-import tailwind from "tailwind-react-native-classnames";
 import tw from "tailwind-react-native-classnames";
 
 type Props = StackScreenProps<HomeStackParamList, "StickerDetailManageScreen">;
@@ -88,25 +87,29 @@ export class StickerDetailManageScreen extends React.Component<Props> {
                     <Card
                         disabled={true}
                         header={() => (
-                            <Text style={tw.style("p-3 text-xs", { textAlign: "center" })}>
+                            <Text
+                                style={tw.style("p-3 text-xs text-gray-500", {
+                                    textAlign: "center",
+                                })}>
                                 {this.state.member}
                             </Text>
+                        )}
+                        footer={() => (
+                            <Button
+                                size="medium"
+                                appearance="ghost"
+                                onPress={() => this.setVisible(false)}>
+                                Close
+                            </Button>
                         )}>
-                        <Button size="small" appearance="ghost" status="basic">
+                        <Button size="medium" appearance="ghost" status="basic">
                             Show Account
                         </Button>
-                        <Button size="small" appearance="ghost" status="basic">
+                        <Button size="medium" appearance="ghost" status="basic">
                             Remove as Admin
                         </Button>
-                        <Button status="danger" size="small" appearance="ghost">
+                        <Button status="danger" size="medium" appearance="ghost">
                             Remove from Pack
-                        </Button>
-                        <Button
-                            style={tw`mt-3`}
-                            size="small"
-                            appearance="ghost"
-                            onPress={() => this.setVisible(false)}>
-                            Cancel
                         </Button>
                     </Card>
                 </Modal>
