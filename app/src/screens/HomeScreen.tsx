@@ -136,7 +136,7 @@ export const HomeScreen = ({ navigation }: Props): JSX.Element => {
         const stickersLeft = stickers.length - STICKERS_IN_PREVIEW - 1;
 
         return (
-            <Layout style={tailwind("flex-row items-center")}>
+            <Layout style={tailwind("flex-row pb-1 items-center")}>
                 {stickersToPreview.map((sticker) => (
                     <Layout
                         key={sticker.id}
@@ -253,7 +253,7 @@ export const HomeScreen = ({ navigation }: Props): JSX.Element => {
     const AddIcon = (props: any) => (
         <Icon
             style={{
-                ...tailwind("w-8 h-8"),
+                ...tailwind("w-6 h-6"),
                 ...{ tintColor: props.style.tintColor },
             }}
             name="plus"
@@ -262,7 +262,7 @@ export const HomeScreen = ({ navigation }: Props): JSX.Element => {
     const LogoutIcon = (props: any) => (
         <Icon
             style={{
-                ...tailwind("w-8 h-8"),
+                ...tailwind("w-6 h-6"),
                 ...{ tintColor: props.style.tintColor },
             }}
             name="person-delete-outline"
@@ -271,10 +271,12 @@ export const HomeScreen = ({ navigation }: Props): JSX.Element => {
 
     return (
         <SafeAreaView style={tailwind("flex-1")}>
-            <Layout style={tailwind("p-4 pb-3 bg-gray-100")}>
+            <Layout style={tailwind("p-5 bg-gray-100")}>
                 <Layout
                     style={tailwind("flex-row justify-between pt-2 bg-transparent items-center")}>
-                    <Text style={tailwind("text-4xl font-bold bg-transparent")}>Sticker Packs</Text>
+                    <Text style={tailwind("text-4xl pb-3 font-semibold bg-transparent")}>
+                        Sticker Packs
+                    </Text>
                     <Layout style={tailwind("flex-row items-center pr-2 bg-transparent")}>
                         <Button
                             appearance="ghost"
@@ -295,7 +297,11 @@ export const HomeScreen = ({ navigation }: Props): JSX.Element => {
                         />
                     </Layout>
                 </Layout>
-                <Input placeholder="Search" />
+                <Input
+                    accessoryLeft={(props: any) => <Icon {...props} name="search" />}
+                    style={tw`rounded-xl`}
+                    placeholder="Search"
+                />
             </Layout>
             <Layout style={tailwind("flex-1")}>
                 <List
