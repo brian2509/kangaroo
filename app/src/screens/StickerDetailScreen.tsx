@@ -13,9 +13,11 @@ import tailwind from "tailwind-rn";
 import { Sticker, StickerPack } from "src/api/apiTypes";
 import tw from "tailwind-react-native-classnames";
 import React from "react";
+import { StickerScreen } from "./StickerScreen";
 
 type StickerPackProps = {
     stickerPack: StickerPack;
+    onStickerPress?: (sticker: Sticker) => void;
 };
 
 const renderFrontSticker = (stickers: Sticker[], style: StyleProp<ImageStyle>): JSX.Element => {
@@ -30,20 +32,30 @@ const renderFrontSticker = (stickers: Sticker[], style: StyleProp<ImageStyle>): 
 class AuthorStickersView extends React.Component<StickerPackProps> {
     renderSticker = (sticker: Sticker): JSX.Element => {
         return (
-            <Image
+            <TouchableOpacity
                 key={sticker.id}
-                style={tw.style("rounded-lg", {
+                style={{
                     width: "21%",
-                    paddingBottom: "21%",
+                    height: "auto",
                     marginHorizontal: "2%",
                     marginBottom: "3.5%",
-                    borderRadius: 3,
-                })}
-                resizeMode="contain"
-                source={{
-                    uri: sticker.url,
                 }}
-            />
+                onPress={() => {
+                    if (this.props.onStickerPress) {
+                        this.props.onStickerPress(sticker);
+                    }
+                }}>
+                <Image
+                    style={tw.style("rounded-lg", {
+                        width: "100%",
+                        paddingBottom: "100%",
+                        borderRadius: 3,
+                    })}
+                    source={{
+                        uri: sticker.url,
+                    }}
+                />
+            </TouchableOpacity>
         );
     };
 
@@ -80,7 +92,10 @@ class Body extends React.Component<StickerPackProps> {
                         {this.props.stickerPack.stickers.length}/30
                     </Text>
                 </Layout>
-                <AuthorStickersView stickerPack={this.props.stickerPack} />
+                <AuthorStickersView
+                    stickerPack={this.props.stickerPack}
+                    onStickerPress={this.props.onStickerPress}
+                />
             </ScrollView>
         );
     }
@@ -92,7 +107,7 @@ class Header extends React.Component<StickerPackProps> {
             <Layout style={tailwind("flex-col p-4 pt-2 pb-2 border-b-2 border-t border-gray-300")}>
                 <Layout style={tailwind("flex-row justify-between w-1/3 pb-1")}>
                     <Icon name="heart-outline" fill="gray" width={25} height={25} />
-                    <Icon name="download" fill="gray" width={25} height={25} />
+                    <Icon name="upload" fill="gray" width={25} height={25} />
                     <Icon name="paper-plane-outline" fill="gray" width={25} height={25} />
                 </Layout>
                 <Layout style={tailwind("flex-row pt-1")}>
@@ -113,6 +128,11 @@ export class StickerDetailScreen extends React.Component<Props> {
     constructor(props: Props) {
         super(props);
         this.stickerPack = props.route.params.stickerPack;
+        this.onStickerPress = this.onStickerPress.bind(this);
+    }
+
+    onStickerPress(data: Sticker): void {
+        this.props.navigation.navigate("StickerScreen", { sticker: data });
     }
 
     componentDidMount(): void {
@@ -143,7 +163,7 @@ export class StickerDetailScreen extends React.Component<Props> {
     render(): JSX.Element {
         return (
             <SafeAreaView style={tailwind("flex-1 bg-white")}>
-                <Body stickerPack={this.stickerPack} />
+                <Body stickerPack={this.stickerPack} onStickerPress={this.onStickerPress} />
                 <Header stickerPack={this.stickerPack} />
             </SafeAreaView>
         );
