@@ -79,36 +79,11 @@ export const HomeScreen = ({ navigation }: Props): JSX.Element => {
                     height: image.height,
                 });
 
-                // Leaving this in, we might need this uri for iOS:
-                // const uri = Platform.OS === "android" ? image.path : "file://" + image.path;
-
                 uploadStickerMutation.mutate({ stickerPackId, formData });
             });
         } catch (error) {
             console.log(error);
         }
-    };
-
-    const renderItemAccessory = (stickerPack: StickerPack) => {
-        const UploadIcon = (props: any) => <Icon {...props} name="upload" />;
-        const TrashIcon = (props: any) => <Icon {...props} name="trash" />;
-
-        return (
-            <>
-                <Button
-                    status="success"
-                    appearance="outline"
-                    onPress={() => pickAndUploadSticker(stickerPack.id)}
-                    accessoryLeft={UploadIcon}
-                />
-                <Button
-                    status="danger"
-                    appearance="outline"
-                    onPress={() => deleteStickerPackMutation.mutate({ id: stickerPack.id })}
-                    accessoryLeft={TrashIcon}
-                />
-            </>
-        );
     };
 
     const CoverSticker = ({ stickerPack }: { stickerPack: StickerPack }): React.ReactElement => {
@@ -251,63 +226,58 @@ export const HomeScreen = ({ navigation }: Props): JSX.Element => {
     };
 
     const AddIcon = (props: any) => (
-        <Icon
-            style={{
-                ...tailwind("w-6 h-6"),
-                ...{ tintColor: props.style.tintColor },
-            }}
-            name="plus"
-        />
+        <Icon style={tw.style("w-6 h-6", { tintColor: props.style.tintColor })} name="plus" />
     );
     const LogoutIcon = (props: any) => (
         <Icon
-            style={{
-                ...tailwind("w-6 h-6"),
-                ...{ tintColor: props.style.tintColor },
-            }}
+            style={tw.style("w-6 h-6", { tintColor: props.style.tintColor })}
             name="person-delete-outline"
         />
     );
 
+    const HeaderIcons = () => (
+        <Layout style={tailwind("flex-row self-start bg-transparent")}>
+            <Button
+                appearance="ghost"
+                style={tailwind("px-1")}
+                onPress={() =>
+                    addStickerPackMutation.mutate({
+                        name: generateName(),
+                        private: true,
+                    })
+                }
+                accessoryLeft={AddIcon}
+            />
+            <Button
+                appearance="ghost"
+                status="danger"
+                onPress={logout}
+                accessoryLeft={LogoutIcon}
+            />
+        </Layout>
+    );
+
+    const Header = () => (
+        <Layout style={tailwind("p-5 pb-3 pt-1 bg-gray-100")}>
+            <Layout
+                style={tailwind("flex-row justify-between pt-2 pb-1 bg-transparent items-center")}>
+                <Text style={tailwind("text-4xl font-semibold bg-transparent")}>Sticker Packs</Text>
+                <HeaderIcons />
+            </Layout>
+            <Input
+                accessoryLeft={(props: any) => <Icon {...props} name="search" />}
+                style={tw`rounded-xl`}
+                placeholder="Search"
+            />
+        </Layout>
+    );
+
     return (
         <SafeAreaView style={tailwind("flex-1")}>
-            <Layout style={tailwind("p-5 pb-3 pt-1 bg-gray-100")}>
-                <Layout
-                    style={tailwind(
-                        "flex-row justify-between pt-2 pb-1 bg-transparent items-center",
-                    )}>
-                    <Text style={tailwind("text-4xl font-semibold bg-transparent")}>
-                        Sticker Packs
-                    </Text>
-                    <Layout style={tailwind("flex-row self-start bg-transparent")}>
-                        <Button
-                            appearance="ghost"
-                            style={tailwind("px-1")}
-                            onPress={() =>
-                                addStickerPackMutation.mutate({
-                                    name: generateName(),
-                                    private: true,
-                                })
-                            }
-                            accessoryLeft={AddIcon}
-                        />
-                        <Button
-                            appearance="ghost"
-                            status="danger"
-                            onPress={logout}
-                            accessoryLeft={LogoutIcon}
-                        />
-                    </Layout>
-                </Layout>
-                <Input
-                    accessoryLeft={(props: any) => <Icon {...props} name="search" />}
-                    style={tw`rounded-xl`}
-                    placeholder="Search"
-                />
-            </Layout>
+            <Header />
             <Layout style={tailwind("flex-1")}>
                 <List
-                    style={styles.list}
+                    style={tailwind("w-full")}
                     data={myStickerPacksQuery.data}
                     renderItem={StickerPackComponent}
                     refreshing={
@@ -321,33 +291,3 @@ export const HomeScreen = ({ navigation }: Props): JSX.Element => {
         </SafeAreaView>
     );
 };
-
-const styles = StyleSheet.create({
-    text: {
-        textAlign: "center",
-    },
-    stickerPackActionButton: {
-        marginHorizontal: 6,
-    },
-    list: {
-        width: "100%",
-    },
-    backdrop: {
-        backgroundColor: "rgba(0, 0, 0, 0.5)",
-    },
-    spinner: {
-        alignSelf: "center",
-        margin: 16,
-    },
-    stickerLayout: {
-        flexDirection: "row",
-        flexWrap: "wrap",
-    },
-    stickerImage: {
-        width: "21%",
-        paddingBottom: "21%",
-        marginHorizontal: "2%",
-        marginBottom: "2%",
-        borderRadius: 3,
-    },
-});
