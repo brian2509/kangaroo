@@ -26,11 +26,12 @@ export class StickerDetailManageScreen extends React.Component<Props> {
         this.stickerPack = props.route.params.stickerPack;
         this.state = {
             visible: false,
+            clickedMember: "loading",
         };
     }
 
-    setVisible(state: boolean): void {
-        this.setState({ visible: state });
+    setVisible(visible: boolean): void {
+        this.setState({ ...this.state, visible });
     }
 
     componentDidMount(): void {
@@ -48,16 +49,14 @@ export class StickerDetailManageScreen extends React.Component<Props> {
 
     renderItem = ({ item }) => (
         <ListItem
-            onPress={() => this.setVisible(true)}
+            onPress={() => {
+                this.setState({ visible: true, member: item.title });
+            }}
             title={`${item.title}`}
             description={`${item.description}`}
             accessoryLeft={(props) => <Icon {...props} name="person" />}
             accessoryRight={() => <Text style={tw`text-gray-500 text-xs pr-3`}>Admin</Text>}
         />
-    );
-
-    Header = (props) => (
-        <Text style={tw.style("p-3 text-xs", { textAlign: "center" })}>Willem Alexander</Text>
     );
 
     render(): JSX.Element {
@@ -86,7 +85,13 @@ export class StickerDetailManageScreen extends React.Component<Props> {
                         backgroundColor: "rgba(0, 0, 0, 0.5)",
                     }}
                     onBackdropPress={() => this.setVisible(false)}>
-                    <Card disabled={true} header={this.Header}>
+                    <Card
+                        disabled={true}
+                        header={() => (
+                            <Text style={tw.style("p-3 text-xs", { textAlign: "center" })}>
+                                {this.state.member}
+                            </Text>
+                        )}>
                         <Button size="small" appearance="ghost" status="basic">
                             Show Account
                         </Button>
