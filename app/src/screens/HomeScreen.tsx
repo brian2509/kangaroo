@@ -271,7 +271,7 @@ export const HomeScreen = ({ navigation }: Props): JSX.Element => {
 
     return (
         <SafeAreaView style={tailwind("flex-1")}>
-            <Layout style={tailwind("p-5 bg-gray-100")}>
+            <Layout style={tailwind("p-5 pb-3 bg-gray-100")}>
                 <Layout
                     style={tailwind(
                         "flex-row justify-between pt-2 pb-0 bg-transparent items-center",
