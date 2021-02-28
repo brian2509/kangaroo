@@ -233,14 +233,16 @@ export const HomeScreen = ({ navigation }: Props): JSX.Element => {
                             <Text style={tailwind("pb-2 py-1 text-gray-500")} category="p2">
                                 19:09
                             </Text>
-                            <Layout
-                                style={tailwind(
-                                    "w-5 h-5 rounded-full bg-blue-600 justify-center items-center",
-                                )}>
-                                <Text style={tailwind("text-white text-xs")}>
-                                    {numberOfNotifications}
-                                </Text>
-                            </Layout>
+                            {numberOfNotifications > 0 && (
+                                <Layout
+                                    style={tailwind(
+                                        "w-5 h-5 rounded-full bg-blue-600 justify-center items-center",
+                                    )}>
+                                    <Text style={tailwind("text-white text-xs")}>
+                                        {numberOfNotifications}
+                                    </Text>
+                                </Layout>
+                            )}
                         </Layout>
                     </Layout>
                 </Layout>
