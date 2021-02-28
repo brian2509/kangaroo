@@ -19,6 +19,7 @@
 		"@ui-kitten/components": "^5.0.0",
 		"@ui-kitten/eva-icons": "5.0.0",
 		"axios": "^0.21.1",
+		"prop-types": "^15.7.2",
 		"react": "16.13.1",
 		"react-native": "^0.63.4",
 		"react-native-document-picker": "^5.0.0",
