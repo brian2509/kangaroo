@@ -229,13 +229,13 @@ export const HomeScreen = ({ navigation }: Props): JSX.Element => {
                             <StickerPreviews stickers={item.stickers} />
                             <StickerPackStats stickerPack={item} />
                         </Layout>
-                        <Layout style={tailwind("flex-col items-center")}>
+                        <Layout style={tailwind("flex-col items-end")}>
                             <Text style={tailwind("pb-2 py-1 text-gray-500")} category="p2">
                                 19:09
                             </Text>
                             <Layout
                                 style={tailwind(
-                                    "mx-1 w-5 h-5 rounded-full bg-blue-600 justify-center items-center",
+                                    "w-5 h-5 rounded-full bg-blue-600 justify-center items-center",
                                 )}>
                                 <Text style={tailwind("text-white text-xs")}>
                                     {numberOfNotifications}
