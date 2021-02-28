@@ -23,7 +23,7 @@ $ npm install
 $ npm run start:dev (development)
 ```
 
-## Typescript-axios Client Generation
+## Typescript-Axios Client Generation
 ```bash
 $ npm run task:client-gen
 ```
