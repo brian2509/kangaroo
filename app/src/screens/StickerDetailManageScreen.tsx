@@ -1,9 +1,20 @@
 import { StackScreenProps } from "@react-navigation/stack";
-import { Button, Card, Divider, Icon, Layout, List, ListItem, Modal } from "@ui-kitten/components";
+import {
+    Text,
+    Button,
+    Card,
+    Divider,
+    Icon,
+    Layout,
+    List,
+    ListItem,
+    Modal,
+} from "@ui-kitten/components";
 import React from "react";
-import { SafeAreaView, Text, TouchableOpacity } from "react-native";
+import { SafeAreaView, TouchableOpacity, View } from "react-native";
 import { StickerPack } from "src/api/apiTypes";
 import { HomeStackParamList } from "src/navigation/AppNavigator";
+import tailwind from "tailwind-react-native-classnames";
 import tw from "tailwind-react-native-classnames";
 
 type Props = StackScreenProps<HomeStackParamList, "StickerDetailManageScreen">;
@@ -35,7 +46,7 @@ export class StickerDetailManageScreen extends React.Component<Props> {
         });
     }
 
-    renderItem = ({ item, index }) => (
+    renderItem = ({ item }) => (
         <ListItem
             onPress={() => this.setVisible(true)}
             title={`${item.title}`}
@@ -43,6 +54,10 @@ export class StickerDetailManageScreen extends React.Component<Props> {
             accessoryLeft={(props) => <Icon {...props} name="person" />}
             accessoryRight={() => <Text style={tw`text-gray-500 text-xs pr-3`}>Admin</Text>}
         />
+    );
+
+    Header = (props) => (
+        <Text style={tw.style("p-3 text-xs", { textAlign: "center" })}>Willem Alexander</Text>
     );
 
     render(): JSX.Element {
@@ -66,13 +81,28 @@ export class StickerDetailManageScreen extends React.Component<Props> {
                 <List data={data} ItemSeparatorComponent={Divider} renderItem={this.renderItem} />
                 <Modal
                     visible={this.state.visible}
+                    style={tw`w-60`}
                     backdropStyle={{
                         backgroundColor: "rgba(0, 0, 0, 0.5)",
                     }}
                     onBackdropPress={() => this.setVisible(false)}>
-                    <Card disabled={true}>
-                        <Text>Welcome to UI Kitten 😻</Text>
-                        <Button onPress={() => this.setVisible(false)}>DISMISS</Button>
+                    <Card disabled={true} header={this.Header}>
+                        <Button size="small" appearance="ghost" status="basic">
+                            Show Account
+                        </Button>
+                        <Button size="small" appearance="ghost" status="basic">
+                            Remove as Admin
+                        </Button>
+                        <Button status="danger" size="small" appearance="ghost">
+                            Remove from Pack
+                        </Button>
+                        <Button
+                            style={tw`mt-3`}
+                            size="small"
+                            appearance="ghost"
+                            onPress={() => this.setVisible(false)}>
+                            Cancel
+                        </Button>
                     </Card>
                 </Modal>
             </SafeAreaView>
