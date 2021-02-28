@@ -271,10 +271,10 @@ export const HomeScreen = ({ navigation }: Props): JSX.Element => {
 
     return (
         <SafeAreaView style={tailwind("flex-1")}>
-            <Layout style={tailwind("p-5 pb-3 bg-gray-100")}>
+            <Layout style={tailwind("p-5 pb-3 pt-1 bg-gray-100")}>
                 <Layout
                     style={tailwind(
-                        "flex-row justify-between pt-2 pb-0 bg-transparent items-center",
+                        "flex-row justify-between pt-2 pb-1 bg-transparent items-center",
                     )}>
                     <Text style={tailwind("text-4xl font-semibold bg-transparent")}>
                         Sticker Packs
