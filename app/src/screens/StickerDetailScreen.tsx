@@ -13,19 +13,29 @@ import tailwind from "tailwind-rn";
 import { Sticker, StickerPack } from "src/api/apiTypes";
 import tw from "tailwind-react-native-classnames";
 import React from "react";
-import { StickerScreen } from "./StickerScreen";
 
 type StickerPackProps = {
     stickerPack: StickerPack;
     onStickerPress?: (sticker: Sticker) => void;
 };
 
-const renderFrontSticker = (stickers: Sticker[], style: StyleProp<ImageStyle>): JSX.Element => {
-    if (stickers.length === 0) {
-        return <Image style={style} source={require("../placeholders/sticker_placeholder.png")} />;
-    } else {
+const renderFrontSticker = (
+    stickers: Sticker[],
+    style: StyleProp<ImageStyle>,
+    onStickerPress: (sticker: Sticker) => void,
+): JSX.Element => {
+    if (stickers.length > 0) {
         const sticker = stickers[0];
-        return <Image style={style} source={{ uri: sticker.url }} />;
+        return (
+            <TouchableOpacity
+                onPress={() => {
+                    onStickerPress(sticker);
+                }}>
+                <Image style={style} source={{ uri: sticker.url }} />
+            </TouchableOpacity>
+        );
+    } else {
+        return <Image style={style} source={require("../placeholders/sticker_placeholder.png")} />;
     }
 };
 
@@ -107,14 +117,16 @@ class Header extends React.Component<StickerPackProps> {
             <Layout style={tailwind("flex-col p-4 pt-2 pb-2 border-b-2 border-t border-gray-300")}>
                 <Layout style={tailwind("flex-row justify-between w-1/3 pb-1")}>
                     <Icon name="heart-outline" fill="gray" width={25} height={25} />
-                    <Icon name="upload" fill="gray" width={25} height={25} />
                     <Icon name="paper-plane-outline" fill="gray" width={25} height={25} />
+                    <Icon name="upload" fill="gray" width={25} height={25} />
                 </Layout>
                 <Layout style={tailwind("flex-row pt-1")}>
                     <Text
-                        style={tw`text-xs pr-1 font-semibold`}>{`${this.props.stickerPack.views} Views`}</Text>
+                        style={tw`text-xs font-semibold`}>{`${this.props.stickerPack.views} Views`}</Text>
                     <Text
                         style={tw`text-xs pl-3 font-semibold`}>{`${this.props.stickerPack.likes} Likes`}</Text>
+                    <Text
+                        style={tw`text-xs pl-3 font-semibold`}>{`${this.props.stickerPack.likes} Followers`}</Text>
                 </Layout>
             </Layout>
         );
@@ -142,6 +154,7 @@ export class StickerDetailScreen extends React.Component<Props> {
                     {renderFrontSticker(
                         this.stickerPack.stickers,
                         tw.style("w-9 h-9 mr-3 rounded-full"),
+                        this.onStickerPress,
                     )}
                     <Layout style={tw`flex-col`}>
                         <Text>{this.stickerPack.name}</Text>

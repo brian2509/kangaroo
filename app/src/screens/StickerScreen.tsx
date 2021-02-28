@@ -29,7 +29,6 @@ export class StickerScreen extends React.Component<Props> {
     }
 
     render(): JSX.Element {
-        console.log(this.sticker.url);
         return (
             <SafeAreaView style={tw`flex justify-center h-full bg-white`}>
                 <Image
