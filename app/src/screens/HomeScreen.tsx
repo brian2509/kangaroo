@@ -205,6 +205,9 @@ export const HomeScreen = ({ navigation }: Props): JSX.Element => {
     };
 
     const StickerPackComponent = ({ item }: { item: StickerPack }) => {
+        //TODO add number of notifications to stickerpacks
+        const numberOfNotifications = 1;
+
         return (
             <TouchableOpacity
                 activeOpacity={0.5}
@@ -219,11 +222,26 @@ export const HomeScreen = ({ navigation }: Props): JSX.Element => {
                     </Layout>
                     <Layout
                         style={tailwind(
-                            "flex-col flex-grow py-2 justify-around border-b border-gray-100",
+                            "flex-row flex-grow py-2 pr-4 border-b border-gray-100 justify-between",
                         )}>
-                        <Text style={tailwind("text-base font-bold")}>{item.name}</Text>
-                        <StickerPreviews stickers={item.stickers} />
-                        <StickerPackStats stickerPack={item} />
+                        <Layout style={tailwind("flex-col justify-around")}>
+                            <Text style={tailwind("text-base font-bold")}>{item.name}</Text>
+                            <StickerPreviews stickers={item.stickers} />
+                            <StickerPackStats stickerPack={item} />
+                        </Layout>
+                        <Layout style={tailwind("flex-col items-center")}>
+                            <Text style={tailwind("pb-2 py-1 text-gray-500")} category="p2">
+                                19:09
+                            </Text>
+                            <Layout
+                                style={tailwind(
+                                    "mx-1 w-5 h-5 rounded-full bg-blue-600 justify-center items-center",
+                                )}>
+                                <Text style={tailwind("text-white text-xs")}>
+                                    {numberOfNotifications}
+                                </Text>
+                            </Layout>
+                        </Layout>
                     </Layout>
                 </Layout>
             </TouchableOpacity>
