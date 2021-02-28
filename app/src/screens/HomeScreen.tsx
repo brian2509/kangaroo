@@ -116,14 +116,14 @@ export const HomeScreen = ({ navigation }: Props): JSX.Element => {
             <>
                 {stickerPack.stickers.length > 0 ? (
                     <Image
-                        style={tw`w-16 h-16 rounded`}
+                        style={tw`w-14 h-14 rounded-full`}
                         source={{
                             uri: stickerPack.stickers[0].url,
                         }}
                     />
                 ) : (
                     <Image
-                        style={tailwind("w-16 h-16 rounded")}
+                        style={tailwind("w-14 h-14 rounded-full")}
                         source={require(PLACEHOLDER_STICKER_PATH)}
                     />
                 )}
@@ -138,21 +138,28 @@ export const HomeScreen = ({ navigation }: Props): JSX.Element => {
         return (
             <Layout style={tailwind("flex-row items-center")}>
                 {stickersToPreview.map((sticker) => (
-                    <Image
+                    <Layout
                         key={sticker.id}
-                        style={tailwind("w-6 h-6 rounded mx-0.5 opacity-75")}
-                        source={{
-                            uri: sticker.url,
-                        }}
-                    />
+                        style={tailwind(
+                            "w-5 h-5 mx-0.5 bg-gray-200 justify-center items-center rounded",
+                        )}>
+                        <Image
+                            style={tailwind("w-3.5 h-3.5 opacity-75")}
+                            source={{
+                                uri: sticker.url,
+                            }}
+                        />
+                    </Layout>
                 ))}
 
                 {stickersLeft > 0 && (
                     <Layout
                         style={tailwind(
-                            "ml-1 w-8 h-5 bg-gray-100 rounded items-center justify-center",
+                            "ml-1 w-6 h-4 bg-gray-100 rounded items-center justify-center",
                         )}>
-                        <Text style={tailwind("text-xs")}>+{stickersLeft}</Text>
+                        <Text style={tailwind("text-xs font-thin text-gray-400")}>
+                            +{stickersLeft}
+                        </Text>
                     </Layout>
                 )}
             </Layout>
@@ -206,8 +213,8 @@ export const HomeScreen = ({ navigation }: Props): JSX.Element => {
                         stickerPack: item,
                     });
                 }}>
-                <Layout style={tailwind("flex-row w-full h-24 bg-white")}>
-                    <Layout style={tailwind("w-24 justify-center items-center")}>
+                <Layout style={tailwind("flex-row w-full h-20 bg-white")}>
+                    <Layout style={tailwind("w-20 mx-1 justify-center items-center")}>
                         <CoverSticker stickerPack={item} />
                     </Layout>
                     <Layout
