@@ -1,22 +1,27 @@
 import React, { useEffect } from "react";
-import { Divider, Layout, List, ListItem, Text, Button, Icon, Input } from "@ui-kitten/components";
+import { Layout, List, Text, Button, Icon, Input } from "@ui-kitten/components";
 import { SafeAreaView, StyleSheet, Image } from "react-native";
 import { AuthContext } from "../contexts/AuthContext";
 import { StackScreenProps } from "@react-navigation/stack";
 import { HomeStackParamList } from "../navigation/AppNavigator";
 import API from "../api/api";
 import { useMutation, useQuery, useQueryClient } from "react-query";
-import { StickerPack } from "../api/apiTypes";
+import { Sticker, StickerPack } from "../api/apiTypes";
 import { QUERY_KEYS } from "../constants/ReactQueryKeys";
 import { logErrorResponse } from "../util/logging";
 import tailwind from "tailwind-rn";
 import ImagePicker, { Image as ImageData } from "react-native-image-crop-picker";
+import tw from "tailwind-react-native-classnames";
+import { TouchableOpacity } from "react-native-gesture-handler";
 
 type Props = StackScreenProps<HomeStackParamList, "Homescreen">;
 
 const generateName = (): string => {
     return Date.now().toString();
 };
+
+const STICKERS_IN_PREVIEW = 5;
+const PLACEHOLDER_STICKER_PATH = "../placeholders/sticker_placeholder.png";
 
 export const HomeScreen = ({ navigation }: Props): JSX.Element => {
     const { accessToken, logout } = React.useContext(AuthContext);
@@ -91,14 +96,12 @@ export const HomeScreen = ({ navigation }: Props): JSX.Element => {
         return (
             <>
                 <Button
-                    style={styles.stickerPackActionButton}
                     status="success"
                     appearance="outline"
                     onPress={() => pickAndUploadSticker(stickerPack.id)}
                     accessoryLeft={UploadIcon}
                 />
                 <Button
-                    style={styles.stickerPackActionButton}
                     status="danger"
                     appearance="outline"
                     onPress={() => deleteStickerPackMutation.mutate({ id: stickerPack.id })}
@@ -108,38 +111,113 @@ export const HomeScreen = ({ navigation }: Props): JSX.Element => {
         );
     };
 
-    const renderItem = ({ item }: { item: StickerPack }) => {
-        const title = `${item.name}`;
-        const description = `${item.stickers.length} sticker${
-            item.stickers.length != 1 ? "s" : ""
-        } ${item.private ? "\nPrivate" : ""}`;
+    const CoverSticker = ({ stickerPack }: { stickerPack: StickerPack }): React.ReactElement => {
+        return (
+            <>
+                {stickerPack.stickers.length > 0 ? (
+                    <Image
+                        style={tw`w-16 h-16 rounded`}
+                        source={{
+                            uri: stickerPack.stickers[0].url,
+                        }}
+                    />
+                ) : (
+                    <Image
+                        style={tailwind("w-16 h-16 rounded")}
+                        source={require(PLACEHOLDER_STICKER_PATH)}
+                    />
+                )}
+            </>
+        );
+    };
+
+    const StickerPreviews = ({ stickers }: { stickers: Sticker[] }): React.ReactElement => {
+        const stickersToPreview = stickers.slice(1, 1 + STICKERS_IN_PREVIEW);
+        const stickersLeft = stickers.length - STICKERS_IN_PREVIEW - 1;
 
         return (
-            <Layout style={tailwind("px-2")}>
-                <ListItem
-                    title={title}
-                    description={description}
-                    accessoryRight={() => renderItemAccessory(item)}
-                    onPress={() => {
-                        navigation.navigate("StickerDetailScreen", {
-                            stickerPack: item,
-                        });
-                    }}
-                />
-                <Layout style={styles.stickerLayout}>
-                    {item.stickers.map((sticker) => {
-                        return (
-                            <Image
-                                style={styles.stickerImage}
-                                key={sticker.id}
-                                source={{
-                                    uri: sticker.url,
-                                }}
-                            />
-                        );
-                    })}
-                </Layout>
+            <Layout style={tailwind("flex-row items-center")}>
+                {stickersToPreview.map((sticker) => (
+                    <Image
+                        key={sticker.id}
+                        style={tailwind("w-6 h-6 rounded mx-0.5 opacity-75")}
+                        source={{
+                            uri: sticker.url,
+                        }}
+                    />
+                ))}
+
+                {stickersLeft > 0 && (
+                    <Layout
+                        style={tailwind(
+                            "ml-1 w-8 h-5 bg-gray-100 rounded items-center justify-center",
+                        )}>
+                        <Text style={tailwind("text-xs")}>+{stickersLeft}</Text>
+                    </Layout>
+                )}
             </Layout>
+        );
+    };
+
+    const renderTextWithIcon = (
+        text: string,
+        iconName: string,
+        textTwString = "",
+        isGrayed = false,
+    ): JSX.Element => {
+        const fill = isGrayed ? "gray" : "black";
+        return (
+            <Layout style={tailwind(`flex-row pr-4`)}>
+                <Text style={tailwind(textTwString)}>{text}</Text>
+                <Icon name={iconName} fill={fill} width={17} height={17} />
+            </Layout>
+        );
+    };
+
+    const StickerPackStats = ({
+        stickerPack,
+    }: {
+        stickerPack: StickerPack;
+    }): React.ReactElement => {
+        return (
+            <Layout style={tailwind("flex-row")}>
+                {renderTextWithIcon(
+                    `${stickerPack.likes}`,
+                    "heart-outline",
+                    "text-xs pr-1 text-gray-500",
+                    true,
+                )}
+                {renderTextWithIcon(
+                    `${stickerPack.views}`,
+                    "eye-outline",
+                    "text-xs pr-1 text-gray-500",
+                    true,
+                )}
+            </Layout>
+        );
+    };
+
+    const StickerPackComponent = ({ item }: { item: StickerPack }) => {
+        return (
+            <TouchableOpacity
+                activeOpacity={0.5}
+                onPress={() => {
+                    navigation.navigate("StickerDetailScreen", {
+                        stickerPack: item,
+                    });
+                }}>
+                <Layout style={tailwind("flex-row w-full h-24 bg-white")}>
+                    <Layout style={tailwind("w-24 justify-center items-center")}>
+                        <CoverSticker stickerPack={item} />
+                    </Layout>
+                    <Layout
+                        style={tailwind("flex-col justify-between py-2 border-b border-gray-100")}>
+                        <Text style={tailwind("text-base font-bold")}>{item.name}</Text>
+                        <StickerPreviews stickers={item.stickers} />
+                        <StickerPackStats stickerPack={item} />
+                    </Layout>
+                </Layout>
+            </TouchableOpacity>
         );
     };
 
@@ -194,8 +272,7 @@ export const HomeScreen = ({ navigation }: Props): JSX.Element => {
                 <List
                     style={styles.list}
                     data={myStickerPacksQuery.data}
-                    ItemSeparatorComponent={Divider}
-                    renderItem={renderItem}
+                    renderItem={StickerPackComponent}
                     refreshing={
                         myStickerPacksQuery.isLoading ||
                         addStickerPackMutation.isLoading ||
