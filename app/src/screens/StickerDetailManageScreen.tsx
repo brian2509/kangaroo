@@ -87,10 +87,7 @@ export class StickerDetailManageScreen extends React.Component<Props> {
                     <Card
                         disabled={true}
                         header={() => (
-                            <Text
-                                style={tw.style("p-3 text-xs text-gray-500", {
-                                    textAlign: "center",
-                                })}>
+                            <Text style={tw`p-3 text-xs text-gray-500 text-center`}>
                                 {this.state.member}
                             </Text>
                         )}

@@ -32,10 +32,8 @@ export class StickerScreen extends React.Component<Props> {
         return (
             <SafeAreaView style={tw`flex justify-center h-full bg-white`}>
                 <Image
-                    style={tw.style("rounded-lg", {
-                        width: "100%",
+                    style={tw.style("rounded-lg w-full", {
                         paddingBottom: "100%",
-                        borderRadius: 3,
                     })}
                     source={{ uri: this.sticker.url }}
                 />
