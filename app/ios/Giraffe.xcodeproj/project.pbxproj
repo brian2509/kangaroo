@@ -18,6 +18,8 @@
 		2E5998CA03CEBE5D5E336AC6 /* libPods-Giraffe.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BD4D0FBDF5CFB7EA9A1EA4EA /* libPods-Giraffe.a */; };
 		3EBEA24B316402FE00830B09 /* libPods-Giraffe-GiraffeTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0E1A9BD597F3BE04046CBE2E /* libPods-Giraffe-GiraffeTests.a */; };
 		4287463BAB99E6444AABFA93 /* libPods-Giraffe-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5303FFC36795834DF9232EF7 /* libPods-Giraffe-tvOS.a */; };
+		C0BE2B1A25EBDE0A00CB0C51 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
+		C0BE2B1F25EBDE1D00CB0C51 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		E62EBEBB474C77A02D138361 /* libPods-Giraffe-tvOSTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EDD27B3C8DD629000CAEAA98 /* libPods-Giraffe-tvOSTests.a */; };
 /* End PBXBuildFile section */
 
@@ -331,6 +333,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C0BE2B1F25EBDE1D00CB0C51 /* Images.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -339,6 +342,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
+				C0BE2B1A25EBDE0A00CB0C51 /* Images.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
