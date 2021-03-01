@@ -105,6 +105,12 @@ export class StickerPacksService {
       );
     }
 
+    if (stickerPack.stickers.length >= 30) {
+      throw new ForbiddenException(
+        "This pack is full. The maximum amount of stickers in a pack is 30."
+      );
+    }
+
     return await this.stickersService.create(
       id,
       createStickerDto,
