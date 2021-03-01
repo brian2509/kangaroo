@@ -44,6 +44,10 @@ export class AuthService {
       throw new ForbiddenException("User with that username already exists.");
     }
 
+    if (await this.usersService.findByEmail(registerUserDto.email)) {
+      throw new ForbiddenException("User with that email already exists.");
+    }
+
     const user = await this.usersService.create(
       registerUserDto.username,
       registerUserDto.email,
