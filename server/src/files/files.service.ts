@@ -12,7 +12,7 @@ export class FilesService {
     private fileRepository: Repository<PrivateFile>
   ) {}
 
-  async uploadFile(data: Buffer, fileName: string): Promise<PrivateFile> {
+  async uploadFile(data: Buffer, appendToFileName: string): Promise<PrivateFile> {
     const s3 = new S3();
     const uuidName = uuid();
 
@@ -22,7 +22,7 @@ export class FilesService {
         .upload({
           Bucket: process.env.AWS_PRIVATE_BUCKET_NAME,
           Body: data,
-          Key: `${uuidName}-${fileName}`,
+          Key: `${uuidName}-${appendToFileName}`,
         })
         .promise();
     } catch (e) {

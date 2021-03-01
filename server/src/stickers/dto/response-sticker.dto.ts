@@ -1,5 +1,6 @@
 export class StickerRo {
   id: string;
   name: string;
-  url: string;
+  whatsAppStickerImageFileUrl: string;
+  whatsAppIconImageFileUrl: string;
 }
