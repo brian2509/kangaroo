@@ -1,3 +1,6 @@
+// https://github.com/facebook/react-native/issues/23922#issuecomment-648096619
+import 'react-native-url-polyfill/auto';
+
 import "react-native-gesture-handler";
 import React from "react";
 import { ApplicationProvider, IconRegistry } from "@ui-kitten/components";
