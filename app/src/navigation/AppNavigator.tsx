@@ -4,10 +4,12 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { LoginScreen } from "../screens/LoginScreen";
 import { RegisterScreen } from "../screens/RegisterScreen";
 import { HomeScreen } from "../screens/HomeScreen";
+import { StickerScreen } from "../screens/StickerScreen";
 import { StickerDetailScreen } from "../screens/StickerDetailScreen";
+import { StickerDetailManageScreen } from "../screens/StickerDetailManageScreen";
 import { AuthContext } from "../contexts/AuthContext";
 import { Layout, Text } from "@ui-kitten/components";
-import { StickerPack } from "../api/apiTypes";
+import { Sticker, StickerPack } from "../api/apiTypes";
 
 export type AuthStackParamList = {
     Login: undefined;
@@ -30,6 +32,12 @@ export type HomeStackParamList = {
     StickerDetailScreen: {
         stickerPack: StickerPack;
     };
+    StickerScreen: {
+        sticker: Sticker;
+    };
+    StickerDetailManageScreen: {
+        stickerPack: StickerPack;
+    };
 };
 
 const HomeStack = createStackNavigator();
@@ -38,12 +46,22 @@ const HomeStackScreen = () => (
         <HomeStack.Screen
             name="Homescreen"
             component={HomeScreen}
-            options={{ title: "Sticker Packs" }}
+            options={{ headerShown: false }}
         />
         <HomeStack.Screen
             name="StickerDetailScreen"
             component={StickerDetailScreen}
             options={{ title: "Details", headerBackTitle: " " }}
+        />
+        <HomeStack.Screen
+            name="StickerScreen"
+            component={StickerScreen}
+            options={{ title: "Sticker", headerBackTitle: " " }}
+        />
+        <HomeStack.Screen
+            name="StickerDetailManageScreen"
+            component={StickerDetailManageScreen}
+            options={{ title: "Group Members", headerBackTitle: " " }}
         />
     </HomeStack.Navigator>
 );

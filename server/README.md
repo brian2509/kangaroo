@@ -6,25 +6,26 @@ Kangaroo backend using the [Nest](https://github.com/nestjs/nest) framework and 
 
 ## Development
 
-- Local images (no registry login needed)
-- Hot reloading from file system
 ```bash
 $ npm run docker:dev
 ```
 
-**Note:** currently hot reload doesn't work on file additions, so stop and start if you have any.
+- To manually stop the Postgres docker (might be running in background)
 ```bash
-$ npm run docker:dev:stop
+$ npm run docker:postgres:stop
 ```
 
 ## Development (no-docker)
 - Have a Postgres server running with the credentials set in `.env`.
 
 ```bash
-$ npm install
-$ npm run start:dev (development)
-or
-$ npm run start (production)
+$ npm run start:dev
+```
+
+## OpenAPI Client Generation
+* Output folder of client is `/app/src/api/generated-typescript-api-client`
+```bash
+$ npm run task:client-gen
 ```
 
 ## Useful Scripts
@@ -36,7 +37,8 @@ $ psql -U {{ POSTGRES_USER }} -W -d {{ POSTGRES_DB }}
 
 ```bash
 # Clear all database files (virtual volume)
-$ docker volume rm server_giraffe-db
+$ npm run docker:postgres:stop
+$ docker volume rm server_kangaroo-db
 ```
 
 
