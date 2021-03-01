@@ -49,12 +49,12 @@ export class StickersService {
 
     const whatsAppStickerImageFile = await this.filesService.uploadFile(
       whatsAppStickerImage,
-      `whatsapp-sticker.webp`
+      "whatsapp-sticker.webp"
     );
 
     const whatsAppIconImageFile = await this.filesService.uploadFile(
       whatsAppIconImage,
-      `whatsapp-icon.webp`
+      "whatsapp-icon.webp"
     );
 
     const sticker = this.stickerRepository.create({
@@ -85,6 +85,9 @@ export class StickersService {
     await this.stickerRepository.delete(id);
     await this.filesService.deleteFile(
       sticker.whatsAppStickerImageFile.fileName
+    );
+    await this.filesService.deleteFile(
+      sticker.whatsAppIconImageFile.fileName
     );
 
     return sticker.toRO();
