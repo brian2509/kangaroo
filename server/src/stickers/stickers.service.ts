@@ -27,15 +27,21 @@ export class StickersService {
     file: MulterFile,
     userId: string
   ): Promise<StickerRo> {
-    const whatsAppStickerImage = await sharp(file.buffer)
-      .resize(512, 512)
-      .webp()
-      .toBuffer();
+    let whatsAppStickerImage;
+    let whatsAppIconImage;
+    try {
+      whatsAppStickerImage = await sharp(file.buffer)
+        .resize(512, 512)
+        .webp()
+        .toBuffer();
 
-    const whatsAppIconImage = await sharp(file.buffer)
-      .resize(96, 96)
-      .webp()
-      .toBuffer();
+      whatsAppIconImage = await sharp(file.buffer)
+        .resize(96, 96)
+        .webp()
+        .toBuffer();
+    } catch (e) {
+      throw new ForbiddenException("Could not resize/convert images.");
+    }
 
     if (whatsAppStickerImage.byteLength / 1024 > 100) {
       throw new ForbiddenException("The (sticker) file is too large.");
@@ -86,9 +92,7 @@ export class StickersService {
     await this.filesService.deleteFile(
       sticker.whatsAppStickerImageFile.fileName
     );
-    await this.filesService.deleteFile(
-      sticker.whatsAppIconImageFile.fileName
-    );
+    await this.filesService.deleteFile(sticker.whatsAppIconImageFile.fileName);
 
     return sticker.toRO();
   }
