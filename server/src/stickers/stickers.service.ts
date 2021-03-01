@@ -27,6 +27,13 @@ export class StickersService {
     file: MulterFile,
     userId: string
   ): Promise<StickerRo> {
+    // Image validation (file type/size done earlier).
+    const metaData = await sharp(file.buffer).metadata();
+    if (metaData.width !== metaData.height) {
+      throw new ForbiddenException("Image should be square.");
+    }
+
+    // Image manipulation.
     let whatsAppStickerImage;
     let whatsAppIconImage;
     try {
@@ -43,13 +50,16 @@ export class StickersService {
       throw new ForbiddenException("Could not resize/convert images.");
     }
 
+    // Check file size post image manipulation.
     if (whatsAppStickerImage.byteLength / 1024 > 100) {
-      throw new ForbiddenException("The (sticker) file is too large.");
+      throw new ForbiddenException(
+        "The (sticker) file is too large after conversion."
+      );
     }
 
     if (whatsAppIconImage.byteLength / 1024 > 50) {
       throw new ForbiddenException(
-        "The (sticker thumbnail) file is too large."
+        "The (sticker thumbnail) file is too large after conversion."
       );
     }
 
