@@ -4,7 +4,7 @@ import { SafeAreaView, StyleSheet, Image } from "react-native";
 import { AuthContext } from "../contexts/AuthContext";
 import { StackScreenProps } from "@react-navigation/stack";
 import { HomeStackParamList } from "../navigation/AppNavigator";
-import API from "../api/api";
+import { uploadSticker } from "../api/customApiWrappers";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { Sticker, StickerPack } from "../api/apiTypes";
 import { QUERY_KEYS } from "../constants/ReactQueryKeys";
@@ -13,6 +13,8 @@ import tailwind from "tailwind-rn";
 import ImagePicker, { Image as ImageData } from "react-native-image-crop-picker";
 import tw from "tailwind-react-native-classnames";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import { api } from "../api/generatedApiWrapper";
+import { CreateStickerPackDto } from "../api/generated-typescript-api-client/src";
 
 type Props = StackScreenProps<HomeStackParamList, "Homescreen">;
 
@@ -32,28 +34,42 @@ export const HomeScreen = ({ navigation }: Props): JSX.Element => {
         () => queryClient.invalidateQueries(QUERY_KEYS.myStickerPacks);
     }, [accessToken]);
 
-    const myStickerPacksQuery = useQuery(QUERY_KEYS.myStickerPacks, API.fetchMyStickerPacks, {
-        onError: logErrorResponse,
-    });
-
-    const addStickerPackMutation = useMutation(API.addStickerPack, {
-        onSuccess: (data) => {
-            if (myStickerPacksQuery.data) {
-                queryClient.setQueryData(QUERY_KEYS.myStickerPacks, [
-                    ...myStickerPacksQuery.data,
-                    data,
-                ]);
-            }
+    const myStickerPacksQuery = useQuery(
+        QUERY_KEYS.myStickerPacks,
+        async () => (await api.users.getOwnStickerPacks()).data,
+        {
+            onError: logErrorResponse,
         },
-        onError: logErrorResponse,
-    });
+    );
 
-    const deleteStickerPackMutation = useMutation(API.deleteStickerPack, {
-        onSuccess: () => queryClient.invalidateQueries(QUERY_KEYS.myStickerPacks),
-        onError: logErrorResponse,
-    });
+    const createStickerPackMutation = useMutation(
+        async (createStickerPackDto: CreateStickerPackDto) =>
+            (await api.stickerPacks.create(createStickerPackDto)).data,
+        {
+            onSuccess: (data) => {
+                console.log(data);
 
-    const uploadStickerMutation = useMutation(API.uploadSticker, {
+                if (myStickerPacksQuery.data) {
+                    queryClient.setQueryData(QUERY_KEYS.myStickerPacks, [
+                        ...myStickerPacksQuery.data,
+                        data,
+                    ]);
+                }
+                () => queryClient.invalidateQueries(QUERY_KEYS.myStickerPacks);
+            },
+            onError: logErrorResponse,
+        },
+    );
+
+    const removeStickerPackMutation = useMutation(
+        async (stickerPackId: string) => (await api.stickerPacks.remove(stickerPackId)).data,
+        {
+            onSuccess: () => queryClient.invalidateQueries(QUERY_KEYS.myStickerPacks),
+            onError: logErrorResponse,
+        },
+    );
+
+    const uploadStickerMutation = useMutation(uploadSticker, {
         onSuccess: () => queryClient.invalidateQueries(QUERY_KEYS.myStickerPacks),
         onError: logErrorResponse,
     });
@@ -141,6 +157,28 @@ export const HomeScreen = ({ navigation }: Props): JSX.Element => {
         );
     };
 
+    const renderItemAccessory = (stickerPack: any) => {
+        const UploadIcon = (props: any) => <Icon {...props} name="upload" />;
+        const TrashIcon = (props: any) => <Icon {...props} name="trash" />;
+
+        return (
+            <>
+                <Button
+                    status="success"
+                    appearance="outline"
+                    onPress={() => pickAndUploadSticker(stickerPack.id)}
+                    accessoryLeft={UploadIcon}
+                />
+                <Button
+                    status="danger"
+                    appearance="outline"
+                    onPress={() => removeStickerPackMutation.mutate(stickerPack.id)}
+                    accessoryLeft={TrashIcon}
+                />
+            </>
+        );
+    };
+
     const renderTextWithIcon = (
         text: string,
         iconName: string,
@@ -184,44 +222,47 @@ export const HomeScreen = ({ navigation }: Props): JSX.Element => {
         const numberOfNotifications = 1;
 
         return (
-            <TouchableOpacity
-                activeOpacity={0.5}
-                onPress={() => {
-                    navigation.navigate("StickerDetailScreen", {
-                        stickerPack: item,
-                    });
-                }}>
-                <Layout style={tailwind("flex-row w-full h-20 bg-white")}>
-                    <Layout style={tailwind("w-20 mx-1 justify-center items-center")}>
-                        <CoverSticker stickerPack={item} />
-                    </Layout>
-                    <Layout
-                        style={tailwind(
-                            "flex-row flex-grow py-2 pr-4 border-b border-gray-100 justify-between",
-                        )}>
-                        <Layout style={tailwind("flex-col justify-around")}>
-                            <Text style={tailwind("text-base font-semibold")}>{item.name}</Text>
-                            <StickerPreviews stickers={item.stickers} />
-                            <StickerPackStats stickerPack={item} />
+            <>
+                <TouchableOpacity
+                    activeOpacity={0.5}
+                    onPress={() => {
+                        navigation.navigate("StickerDetailScreen", {
+                            stickerPack: item,
+                        });
+                    }}>
+                    <Layout style={tailwind("flex-row w-full h-20 bg-white")}>
+                        <Layout style={tailwind("w-20 mx-1 justify-center items-center")}>
+                            <CoverSticker stickerPack={item} />
                         </Layout>
-                        <Layout style={tailwind("flex-col items-end")}>
-                            <Text style={tailwind("pb-2 py-1 text-gray-500")} category="p2">
-                                19:09
-                            </Text>
-                            {numberOfNotifications > 0 && (
-                                <Layout
-                                    style={tailwind(
-                                        "w-5 h-5 rounded-full bg-blue-600 justify-center items-center",
-                                    )}>
-                                    <Text style={tailwind("text-white text-xs")}>
-                                        {numberOfNotifications}
-                                    </Text>
-                                </Layout>
-                            )}
+                        <Layout
+                            style={tailwind(
+                                "flex-row flex-grow py-2 pr-4 border-b border-gray-100 justify-between",
+                            )}>
+                            <Layout style={tailwind("flex-col justify-around")}>
+                                <Text style={tailwind("text-base font-semibold")}>{item.name}</Text>
+                                <StickerPreviews stickers={item.stickers} />
+                                <StickerPackStats stickerPack={item} />
+                            </Layout>
+                            <Layout style={tailwind("flex-col items-end")}>
+                                <Text style={tailwind("pb-2 py-1 text-gray-500")} category="p2">
+                                    19:09
+                                </Text>
+                                {numberOfNotifications > 0 && (
+                                    <Layout
+                                        style={tailwind(
+                                            "w-5 h-5 rounded-full bg-blue-600 justify-center items-center",
+                                        )}>
+                                        <Text style={tailwind("text-white text-xs")}>
+                                            {numberOfNotifications}
+                                        </Text>
+                                    </Layout>
+                                )}
+                            </Layout>
                         </Layout>
                     </Layout>
-                </Layout>
-            </TouchableOpacity>
+                </TouchableOpacity>
+                {renderItemAccessory(item)}
+            </>
         );
     };
 
@@ -241,7 +282,7 @@ export const HomeScreen = ({ navigation }: Props): JSX.Element => {
                 appearance="ghost"
                 style={tailwind("px-1")}
                 onPress={() =>
-                    addStickerPackMutation.mutate({
+                    createStickerPackMutation.mutate({
                         name: generateName(),
                         private: true,
                     })
@@ -282,8 +323,8 @@ export const HomeScreen = ({ navigation }: Props): JSX.Element => {
                     renderItem={StickerPackComponent}
                     refreshing={
                         myStickerPacksQuery.isLoading ||
-                        addStickerPackMutation.isLoading ||
-                        deleteStickerPackMutation.isLoading
+                        createStickerPackMutation.isLoading ||
+                        removeStickerPackMutation.isLoading
                     }
                     onRefresh={() => queryClient.invalidateQueries(QUERY_KEYS.myStickerPacks)}
                 />
