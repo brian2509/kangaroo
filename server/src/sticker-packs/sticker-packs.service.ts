@@ -48,6 +48,15 @@ export class StickerPacksService {
     if (!stickerPack.isOwner(userId)) {
       throw new ForbiddenException("Not the owner of the pack.");
     }
+    if (
+      stickerPack.stickers.length > 0 &&
+      updateStickerPackDto.animated !== stickerPack.animated
+    ) {
+      throw new ForbiddenException(
+        "You can not change the animation status of this pack, because there are still stickers in it."
+      );
+    }
+
     await this.stickerPackRepository.save({
       ...stickerPack,
       ...updateStickerPackDto,
