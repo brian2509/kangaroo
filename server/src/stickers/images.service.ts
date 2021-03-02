@@ -7,7 +7,7 @@ export class ImagesService {
 
   async createWhatsappImages(
     data: Buffer,
-    animated: boolean = false
+    animated: boolean
   ): Promise<{ whatsAppStickerImage: Buffer; whatsAppIconImage: Buffer }> {
     // Image validation (file type/size done earlier).
     const metaData = await sharp(data).metadata();
@@ -17,9 +17,9 @@ export class ImagesService {
       throw new ForbiddenException("This format is not allowed.");
     }
 
-    // if (metaData.width !== metaData.height) {
-    //   throw new ForbiddenException("File should be square.");
-    // }
+    if (metaData.width !== metaData.height) {
+      throw new ForbiddenException("File should be square.");
+    }
 
     // Create images.
     let whatsAppStickerImage;
@@ -27,6 +27,7 @@ export class ImagesService {
     try {
       if (animated) {
         // TODO: Resize this animated file somehow.
+        // https://github.com/lovell/sharp/issues/2275
         whatsAppStickerImage = await sharp(data, {
           animated: true,
         })

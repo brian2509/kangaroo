@@ -1,10 +1,5 @@
-import {
-  ForbiddenException,
-  Injectable,
-  NotFoundException,
-} from "@nestjs/common";
+import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import * as sharp from "sharp";
 import { Repository } from "typeorm";
 import { MulterFile } from "../files/file.validation";
 import { FilesService } from "../files/files.service";
@@ -27,13 +22,13 @@ export class StickersService {
     stickerPackId: string,
     createStickerDto: CreateStickerDto,
     file: MulterFile,
+    animated: boolean,
     userId: string
   ): Promise<StickerRo> {
-    // Image manipulation.
     const {
       whatsAppStickerImage,
       whatsAppIconImage,
-    } = await this.imagesService.createWhatsappImages(file.buffer);
+    } = await this.imagesService.createWhatsappImages(file.buffer, animated);
 
     const whatsAppStickerImageFile = await this.filesService.uploadFile(
       whatsAppStickerImage,

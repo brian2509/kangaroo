@@ -123,6 +123,7 @@ export class StickerPacksService {
       id,
       createStickerDto,
       file,
+      stickerPack.animated,
       userId
     );
   }
