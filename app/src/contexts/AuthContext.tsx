@@ -1,8 +1,7 @@
 import AsyncStorage from "@react-native-community/async-storage";
 import React, { useEffect } from "react";
 import { STORAGE_KEYS } from "../constants/StorageKeys";
-import axios from "../api/axios";
-import API from "../api/api";
+import { api, instance } from "../api/generatedApiWrapper";
 
 export interface AuthContextProps {
     accessToken: string | undefined;
@@ -38,7 +37,8 @@ export const AuthContextProvider = ({ children }: any): React.ReactElement => {
     }, []);
 
     useEffect(() => {
-        API.isAuthenticated()
+        api.auth
+            .testAuth()
             .then(() => setIsAuthenticated(true))
             .catch(() => setIsAuthenticated(false));
     }, [accessToken]);
@@ -52,7 +52,7 @@ export const AuthContextProvider = ({ children }: any): React.ReactElement => {
         }
 
         // Set axios default authorization header
-        axios.defaults.headers.common["Authorization"] = newToken
+        instance.defaults.headers.common["Authorization"] = newToken
             ? "Bearer " + newToken
             : undefined;
 

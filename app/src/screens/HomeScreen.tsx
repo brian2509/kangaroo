@@ -1,18 +1,23 @@
 import React, { useEffect } from "react";
 import { Layout, List, Text, Button, Icon, Input } from "@ui-kitten/components";
-import { SafeAreaView, StyleSheet, Image } from "react-native";
+import { SafeAreaView, Image, ImageProps } from "react-native";
 import { AuthContext } from "../contexts/AuthContext";
 import { StackScreenProps } from "@react-navigation/stack";
 import { HomeStackParamList } from "../navigation/AppNavigator";
-import API from "../api/api";
+import { uploadSticker } from "../api/customApiWrappers";
 import { useMutation, useQuery, useQueryClient } from "react-query";
-import { Sticker, StickerPack } from "../api/apiTypes";
 import { QUERY_KEYS } from "../constants/ReactQueryKeys";
 import { logErrorResponse } from "../util/logging";
 import tailwind from "tailwind-rn";
 import ImagePicker, { Image as ImageData } from "react-native-image-crop-picker";
 import tw from "tailwind-react-native-classnames";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import { api } from "../api/generatedApiWrapper";
+import {
+    CreateStickerPackDto,
+    StickerPackRo,
+    StickerRo,
+} from "../api/generated-typescript-api-client/src";
 
 type Props = StackScreenProps<HomeStackParamList, "Homescreen">;
 
@@ -32,61 +37,72 @@ export const HomeScreen = ({ navigation }: Props): JSX.Element => {
         () => queryClient.invalidateQueries(QUERY_KEYS.myStickerPacks);
     }, [accessToken]);
 
-    const myStickerPacksQuery = useQuery(QUERY_KEYS.myStickerPacks, API.fetchMyStickerPacks, {
-        onError: logErrorResponse,
-    });
-
-    const addStickerPackMutation = useMutation(API.addStickerPack, {
-        onSuccess: (data) => {
-            if (myStickerPacksQuery.data) {
-                queryClient.setQueryData(QUERY_KEYS.myStickerPacks, [
-                    ...myStickerPacksQuery.data,
-                    data,
-                ]);
-            }
+    const myStickerPacksQuery = useQuery(
+        QUERY_KEYS.myStickerPacks,
+        async () => (await api.users.getOwnStickerPacks()).data,
+        {
+            onError: logErrorResponse,
         },
-        onError: logErrorResponse,
-    });
+    );
 
-    const deleteStickerPackMutation = useMutation(API.deleteStickerPack, {
-        onSuccess: () => queryClient.invalidateQueries(QUERY_KEYS.myStickerPacks),
-        onError: logErrorResponse,
-    });
+    const createStickerPackMutation = useMutation(
+        async (createStickerPackDto: CreateStickerPackDto) =>
+            (await api.stickerPacks.create(createStickerPackDto)).data,
+        {
+            onSuccess: (data) => {
+                console.log(data);
 
-    const uploadStickerMutation = useMutation(API.uploadSticker, {
+                if (myStickerPacksQuery.data) {
+                    queryClient.setQueryData(QUERY_KEYS.myStickerPacks, [
+                        ...myStickerPacksQuery.data,
+                        data,
+                    ]);
+                }
+                () => queryClient.invalidateQueries(QUERY_KEYS.myStickerPacks);
+            },
+            onError: logErrorResponse,
+        },
+    );
+
+    const removeStickerPackMutation = useMutation(
+        async (stickerPackId: string) => (await api.stickerPacks.remove(stickerPackId)).data,
+        {
+            onSuccess: () => queryClient.invalidateQueries(QUERY_KEYS.myStickerPacks),
+            onError: logErrorResponse,
+        },
+    );
+
+    const uploadStickerMutation = useMutation(uploadSticker, {
         onSuccess: () => queryClient.invalidateQueries(QUERY_KEYS.myStickerPacks),
         onError: logErrorResponse,
     });
 
     const pickAndUploadSticker = async (stickerPackId: string) => {
-        try {
-            ImagePicker.openPicker({
-                width: 512,
-                height: 512,
-                cropping: true,
-                mediaType: "photo",
-            }).then((image: ImageData) => {
+        ImagePicker.openPicker({
+            width: 512,
+            height: 512,
+            cropping: true,
+            mediaType: "photo",
+        })
+            .then((image: ImageData) => {
                 const stickerName = generateName();
 
-                const formData = new FormData();
-                formData.append("name", stickerName);
-                formData.append("file", {
-                    name: image.path.split("/").slice(-1)[0],
-                    size: image.size,
-                    type: image.mime,
+                const file = {
                     uri: image.path,
-                    width: image.width,
-                    height: image.height,
-                });
+                    name: image.path.split("/").slice(-1)[0],
+                    type: image.mime,
+                };
 
-                uploadStickerMutation.mutate({ stickerPackId, formData });
+                uploadStickerMutation.mutate({ stickerPackId, stickerName, file });
+            })
+            .catch((error) => {
+                if (error.code !== "E_PICKER_CANCELLED") {
+                    console.log(error);
+                }
             });
-        } catch (error) {
-            console.log(error);
-        }
     };
 
-    const CoverSticker = ({ stickerPack }: { stickerPack: StickerPack }): React.ReactElement => {
+    const CoverSticker = ({ stickerPack }: { stickerPack: StickerPackRo }): React.ReactElement => {
         return (
             <>
                 {stickerPack.stickers.length > 0 ? (
@@ -106,7 +122,7 @@ export const HomeScreen = ({ navigation }: Props): JSX.Element => {
         );
     };
 
-    const StickerPreviews = ({ stickers }: { stickers: Sticker[] }): React.ReactElement => {
+    const StickerPreviews = ({ stickers }: { stickers: StickerRo[] }): React.ReactElement => {
         const stickersToPreview = stickers.slice(1, 1 + STICKERS_IN_PREVIEW);
         const stickersLeft = stickers.length - STICKERS_IN_PREVIEW - 1;
 
@@ -159,7 +175,7 @@ export const HomeScreen = ({ navigation }: Props): JSX.Element => {
     const StickerPackStats = ({
         stickerPack,
     }: {
-        stickerPack: StickerPack;
+        stickerPack: StickerPackRo;
     }): React.ReactElement => {
         return (
             <Layout style={tailwind("flex-row")}>
@@ -179,7 +195,7 @@ export const HomeScreen = ({ navigation }: Props): JSX.Element => {
         );
     };
 
-    const StickerPackComponent = ({ item }: { item: StickerPack }) => {
+    const StickerPackComponent = ({ item }: { item: StickerPackRo }) => {
         //TODO add number of notifications to stickerpacks
         const numberOfNotifications = 1;
 
@@ -241,7 +257,7 @@ export const HomeScreen = ({ navigation }: Props): JSX.Element => {
                 appearance="ghost"
                 style={tailwind("px-1")}
                 onPress={() =>
-                    addStickerPackMutation.mutate({
+                    createStickerPackMutation.mutate({
                         name: generateName(),
                         private: true,
                     })
@@ -282,8 +298,8 @@ export const HomeScreen = ({ navigation }: Props): JSX.Element => {
                     renderItem={StickerPackComponent}
                     refreshing={
                         myStickerPacksQuery.isLoading ||
-                        addStickerPackMutation.isLoading ||
-                        deleteStickerPackMutation.isLoading
+                        createStickerPackMutation.isLoading ||
+                        removeStickerPackMutation.isLoading
                     }
                     onRefresh={() => queryClient.invalidateQueries(QUERY_KEYS.myStickerPacks)}
                 />

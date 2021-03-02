@@ -12,13 +12,13 @@ import {
 } from "@ui-kitten/components";
 import React from "react";
 import { SafeAreaView, TouchableOpacity, View } from "react-native";
-import { StickerPack } from "src/api/apiTypes";
 import { HomeStackParamList } from "src/navigation/AppNavigator";
 import tw from "tailwind-react-native-classnames";
+import { StickerPackRo } from "../api/generated-typescript-api-client/src";
 
 type Props = StackScreenProps<HomeStackParamList, "StickerDetailManageScreen">;
 export class StickerDetailManageScreen extends React.Component<Props> {
-    private stickerPack: StickerPack;
+    private stickerPack: StickerPackRo;
 
     constructor(props: Props) {
         super(props);
