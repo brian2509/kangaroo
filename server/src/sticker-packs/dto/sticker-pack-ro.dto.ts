@@ -5,6 +5,7 @@ export class StickerPackRo {
   id: string;
   name: string;
   private: boolean;
+  animated: boolean;
   stickers: StickerRo[];
   members: UserRo[];
   views: number;

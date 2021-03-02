@@ -26,8 +26,7 @@ export class StickerPacksService {
     userId: string
   ): Promise<StickerPackRo> {
     const stickerPack = this.stickerPackRepository.create({
-      name: createStickerPackDto.name,
-      private: createStickerPackDto.private,
+      ...createStickerPackDto,
       author: { id: userId },
     });
     const result = await this.stickerPackRepository.save(stickerPack);
