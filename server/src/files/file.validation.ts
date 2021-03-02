@@ -1,10 +1,8 @@
 import { ForbiddenException } from "@nestjs/common";
 import * as pathUtil from "path";
 
-export const STICKER_MAX_FILE_SIZE_BYTES = 100 * 1024;
-export const STICKER_ALL_FILETYPES_ALLOWED = /jpeg|jpg|png|webp|gif/;
-export const STICKER_PICTURE_FILETYPES_ALLOWED = /jpeg|jpg|png|webp/;
-export const STICKER_GIF_FILETYPES_ALLOWED = /gif|webp/;
+export const STICKER_MAX_FILE_SIZE_BYTES = 500 * 1024;
+export const STICKER_ALL_FILETYPES_ALLOWED = /jpeg|jpg|png|gif/;
 
 export type MulterFile = {
   fieldname: string;
@@ -47,12 +45,4 @@ const multerOptionFactory = (maxSize: number, fileTypes: RegExp) => {
 export const STICKER_VALIDATION_MULTER_ALL = multerOptionFactory(
   STICKER_MAX_FILE_SIZE_BYTES,
   STICKER_ALL_FILETYPES_ALLOWED
-);
-export const STICKER_VALIDATION_MULTER_PICTURE = multerOptionFactory(
-  STICKER_MAX_FILE_SIZE_BYTES,
-  STICKER_PICTURE_FILETYPES_ALLOWED
-);
-export const STICKER_VALIDATION_MULTER_GIF = multerOptionFactory(
-  STICKER_MAX_FILE_SIZE_BYTES,
-  STICKER_GIF_FILETYPES_ALLOWED
 );

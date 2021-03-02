@@ -12,12 +12,14 @@ import { UsersService } from "../users/user.service";
 import { CreateStickerDto } from "./dto/create-sticker.dto";
 import { StickerRo } from "./dto/response-sticker.dto";
 import { Sticker } from "./entities/sticker.entity";
+import { ImagesService } from "./images.service";
 
 @Injectable()
 export class StickersService {
   constructor(
     @InjectRepository(Sticker) private stickerRepository: Repository<Sticker>,
     private usersService: UsersService,
+    private imagesService: ImagesService,
     private filesService: FilesService
   ) {}
 
@@ -27,41 +29,11 @@ export class StickersService {
     file: MulterFile,
     userId: string
   ): Promise<StickerRo> {
-    // Image validation (file type/size done earlier).
-    const metaData = await sharp(file.buffer).metadata();
-    if (metaData.width !== metaData.height) {
-      throw new ForbiddenException("Image should be square.");
-    }
-
     // Image manipulation.
-    let whatsAppStickerImage;
-    let whatsAppIconImage;
-    try {
-      whatsAppStickerImage = await sharp(file.buffer)
-        .resize(512, 512)
-        .webp()
-        .toBuffer();
-
-      whatsAppIconImage = await sharp(file.buffer)
-        .resize(96, 96)
-        .webp()
-        .toBuffer();
-    } catch (e) {
-      throw new ForbiddenException("Could not resize/convert images.");
-    }
-
-    // Check file size post image manipulation.
-    if (whatsAppStickerImage.byteLength / 1024 > 100) {
-      throw new ForbiddenException(
-        "The (sticker) file is too large after conversion."
-      );
-    }
-
-    if (whatsAppIconImage.byteLength / 1024 > 50) {
-      throw new ForbiddenException(
-        "The (sticker thumbnail) file is too large after conversion."
-      );
-    }
+    const {
+      whatsAppStickerImage,
+      whatsAppIconImage,
+    } = await this.imagesService.createWhatsappImages(file.buffer);
 
     const whatsAppStickerImageFile = await this.filesService.uploadFile(
       whatsAppStickerImage,
