@@ -6,6 +6,7 @@ import {
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { MulterFile } from "../files/file.validation";
+import { WHATSAPP_MAX_PACK_SIZE } from "../stickers/constants/whatsapp.constants";
 import { CreateStickerDto } from "../stickers/dto/create-sticker.dto";
 import { StickersService } from "../stickers/stickers.service";
 import { CreateStickerPackDto } from "./dto/create-sticker-pack.dto";
@@ -113,7 +114,7 @@ export class StickerPacksService {
       );
     }
 
-    if (stickerPack.stickers.length >= 30) {
+    if (stickerPack.stickers.length >= WHATSAPP_MAX_PACK_SIZE) {
       throw new ForbiddenException(
         "This pack is full. The maximum amount of stickers in a pack is 30."
       );

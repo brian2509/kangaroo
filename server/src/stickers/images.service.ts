@@ -1,5 +1,14 @@
 import { ForbiddenException, Injectable } from "@nestjs/common";
 import * as sharp from "sharp";
+import {
+  WHATSAPP_ICON_HEIGHT_PX,
+  WHATSAPP_ICON_SIZE_PX,
+  WHATSAPP_ICON_WIDTH_PX,
+  WHATSAPP_STICKER_HEIGHT_PX,
+  WHATSAPP_STICKER_SIZE_ANIMATED_KB,
+  WHATSAPP_STICKER_SIZE_NON_ANIMATED_KB,
+  WHATSAPP_STICKER_WIDTH_PX,
+} from "./constants/whatsapp.constants";
 
 @Injectable()
 export class ImagesService {
@@ -35,11 +44,14 @@ export class ImagesService {
           .toBuffer();
       } else {
         whatsAppStickerImage = await sharp(data)
-          .resize(512, 512)
+          .resize(WHATSAPP_STICKER_WIDTH_PX, WHATSAPP_STICKER_HEIGHT_PX)
           .webp()
           .toBuffer();
       }
-      whatsAppIconImage = await sharp(data).resize(96, 96).webp().toBuffer();
+      whatsAppIconImage = await sharp(data)
+        .resize(WHATSAPP_ICON_WIDTH_PX, WHATSAPP_ICON_HEIGHT_PX)
+        .webp()
+        .toBuffer();
     } catch (e) {
       throw new ForbiddenException(
         "Could not resize/convert images (sharp error)."
@@ -47,14 +59,16 @@ export class ImagesService {
     }
 
     // Check file size post image manipulation.
-    const maxSizeInKb = animated ? 500 : 100;
+    const maxSizeInKb = animated
+      ? WHATSAPP_STICKER_SIZE_ANIMATED_KB
+      : WHATSAPP_STICKER_SIZE_NON_ANIMATED_KB;
     if (whatsAppStickerImage.byteLength / 1024 > maxSizeInKb) {
       throw new ForbiddenException(
         "The (sticker) file is too large after conversion."
       );
     }
 
-    if (whatsAppIconImage.byteLength / 1024 > 50) {
+    if (whatsAppIconImage.byteLength / 1024 > WHATSAPP_ICON_SIZE_PX) {
       throw new ForbiddenException(
         "The (sticker thumbnail) file is too large after conversion."
       );
