@@ -31,7 +31,7 @@ const renderFrontSticker = (
                 onPress={() => {
                     onStickerPress(sticker);
                 }}>
-                <Image style={style} source={{ uri: sticker.url }} />
+                <Image style={style} source={{ uri: sticker.fileUrl }} />
             </TouchableOpacity>
         );
     } else {
@@ -62,7 +62,7 @@ class AuthorStickersView extends React.Component<StickerPackProps> {
                         borderRadius: 3,
                     })}
                     source={{
-                        uri: sticker.url,
+                        uri: sticker.fileUrl,
                     }}
                 />
             </TouchableOpacity>

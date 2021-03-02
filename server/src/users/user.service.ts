@@ -20,6 +20,14 @@ export class UsersService {
     return user;
   }
 
+  async findByEmail(email: string) {
+    const user = await this.userRepository.findOne({ where: { email } });
+    if (!user) {
+      return null;
+    }
+    return user;
+  }
+
   async create(
     username: string,
     email: string,
@@ -44,7 +52,8 @@ export class UsersService {
       .leftJoinAndSelect("stickerpack.author", "author")
       .leftJoinAndSelect("stickerpack.members", "member")
       .leftJoinAndSelect("stickerpack.stickers", "sticker")
-      .leftJoinAndSelect("sticker.file", "stickerFile")
+      .leftJoinAndSelect("sticker.whatsAppStickerImageFile", "whatsAppStickerImageFile")
+      .leftJoinAndSelect("sticker.whatsAppIconImageFile", "whatsAppIconImageFile")
       .where("member.id = :id", { id: userId })
       .getMany();
 
@@ -57,7 +66,8 @@ export class UsersService {
       .leftJoinAndSelect("stickerpack.author", "author")
       .leftJoinAndSelect("stickerpack.members", "member")
       .leftJoinAndSelect("stickerpack.stickers", "sticker")
-      .leftJoinAndSelect("sticker.file", "stickerFile")
+      .leftJoinAndSelect("sticker.whatsAppStickerImageFile", "whatsAppStickerImageFile")
+      .leftJoinAndSelect("sticker.whatsAppIconImageFile", "whatsAppIconImageFile")
       .where("member.id = :id", { id: userId })
       .orWhere("author.id =:id", { id: userId })
       .getMany();

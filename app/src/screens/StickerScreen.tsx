@@ -35,7 +35,7 @@ export class StickerScreen extends React.Component<Props> {
                     style={tw.style("rounded-lg w-full", {
                         paddingBottom: "100%",
                     })}
-                    source={{ uri: this.sticker.url }}
+                    source={{ uri: this.sticker.fileUrl }}
                 />
             </SafeAreaView>
         );

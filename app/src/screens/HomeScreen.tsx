@@ -109,7 +109,7 @@ export const HomeScreen = ({ navigation }: Props): JSX.Element => {
                     <Image
                         style={tw`w-14 h-14 rounded-full`}
                         source={{
-                            uri: stickerPack.stickers[0].url,
+                            uri: stickerPack.stickers[0].fileUrl,
                         }}
                     />
                 ) : (
@@ -137,7 +137,7 @@ export const HomeScreen = ({ navigation }: Props): JSX.Element => {
                         <Image
                             style={tailwind("w-3.5 h-3.5 opacity-75")}
                             source={{
-                                uri: sticker.url,
+                                uri: sticker.fileUrl,
                             }}
                         />
                     </Layout>

@@ -1,12 +1,16 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
+import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
+import * as sharp from "sharp";
 import { Repository } from "typeorm";
 import { MulterFile } from "../files/file.validation";
 import { FilesService } from "../files/files.service";
 import { UsersService } from "../users/user.service";
 import { CreateStickerDto } from "./dto/create-sticker.dto";
 import { StickerRo } from "./dto/response-sticker.dto";
-import { UpdateStickerDto } from "./dto/update-sticker.dto";
 import { Sticker } from "./entities/sticker.entity";
 
 @Injectable()
@@ -23,63 +27,66 @@ export class StickersService {
     file: MulterFile,
     userId: string
   ): Promise<StickerRo> {
-    const uploadedFile = await this.filesService.uploadFile(
-      file.buffer,
-      file.originalname
+    // Image validation (file type/size done earlier).
+    const metaData = await sharp(file.buffer).metadata();
+    if (metaData.width !== metaData.height) {
+      throw new ForbiddenException("Image should be square.");
+    }
+
+    // Image manipulation.
+    let whatsAppStickerImage;
+    let whatsAppIconImage;
+    try {
+      whatsAppStickerImage = await sharp(file.buffer)
+        .resize(512, 512)
+        .webp()
+        .toBuffer();
+
+      whatsAppIconImage = await sharp(file.buffer)
+        .resize(96, 96)
+        .webp()
+        .toBuffer();
+    } catch (e) {
+      throw new ForbiddenException("Could not resize/convert images.");
+    }
+
+    // Check file size post image manipulation.
+    if (whatsAppStickerImage.byteLength / 1024 > 100) {
+      throw new ForbiddenException(
+        "The (sticker) file is too large after conversion."
+      );
+    }
+
+    if (whatsAppIconImage.byteLength / 1024 > 50) {
+      throw new ForbiddenException(
+        "The (sticker thumbnail) file is too large after conversion."
+      );
+    }
+
+    const whatsAppStickerImageFile = await this.filesService.uploadFile(
+      whatsAppStickerImage,
+      "whatsapp-sticker.webp"
     );
-    // TODO: Add image/file validation.
+
+    const whatsAppIconImageFile = await this.filesService.uploadFile(
+      whatsAppIconImage,
+      "whatsapp-icon.webp"
+    );
+
     const sticker = this.stickerRepository.create({
       author: { id: userId },
       name: createStickerDto.name,
-      file: uploadedFile,
+      whatsAppStickerImageFile,
+      whatsAppIconImageFile,
       stickerPack: { id: stickerPackId },
     });
 
     const savedSticker = await this.stickerRepository.save(sticker);
-    return {
-      id: savedSticker.id,
-      name: savedSticker.name,
-      url: savedSticker.file.fileUrl(),
-    };
-  }
-
-  async findAll(): Promise<StickerRo[]> {
-    const stickers = await this.stickerRepository.find();
-    return stickers.map((sticker) => {
-      return {
-        id: sticker.id,
-        name: sticker.name,
-        url: sticker.file.fileUrl(),
-      };
-    });
-  }
-
-  async findOne(id: string): Promise<StickerRo> {
-    const sticker = await this.stickerRepository.findOne({
-      where: { id },
-    });
-    if (!sticker) {
-      throw new NotFoundException();
-    }
-    return {
-      id: sticker.id,
-      name: sticker.name,
-      url: sticker.file.fileUrl(),
-    };
-  }
-
-  async update(
-    id: string,
-    updateStickerDto: UpdateStickerDto
-  ): Promise<StickerRo> {
-    const sticker = await this.findOne(id);
-    const updatedSticker = { ...sticker, ...updateStickerDto };
-    const saved = await this.stickerRepository.save(updatedSticker);
-    return {
-      id: saved.id,
-      name: saved.name,
-      url: saved.url,
-    };
+    return (
+      await this.stickerRepository.findOne({
+        where: { id: savedSticker.id },
+      })
+    ).toRO();
   }
 
   async remove(id: string): Promise<StickerRo> {
@@ -92,12 +99,11 @@ export class StickersService {
 
     // TODO: Reverse these actions/use transactions.
     await this.stickerRepository.delete(id);
-    await this.filesService.deleteFile(sticker.file.fileName);
+    await this.filesService.deleteFile(
+      sticker.whatsAppStickerImageFile.fileName
+    );
+    await this.filesService.deleteFile(sticker.whatsAppIconImageFile.fileName);
 
-    return {
-      id: sticker.id,
-      name: sticker.name,
-      url: sticker.file.fileUrl(),
-    };
+    return sticker.toRO();
   }
 }

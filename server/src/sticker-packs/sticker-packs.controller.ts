@@ -72,8 +72,8 @@ export class StickerPacksController {
   @UseInterceptors(FileInterceptor("file", STICKER_VALIDATION_MULTER_ALL))
   @ApiOperation({
     summary: `Add a sticker to a sticker pack you own or a member of. The file must be less than ${
-      STICKER_MAX_FILE_SIZE_BYTES / 1024 / 1024
-    }MB and be of type ${STICKER_ALL_FILETYPES_ALLOWED}.`,
+      (STICKER_MAX_FILE_SIZE_BYTES / 1024 / 1024).toFixed(2)
+    } MB and be of type ${STICKER_ALL_FILETYPES_ALLOWED}.`,
   })
   @Post(":id/stickers")
   async addSticker(
