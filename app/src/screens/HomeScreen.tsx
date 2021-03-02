@@ -157,32 +157,6 @@ export const HomeScreen = ({ navigation }: Props): JSX.Element => {
         );
     };
 
-    const renderItemAccessory = (stickerPack: StickerPackRo) => {
-        const UploadIcon = (props: Partial<ImageProps> | undefined) => (
-            <Icon {...props} name="upload" />
-        );
-        const TrashIcon = (props: Partial<ImageProps> | undefined) => (
-            <Icon {...props} name="trash" />
-        );
-
-        return (
-            <>
-                <Button
-                    status="success"
-                    appearance="outline"
-                    onPress={() => pickAndUploadSticker(stickerPack.id)}
-                    accessoryLeft={UploadIcon}
-                />
-                <Button
-                    status="danger"
-                    appearance="outline"
-                    onPress={() => removeStickerPackMutation.mutate(stickerPack.id)}
-                    accessoryLeft={TrashIcon}
-                />
-            </>
-        );
-    };
-
     const renderTextWithIcon = (
         text: string,
         iconName: string,
@@ -226,47 +200,44 @@ export const HomeScreen = ({ navigation }: Props): JSX.Element => {
         const numberOfNotifications = 1;
 
         return (
-            <>
-                <TouchableOpacity
-                    activeOpacity={0.5}
-                    onPress={() => {
-                        navigation.navigate("StickerDetailScreen", {
-                            stickerPack: item,
-                        });
-                    }}>
-                    <Layout style={tailwind("flex-row w-full h-20 bg-white")}>
-                        <Layout style={tailwind("w-20 mx-1 justify-center items-center")}>
-                            <CoverSticker stickerPack={item} />
+            <TouchableOpacity
+                activeOpacity={0.5}
+                onPress={() => {
+                    navigation.navigate("StickerDetailScreen", {
+                        stickerPack: item,
+                    });
+                }}>
+                <Layout style={tailwind("flex-row w-full h-20 bg-white")}>
+                    <Layout style={tailwind("w-20 mx-1 justify-center items-center")}>
+                        <CoverSticker stickerPack={item} />
+                    </Layout>
+                    <Layout
+                        style={tailwind(
+                            "flex-row flex-grow py-2 pr-4 border-b border-gray-100 justify-between",
+                        )}>
+                        <Layout style={tailwind("flex-col justify-around")}>
+                            <Text style={tailwind("text-base font-semibold")}>{item.name}</Text>
+                            <StickerPreviews stickers={item.stickers} />
+                            <StickerPackStats stickerPack={item} />
                         </Layout>
-                        <Layout
-                            style={tailwind(
-                                "flex-row flex-grow py-2 pr-4 border-b border-gray-100 justify-between",
-                            )}>
-                            <Layout style={tailwind("flex-col justify-around")}>
-                                <Text style={tailwind("text-base font-semibold")}>{item.name}</Text>
-                                <StickerPreviews stickers={item.stickers} />
-                                <StickerPackStats stickerPack={item} />
-                            </Layout>
-                            <Layout style={tailwind("flex-col items-end")}>
-                                <Text style={tailwind("pb-2 py-1 text-gray-500")} category="p2">
-                                    19:09
-                                </Text>
-                                {numberOfNotifications > 0 && (
-                                    <Layout
-                                        style={tailwind(
-                                            "w-5 h-5 rounded-full bg-blue-600 justify-center items-center",
-                                        )}>
-                                        <Text style={tailwind("text-white text-xs")}>
-                                            {numberOfNotifications}
-                                        </Text>
-                                    </Layout>
-                                )}
-                            </Layout>
+                        <Layout style={tailwind("flex-col items-end")}>
+                            <Text style={tailwind("pb-2 py-1 text-gray-500")} category="p2">
+                                19:09
+                            </Text>
+                            {numberOfNotifications > 0 && (
+                                <Layout
+                                    style={tailwind(
+                                        "w-5 h-5 rounded-full bg-blue-600 justify-center items-center",
+                                    )}>
+                                    <Text style={tailwind("text-white text-xs")}>
+                                        {numberOfNotifications}
+                                    </Text>
+                                </Layout>
+                            )}
                         </Layout>
                     </Layout>
-                </TouchableOpacity>
-                {renderItemAccessory(item)}
-            </>
+                </Layout>
+            </TouchableOpacity>
         );
     };
 
