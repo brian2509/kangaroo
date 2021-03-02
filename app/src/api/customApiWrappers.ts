@@ -3,19 +3,23 @@ import { instance } from "./generatedApiWrapper";
 
 export interface UploadStickerRo {
     stickerPackId: string;
-    formData: FormData; // TODO: Change this to an object {name, file}
+    stickerName: string;
+    file: {
+        uri: string;
+        name: string;
+        type: string;
+    };
 }
 
 export const uploadSticker = async (options: UploadStickerRo): Promise<StickerRo> => {
-    // TODO: Create FormData object here
-    const res = await instance.post(
-        `sticker-packs/${options.stickerPackId}/stickers`,
-        options.formData,
-        {
-            headers: {
-                "Content-Type": "multipart/form-data",
-            },
+    const formData = new FormData();
+    formData.append("name", options.stickerName);
+    formData.append("file", options.file);
+
+    const res = await instance.post(`sticker-packs/${options.stickerPackId}/stickers`, formData, {
+        headers: {
+            "Content-Type": "multipart/form-data",
         },
-    );
+    });
     return res.data as StickerRo;
-}
+};

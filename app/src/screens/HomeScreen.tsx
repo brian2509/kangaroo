@@ -78,31 +78,28 @@ export const HomeScreen = ({ navigation }: Props): JSX.Element => {
     });
 
     const pickAndUploadSticker = async (stickerPackId: string) => {
-        try {
-            ImagePicker.openPicker({
-                width: 512,
-                height: 512,
-                cropping: true,
-                mediaType: "photo",
-            }).then((image: ImageData) => {
+        ImagePicker.openPicker({
+            width: 512,
+            height: 512,
+            cropping: true,
+            mediaType: "photo",
+        })
+            .then((image: ImageData) => {
                 const stickerName = generateName();
 
-                const formData = new FormData();
-                formData.append("name", stickerName);
-                formData.append("file", {
-                    name: image.path.split("/").slice(-1)[0],
-                    size: image.size,
-                    type: image.mime,
+                const file = {
                     uri: image.path,
-                    width: image.width,
-                    height: image.height,
-                });
+                    name: image.path.split("/").slice(-1)[0],
+                    type: image.mime,
+                };
 
-                uploadStickerMutation.mutate({ stickerPackId, formData });
+                uploadStickerMutation.mutate({ stickerPackId, stickerName, file });
+            })
+            .catch((error) => {
+                if (error.code !== "E_PICKER_CANCELLED") {
+                    console.log(error);
+                }
             });
-        } catch (error) {
-            console.log(error);
-        }
     };
 
     const CoverSticker = ({ stickerPack }: { stickerPack: StickerPackRo }): React.ReactElement => {
