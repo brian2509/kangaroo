@@ -68,6 +68,8 @@ export class StickerPack {
       members: !this.members ? [] : this.members.map((member) => member.toRo()),
       views: this.views,
       likes: this.likes,
+      createdAt: this.createdAt,
+      updatedAt: this.updatedAt,
     };
   }
 

@@ -10,4 +10,6 @@ export class StickerPackRo {
   members: UserRo[];
   views: number;
   likes: number;
+  createdAt: Date;
+  updatedAt: Date;
 }

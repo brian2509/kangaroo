@@ -4,4 +4,6 @@ export class StickerRo {
   fileUrl: string;
   whatsAppStickerImageFileUrl: string;
   whatsAppIconImageFileUrl: string;
+  createdAt: Date;
+  updatedAt: Date;
 }
