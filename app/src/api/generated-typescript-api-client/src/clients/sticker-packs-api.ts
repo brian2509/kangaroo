@@ -36,7 +36,7 @@ export const StickerPacksApiAxiosParamCreator = function (configuration?: Config
     return {
         /**
          * 
-         * @summary Add a sticker to a sticker pack you own or a member of. The file must be less than 3MB and be of type /jpeg|jpg|png|gif/.
+         * @summary Add a sticker to a sticker pack you own or a member of. The file must be less than 0.10 MB and be of type /jpeg|jpg|png|webp|gif/.
          * @param {string} id 
          * @param {CreateStickerDto} createStickerDto 
          * @param {*} [options] Override http request option.
@@ -554,7 +554,7 @@ export const StickerPacksApiFp = function(configuration?: Configuration) {
     return {
         /**
          * 
-         * @summary Add a sticker to a sticker pack you own or a member of. The file must be less than 3MB and be of type /jpeg|jpg|png|gif/.
+         * @summary Add a sticker to a sticker pack you own or a member of. The file must be less than 0.10 MB and be of type /jpeg|jpg|png|webp|gif/.
          * @param {string} id 
          * @param {CreateStickerDto} createStickerDto 
          * @param {*} [options] Override http request option.
@@ -709,7 +709,7 @@ export const StickerPacksApiFactory = function (configuration?: Configuration, b
     return {
         /**
          * 
-         * @summary Add a sticker to a sticker pack you own or a member of. The file must be less than 3MB and be of type /jpeg|jpg|png|gif/.
+         * @summary Add a sticker to a sticker pack you own or a member of. The file must be less than 0.10 MB and be of type /jpeg|jpg|png|webp|gif/.
          * @param {string} id 
          * @param {CreateStickerDto} createStickerDto 
          * @param {*} [options] Override http request option.
@@ -851,7 +851,7 @@ export const StickerPacksApiFactory = function (configuration?: Configuration, b
 export class StickerPacksApi extends BaseAPI {
     /**
      * 
-     * @summary Add a sticker to a sticker pack you own or a member of. The file must be less than 3MB and be of type /jpeg|jpg|png|gif/.
+     * @summary Add a sticker to a sticker pack you own or a member of. The file must be less than 0.10 MB and be of type /jpeg|jpg|png|webp|gif/.
      * @param {string} id 
      * @param {CreateStickerDto} createStickerDto 
      * @param {*} [options] Override http request option.

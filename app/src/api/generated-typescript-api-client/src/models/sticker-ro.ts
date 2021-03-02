@@ -37,7 +37,19 @@ export interface StickerRo {
      * @type {string}
      * @memberof StickerRo
      */
-    url: string;
+    fileUrl: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof StickerRo
+     */
+    whatsAppStickerImageFileUrl: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof StickerRo
+     */
+    whatsAppIconImageFileUrl: string;
 }
 
 

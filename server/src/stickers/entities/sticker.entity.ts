@@ -1,7 +1,8 @@
 import {
   Column,
   CreateDateColumn,
-  Entity, JoinColumn,
+  Entity,
+  JoinColumn,
   ManyToOne,
   OneToOne,
   PrimaryGeneratedColumn,
@@ -44,6 +45,7 @@ export class Sticker {
     return {
       id: this.id,
       name: this.name,
+      fileUrl: this.whatsAppStickerImageFile.fileUrl(),
       whatsAppStickerImageFileUrl: this.whatsAppStickerImageFile.fileUrl(),
       whatsAppIconImageFileUrl: this.whatsAppIconImageFile.fileUrl(),
     };
