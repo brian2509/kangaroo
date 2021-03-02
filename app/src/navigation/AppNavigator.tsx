@@ -9,7 +9,7 @@ import { StickerDetailScreen } from "../screens/StickerDetailScreen";
 import { StickerDetailManageScreen } from "../screens/StickerDetailManageScreen";
 import { AuthContext } from "../contexts/AuthContext";
 import { Layout, Text } from "@ui-kitten/components";
-import { Sticker, StickerPack } from "../api/apiTypes";
+import { StickerPackRo, StickerRo } from "../api/generated-typescript-api-client/src";
 
 export type AuthStackParamList = {
     Login: undefined;
@@ -30,13 +30,13 @@ export const AuthStackScreen = (): JSX.Element => (
 export type HomeStackParamList = {
     Homescreen: undefined;
     StickerDetailScreen: {
-        stickerPack: StickerPack;
+        stickerPack: StickerPackRo;
     };
     StickerScreen: {
-        sticker: Sticker;
+        sticker: StickerRo;
     };
     StickerDetailManageScreen: {
-        stickerPack: StickerPack;
+        stickerPack: StickerPackRo;
     };
 };
 

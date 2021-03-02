@@ -4,10 +4,11 @@ import { Image, SafeAreaView, StyleSheet } from "react-native";
 import { AuthContext } from "../contexts/AuthContext";
 import { StackScreenProps } from "@react-navigation/stack";
 import { AuthStackParamList } from "../navigation/AppNavigator";
-import API from "../api/api";
 import { useMutation } from "react-query";
 import { logErrorResponse } from "../util/logging";
 import tailwind from "tailwind-rn";
+import { api } from "../api/generatedApiWrapper";
+import { LoginUserDto } from "../api/generated-typescript-api-client/src";
 
 type Props = StackScreenProps<AuthStackParamList, "Login">;
 
@@ -17,14 +18,17 @@ export const LoginScreen = ({ navigation }: Props) => {
     const [username, setUsername] = React.useState("username2");
     const [password, setPassword] = React.useState("password123");
 
-    const loginMutation = useMutation(API.login, {
-        onSuccess: (res) => {
-            login(res.access_token);
+    const loginMutation = useMutation(
+        async (loginUserDto: LoginUserDto) => (await api.auth.login(loginUserDto)).data,
+        {
+            onSuccess: (data) => {
+                login(data.access_token);
+            },
+            onError: (e: any) => {
+                logErrorResponse(e);
+            },
         },
-        onError: (e: any) => {
-            logErrorResponse(e);
-        },
-    });
+    );
 
     return (
         <SafeAreaView style={{ flex: 1 }}>
@@ -65,7 +69,7 @@ export const LoginScreen = ({ navigation }: Props) => {
                     <Text style={styles.text} category="h5">
                         {loginMutation.error &&
                             (loginMutation.error.response?.status == 401
-                                ? "Invalid password, please try again."
+                                ? "Invalid username/password, please try again."
                                 : "Login failed!")}
                     </Text>
                     {loginMutation.isLoading && (

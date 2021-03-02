@@ -1,12 +1,13 @@
 import React from "react";
 import { Layout, Text, Button, Input } from "@ui-kitten/components";
 import { SafeAreaView, StyleSheet } from "react-native";
-import API from "../api/api";
 import { StackScreenProps } from "@react-navigation/stack";
 import { AuthStackParamList } from "../navigation/AppNavigator";
 import { useMutation } from "react-query";
 import { logErrorResponse } from "../util/logging";
 import tailwind from "tailwind-rn";
+import { api } from "../api/generatedApiWrapper";
+import { RegisterUserDto } from "../api/generated-typescript-api-client/src";
 
 type Props = StackScreenProps<AuthStackParamList, "Register">;
 
@@ -15,14 +16,17 @@ export const RegisterScreen = ({ navigation }: Props) => {
     const [username, setUsername] = React.useState("username2");
     const [password, setPassword] = React.useState("password123");
 
-    const registerMutation = useMutation(API.register, {
-        onSuccess: (res) => {
-            navigation.pop();
+    const registerMutation = useMutation(
+        async (registerUserDto: RegisterUserDto) => (await api.auth.register(registerUserDto)).data,
+        {
+            onSuccess: (res) => {
+                navigation.pop();
+            },
+            onError: (e: any) => {
+                logErrorResponse(e);
+            },
         },
-        onError: (e: any) => {
-            logErrorResponse(e);
-        },
-    });
+    );
 
     return (
         <SafeAreaView style={{ flex: 1 }}>

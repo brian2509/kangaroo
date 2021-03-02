@@ -10,19 +10,19 @@ import {
 import { StackScreenProps } from "@react-navigation/stack";
 import { HomeStackParamList } from "../navigation/AppNavigator";
 import tailwind from "tailwind-rn";
-import { Sticker, StickerPack } from "src/api/apiTypes";
 import tw from "tailwind-react-native-classnames";
 import React from "react";
+import { StickerPackRo, StickerRo } from "../api/generated-typescript-api-client/src";
 
 type StickerPackProps = {
-    stickerPack: StickerPack;
-    onStickerPress?: (sticker: Sticker) => void;
+    stickerPack: StickerPackRo;
+    onStickerPress?: (sticker: StickerRo) => void;
 };
 
 const renderFrontSticker = (
-    stickers: Sticker[],
+    stickers: StickerRo[],
     style: StyleProp<ImageStyle>,
-    onStickerPress: (sticker: Sticker) => void,
+    onStickerPress: (sticker: StickerRo) => void,
 ): JSX.Element => {
     if (stickers.length > 0) {
         const sticker = stickers[0];
@@ -40,7 +40,7 @@ const renderFrontSticker = (
 };
 
 class AuthorStickersView extends React.Component<StickerPackProps> {
-    renderSticker = (sticker: Sticker): JSX.Element => {
+    renderSticker = (sticker: StickerRo): JSX.Element => {
         return (
             <TouchableOpacity
                 key={sticker.id}
@@ -135,7 +135,7 @@ class ToolBar extends React.Component<StickerPackProps> {
 
 type Props = StackScreenProps<HomeStackParamList, "StickerDetailScreen">;
 export class StickerDetailScreen extends React.Component<Props> {
-    private stickerPack: StickerPack;
+    private stickerPack: StickerPackRo;
 
     constructor(props: Props) {
         super(props);
@@ -143,7 +143,7 @@ export class StickerDetailScreen extends React.Component<Props> {
         this.onStickerPress = this.onStickerPress.bind(this);
     }
 
-    onStickerPress(data: Sticker): void {
+    onStickerPress(data: StickerRo): void {
         this.props.navigation.navigate("StickerScreen", { sticker: data });
     }
 
