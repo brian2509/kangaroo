@@ -1,12 +1,11 @@
 import React, { useEffect } from "react";
 import { Layout, List, Text, Button, Icon, Input } from "@ui-kitten/components";
-import { SafeAreaView, StyleSheet, Image } from "react-native";
+import { SafeAreaView, Image, ImageProps } from "react-native";
 import { AuthContext } from "../contexts/AuthContext";
 import { StackScreenProps } from "@react-navigation/stack";
 import { HomeStackParamList } from "../navigation/AppNavigator";
 import { uploadSticker } from "../api/customApiWrappers";
 import { useMutation, useQuery, useQueryClient } from "react-query";
-import { Sticker, StickerPack } from "../api/apiTypes";
 import { QUERY_KEYS } from "../constants/ReactQueryKeys";
 import { logErrorResponse } from "../util/logging";
 import tailwind from "tailwind-rn";
@@ -14,7 +13,11 @@ import ImagePicker, { Image as ImageData } from "react-native-image-crop-picker"
 import tw from "tailwind-react-native-classnames";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { api } from "../api/generatedApiWrapper";
-import { CreateStickerPackDto } from "../api/generated-typescript-api-client/src";
+import {
+    CreateStickerPackDto,
+    StickerPackRo,
+    StickerRo,
+} from "../api/generated-typescript-api-client/src";
 
 type Props = StackScreenProps<HomeStackParamList, "Homescreen">;
 
@@ -102,7 +105,7 @@ export const HomeScreen = ({ navigation }: Props): JSX.Element => {
         }
     };
 
-    const CoverSticker = ({ stickerPack }: { stickerPack: StickerPack }): React.ReactElement => {
+    const CoverSticker = ({ stickerPack }: { stickerPack: StickerPackRo }): React.ReactElement => {
         return (
             <>
                 {stickerPack.stickers.length > 0 ? (
@@ -122,7 +125,7 @@ export const HomeScreen = ({ navigation }: Props): JSX.Element => {
         );
     };
 
-    const StickerPreviews = ({ stickers }: { stickers: Sticker[] }): React.ReactElement => {
+    const StickerPreviews = ({ stickers }: { stickers: StickerRo[] }): React.ReactElement => {
         const stickersToPreview = stickers.slice(1, 1 + STICKERS_IN_PREVIEW);
         const stickersLeft = stickers.length - STICKERS_IN_PREVIEW - 1;
 
@@ -157,9 +160,13 @@ export const HomeScreen = ({ navigation }: Props): JSX.Element => {
         );
     };
 
-    const renderItemAccessory = (stickerPack: any) => {
-        const UploadIcon = (props: any) => <Icon {...props} name="upload" />;
-        const TrashIcon = (props: any) => <Icon {...props} name="trash" />;
+    const renderItemAccessory = (stickerPack: StickerPackRo) => {
+        const UploadIcon = (props: Partial<ImageProps> | undefined) => (
+            <Icon {...props} name="upload" />
+        );
+        const TrashIcon = (props: Partial<ImageProps> | undefined) => (
+            <Icon {...props} name="trash" />
+        );
 
         return (
             <>
@@ -197,7 +204,7 @@ export const HomeScreen = ({ navigation }: Props): JSX.Element => {
     const StickerPackStats = ({
         stickerPack,
     }: {
-        stickerPack: StickerPack;
+        stickerPack: StickerPackRo;
     }): React.ReactElement => {
         return (
             <Layout style={tailwind("flex-row")}>
@@ -217,7 +224,7 @@ export const HomeScreen = ({ navigation }: Props): JSX.Element => {
         );
     };
 
-    const StickerPackComponent = ({ item }: { item: StickerPack }) => {
+    const StickerPackComponent = ({ item }: { item: StickerPackRo }) => {
         //TODO add number of notifications to stickerpacks
         const numberOfNotifications = 1;
 

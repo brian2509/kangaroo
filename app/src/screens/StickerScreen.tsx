@@ -2,13 +2,13 @@ import { StackScreenProps } from "@react-navigation/stack";
 import { Icon, Layout } from "@ui-kitten/components";
 import React from "react";
 import { Image, SafeAreaView, TouchableOpacity } from "react-native";
-import { Sticker } from "src/api/apiTypes";
 import { HomeStackParamList } from "src/navigation/AppNavigator";
 import tw from "tailwind-react-native-classnames";
+import { StickerRo } from "../api/generated-typescript-api-client/src";
 
 type Props = StackScreenProps<HomeStackParamList, "StickerScreen">;
 export class StickerScreen extends React.Component<Props> {
-    private sticker: Sticker;
+    private sticker: StickerRo;
 
     constructor(props: Props) {
         super(props);
