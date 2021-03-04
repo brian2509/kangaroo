@@ -10,6 +10,7 @@ import { StickerDetailManageScreen } from "../screens/StickerDetailManageScreen"
 import { AuthContext } from "../contexts/AuthContext";
 import { Layout, Text } from "@ui-kitten/components";
 import { StickerPackRo, StickerRo } from "../api/generated-typescript-api-client/src";
+import { CreateStickerPackScreen } from "../screens/createpack/CreateStickerPackScreen";
 
 export type AuthStackParamList = {
     Login: undefined;
@@ -38,6 +39,7 @@ export type HomeStackParamList = {
     StickerDetailManageScreen: {
         stickerPack: StickerPackRo;
     };
+    CreateStickerPackScreen: undefined;
 };
 
 const HomeStack = createStackNavigator();
@@ -62,6 +64,11 @@ const HomeStackScreen = () => (
             name="StickerDetailManageScreen"
             component={StickerDetailManageScreen}
             options={{ title: "Group Members", headerBackTitle: " " }}
+        />
+        <HomeStack.Screen
+            name="CreateStickerPackScreen"
+            component={CreateStickerPackScreen}
+            options={{ title: "Create sticker pack", headerBackTitle: " " }}
         />
     </HomeStack.Navigator>
 );

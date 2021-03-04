@@ -50,8 +50,6 @@ export const HomeScreen = ({ navigation }: Props): JSX.Element => {
             (await api.stickerPacks.create(createStickerPackDto)).data,
         {
             onSuccess: (data) => {
-                console.log(data);
-
                 if (myStickerPacksQuery.data) {
                     queryClient.setQueryData(QUERY_KEYS.myStickerPacks, [
                         ...myStickerPacksQuery.data,
@@ -256,12 +254,7 @@ export const HomeScreen = ({ navigation }: Props): JSX.Element => {
             <Button
                 appearance="ghost"
                 style={tailwind("px-1")}
-                onPress={() =>
-                    createStickerPackMutation.mutate({
-                        name: generateName(),
-                        private: true,
-                    })
-                }
+                onPress={() => navigation.navigate("CreateStickerPackScreen")}
                 accessoryLeft={AddIcon}
             />
             <Button
