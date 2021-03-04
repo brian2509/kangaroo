@@ -2,7 +2,9 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
   ManyToOne,
+  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
@@ -25,8 +27,13 @@ export class Sticker {
   @ManyToOne(() => StickerPack, (stickerPack) => stickerPack.stickers)
   stickerPack: StickerPack;
 
-  @ManyToOne(() => PrivateFile, (file) => file.stickers, { eager: true })
-  file: PrivateFile;
+  @OneToOne(() => PrivateFile, { eager: true })
+  @JoinColumn()
+  whatsAppStickerImageFile: PrivateFile;
+
+  @OneToOne(() => PrivateFile, { eager: true })
+  @JoinColumn()
+  whatsAppIconImageFile: PrivateFile;
 
   @CreateDateColumn()
   createdAt: Date;
@@ -38,7 +45,9 @@ export class Sticker {
     return {
       id: this.id,
       name: this.name,
-      url: this.file.fileUrl(),
+      fileUrl: this.whatsAppStickerImageFile.fileUrl(),
+      whatsAppStickerImageFileUrl: this.whatsAppStickerImageFile.fileUrl(),
+      whatsAppIconImageFileUrl: this.whatsAppIconImageFile.fileUrl(),
     };
   }
 }

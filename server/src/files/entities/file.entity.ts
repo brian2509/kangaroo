@@ -19,9 +19,6 @@ export class PrivateFile {
   @Column()
   fileName: string;
 
-  @OneToMany(() => Sticker, (sticker) => sticker.file)
-  stickers?: Sticker[];
-
   @CreateDateColumn()
   createdAt: Date;
 
@@ -29,7 +26,6 @@ export class PrivateFile {
   updatedAt: Date;
 
   fileUrl(): string {
-    // TODO: Make this more robust.
     return `${process.env.DOMAIN_NAME}/api/files/${this.fileName}`;
   }
 }
