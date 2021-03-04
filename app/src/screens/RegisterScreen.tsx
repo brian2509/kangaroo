@@ -74,8 +74,8 @@ export const RegisterScreen = ({ navigation }: Props) => {
     );
 
 
-    const inputValidations = (validate.validate({ "email": email, "username": username, "password": password }, constraints) || "")
-    const defaultStatus = !formInteracted ? 'basic' : undefined
+    const inputValidations = formInteracted && (validate.validate({ "email": email, "username": username, "password": password }, constraints) || "")
+    // const defaultStatus = !formInteracted ? 'basic' : undefined
     const isEmailValid = !inputValidations["email"]
     const isUsernameValid = !inputValidations["username"]
     const isPasswordValid = !inputValidations["password"]
@@ -91,7 +91,7 @@ export const RegisterScreen = ({ navigation }: Props) => {
                         value={email}
                         placeholder="Enter your E-mail"
                         caption={!isEmailValid && inputValidations["email"][0]}
-                        status={defaultStatus || (!isEmailValid ? "danger" : "success")}
+                        status={!isEmailValid ? "danger" : "basic"}
                         captionIcon={!isEmailValid ? AlertIcon : undefined}
                         onChangeText={setEmail} />
                     <Input
@@ -100,7 +100,7 @@ export const RegisterScreen = ({ navigation }: Props) => {
                         value={username}
                         placeholder="Enter your username"
                         caption={!isUsernameValid && inputValidations["username"][0]}
-                        status={defaultStatus || (!isUsernameValid ? "danger" : "success")}
+                        status={!isUsernameValid ? "danger" : "basic"}
                         captionIcon={!isUsernameValid ? AlertIcon : undefined}
                         onChangeText={setUsername} />
                     <Input
@@ -112,7 +112,7 @@ export const RegisterScreen = ({ navigation }: Props) => {
                         secureTextEntry={secureTextEntry}
                         label="Password"
                         value={password}
-                        status={defaultStatus || (!isPasswordValid ? "danger" : "success")}
+                        status={!isPasswordValid ? "danger" : "basic"}
                         onChangeText={setPassword} />
 
                     <Layout style={tailwind("flex-row items-center justify-between pt-3")}>
