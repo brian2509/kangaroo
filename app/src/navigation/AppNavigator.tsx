@@ -3,7 +3,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { LoginScreen } from "../screens/LoginScreen";
 import { RegisterScreen } from "../screens/RegisterScreen";
-import { HomeScreen } from "../screens/HomeScreen";
+import { HomeScreen } from "../screens/home/HomeScreen";
 import { StickerScreen } from "../screens/StickerScreen";
 import { StickerDetailScreen } from "../screens/StickerDetailScreen";
 import { StickerDetailManageScreen } from "../screens/StickerDetailManageScreen";
