@@ -13,30 +13,11 @@ import tailwind from "tailwind-rn";
 import tw from "tailwind-react-native-classnames";
 import React from "react";
 import { StickerPackRo, StickerRo } from "../../../../api/generated-typescript-api-client/src";
+import { CoverStickerImage } from "../../../../common/CoverStickerImage";
 
 type StickerPackProps = {
     stickerPack: StickerPackRo;
     onStickerPress?: (sticker: StickerRo) => void;
-};
-
-const renderFrontSticker = (
-    stickers: StickerRo[],
-    style: StyleProp<ImageStyle>,
-    onStickerPress: (sticker: StickerRo) => void,
-): JSX.Element => {
-    if (stickers.length > 0) {
-        const sticker = stickers[0];
-        return (
-            <TouchableOpacity
-                onPress={() => {
-                    onStickerPress(sticker);
-                }}>
-                <Image style={style} source={{ uri: sticker.fileUrl }} />
-            </TouchableOpacity>
-        );
-    } else {
-        return <Image style={style} source={require("../../../../assets/placeholders/sticker_placeholder.png")} />;
-    }
 };
 
 class AuthorStickersView extends React.Component<StickerPackProps> {
@@ -151,11 +132,10 @@ export class StickerDetailScreen extends React.Component<Props> {
         this.props.navigation.setOptions({
             headerTitle: () => (
                 <Layout style={tw`flex-row left-0`}>
-                    {renderFrontSticker(
-                        this.stickerPack.stickers,
-                        tw.style("w-9 h-9 mr-3 rounded-full"),
-                        this.onStickerPress,
-                    )}
+                    <CoverStickerImage 
+                        stickerPack={this.stickerPack} 
+                        style={tw.style("w-9 h-9 mr-3 rounded-full")} 
+                        onStickerPress={this.onStickerPress} />
                     <TouchableOpacity
                         onPress={() =>
                             this.props.navigation.navigate("StickerPackManageScreen", {
