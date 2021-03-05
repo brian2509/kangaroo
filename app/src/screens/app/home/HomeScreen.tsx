@@ -13,6 +13,7 @@ import { api } from "../../../api/generatedApiWrapper";
 import { CreateStickerPackDto, StickerPackRo } from "../../../api/generated-typescript-api-client/src";
 import { HomeScreenHeader } from "./HomeScreenHeader";
 import { StickerPacksList } from "./StickerPackList";
+import { STICKER_FULL_SIZE_PX } from "../../../constants/StickerSizes";
 
 type Props = StackScreenProps<HomeStackParamList, "Homescreen">;
 
@@ -69,8 +70,8 @@ export const HomeScreen = ({ navigation }: Props): React.ReactElement => {
 
     const pickAndUploadSticker = async (stickerPackId: string) => {
         ImagePicker.openPicker({
-            width: 512,
-            height: 512,
+            width: STICKER_FULL_SIZE_PX,
+            height: STICKER_FULL_SIZE_PX,
             cropping: true,
             mediaType: "photo",
         })
