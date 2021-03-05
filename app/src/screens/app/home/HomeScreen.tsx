@@ -1,16 +1,16 @@
 import React, { useEffect } from "react";
 import tailwind from "tailwind-rn";
 import { SafeAreaView } from "react-native";
-import { AuthContext } from "../../contexts/AuthContext";
+import { AuthContext } from "../../../contexts/AuthContext";
 import { StackScreenProps } from "@react-navigation/stack";
-import { HomeStackParamList } from "../../navigation/AppNavigator";
-import { uploadSticker } from "../../api/customApiWrappers";
+import { HomeStackParamList } from "../../../navigation/AppNavigator";
+import { uploadSticker } from "../../../api/customApiWrappers";
 import { useMutation, useQuery, useQueryClient } from "react-query";
-import { QUERY_KEYS } from "../../constants/ReactQueryKeys";
-import { logErrorResponse } from "../../util/logging";
+import { QUERY_KEYS } from "../../../constants/ReactQueryKeys";
+import { logErrorResponse } from "../../../util/logging";
 import ImagePicker, { Image as ImageData } from "react-native-image-crop-picker";
-import { api } from "../../api/generatedApiWrapper";
-import { CreateStickerPackDto, StickerPackRo } from "../../api/generated-typescript-api-client/src";
+import { api } from "../../../api/generatedApiWrapper";
+import { CreateStickerPackDto, StickerPackRo } from "../../../api/generated-typescript-api-client/src";
 import { HomeScreenHeader } from "./HomeScreenHeader";
 import { StickerPacksList } from "./StickerPackList";
 
@@ -112,7 +112,7 @@ export const HomeScreen = ({ navigation }: Props): React.ReactElement => {
                 }
                 onRefresh={() => queryClient.invalidateQueries(QUERY_KEYS.myStickerPacks)}
                 onPressStickerPack={(stickerPack: StickerPackRo) => {
-                    navigation.navigate("StickerDetailScreen", {
+                    navigation.navigate("StickerPackDetailScreen", {
                         stickerPack,
                     });
                 }}
