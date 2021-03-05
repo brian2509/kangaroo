@@ -3,7 +3,7 @@ import tailwind from "tailwind-rn";
 import { Layout, List, Text } from "@ui-kitten/components";
 import { TouchableOpacity } from "react-native";
 import { StickerPackRo } from "../../../api/generated-typescript-api-client/src";
-import { CoverStickerImage } from "../../../common/CoverStickerImage";
+import { CoverStickerImage } from "../../../components/common/CoverStickerImage";
 import { StickerPreviews } from "./StickerPreviews";
 import { StickerPackStats } from "./StickerPackStats";
 import { StickerPackSideInfo } from "./StickerPackSideInfo";

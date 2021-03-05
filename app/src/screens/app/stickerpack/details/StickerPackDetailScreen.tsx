@@ -13,7 +13,7 @@ import tailwind from "tailwind-rn";
 import tw from "tailwind-react-native-classnames";
 import React from "react";
 import { StickerPackRo, StickerRo } from "../../../../api/generated-typescript-api-client/src";
-import { CoverStickerImage } from "../../../../common/CoverStickerImage";
+import { CoverStickerImage } from "../../../../components/common/CoverStickerImage";
 
 type StickerPackProps = {
     stickerPack: StickerPackRo;
