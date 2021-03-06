@@ -32,11 +32,11 @@ const constraints = {
         presence: true,
         length: {
             minimum: 4,
-            maximum: 10,
+            maximum: 20,
             message: "must at least contain 4 and at most 20 characters",
         },
         format: {
-            pattern: "^(?=[a-zA-Z0-9._]{5,20}$)(?!.*[_.]{2})[^_.].*[^_.]$",
+            pattern: "^(?=[a-zA-Z0-9._]{4,20}$)(?!.*[_.]{2})[^_.].*[^_.]$",
             message: "contains illegal characters",
         },
     },
