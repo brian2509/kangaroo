@@ -8,12 +8,12 @@ import {
     TouchableOpacity,
 } from "react-native";
 import { StackScreenProps } from "@react-navigation/stack";
-import { HomeStackParamList } from "../../../../navigation/AppNavigator";
+import { HomeStackParamList } from "../../../navigation/AppNavigator";
 import tailwind from "tailwind-rn";
 import tw from "tailwind-react-native-classnames";
 import React from "react";
-import { StickerPackRo, StickerRo } from "../../../../api/generated-typescript-api-client/src";
-import { CoverStickerImage } from "../../../../components/common/CoverStickerImage";
+import { StickerPackRo, StickerRo } from "../../../api/generated-typescript-api-client/src";
+import { CoverStickerImage } from "../../../components/common/CoverStickerImage";
 
 type StickerPackProps = {
     stickerPack: StickerPackRo;
@@ -132,9 +132,9 @@ export class StickerDetailScreen extends React.Component<Props> {
         this.props.navigation.setOptions({
             headerTitle: () => (
                 <Layout style={tw`flex-row left-0`}>
-                    <CoverStickerImage 
-                        stickerPack={this.stickerPack} 
-                        style={tw.style("w-9 h-9 mr-3 rounded-full")} 
+                    <CoverStickerImage
+                        stickerPack={this.stickerPack}
+                        style={tw.style("w-9 h-9 mr-3 rounded-full")}
                         onStickerPress={this.onStickerPress} />
                     <TouchableOpacity
                         onPress={() =>

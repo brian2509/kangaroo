@@ -1,6 +1,6 @@
 import React from "react";
 import tailwind from "tailwind-rn";
-import { StickerPackRo } from "../../../api/generated-typescript-api-client/src";
+import { StickerPackRo } from "../../api/generated-typescript-api-client/src";
 import { Image } from "react-native";
 import { Layout, Text } from "@ui-kitten/components";
 

@@ -1,8 +1,8 @@
 import React from "react";
 import tailwind from "tailwind-rn";
 import { Layout } from "@ui-kitten/components";
-import { StickerPackRo } from "../../../api/generated-typescript-api-client/src";
-import { TextWithIcon } from "../../../components/common/TextWithIcon";
+import { StickerPackRo } from "../../api/generated-typescript-api-client/src";
+import { TextWithIcon } from "../common/TextWithIcon";
 
 interface Props {
     stickerPack: StickerPackRo;
