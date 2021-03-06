@@ -1,6 +1,6 @@
 import React from "react";
-import { Layout, Text, Button, Input, Spinner } from "@ui-kitten/components";
-import { Image, SafeAreaView, StyleSheet } from "react-native";
+import { Layout, Text, Button, Input, Spinner, Card, Icon, InputProps, IconProps } from "@ui-kitten/components";
+import { Image, Keyboard, SafeAreaView, StyleSheet, TouchableWithoutFeedback } from "react-native";
 import { AuthContext } from "../contexts/AuthContext";
 import { StackScreenProps } from "@react-navigation/stack";
 import { AuthStackParamList } from "../navigation/AppNavigator";
@@ -17,6 +17,7 @@ export const LoginScreen = ({ navigation }: Props) => {
 
     const [username, setUsername] = React.useState("username2");
     const [password, setPassword] = React.useState("password123");
+    const [secureTextEntry, setSecureTextEntry] = React.useState(true);
 
     const loginMutation = useMutation(
         async (loginUserDto: LoginUserDto) => (await api.auth.login(loginUserDto)).data,
@@ -29,6 +30,16 @@ export const LoginScreen = ({ navigation }: Props) => {
             },
         },
     );
+
+    const visibilityIcon = (props: IconProps) => (
+        <TouchableWithoutFeedback onPress={toggleSecureEntry}>
+            <Icon {...props} name={secureTextEntry ? 'eye-off' : 'eye'} />
+        </TouchableWithoutFeedback>
+    );
+
+    const toggleSecureEntry = () => {
+        setSecureTextEntry(!secureTextEntry);
+    };
 
     return (
         <SafeAreaView style={{ flex: 1 }}>
@@ -44,14 +55,17 @@ export const LoginScreen = ({ navigation }: Props) => {
                         style={styles.input}
                         size="medium"
                         label="Username"
+                        placeholder="Enter your username"
                         value={username}
-                        onChangeText={setUsername}></Input>
+                        onChangeText={setUsername} />
                     <Input
                         style={styles.input}
-                        size="medium"
+                        placeholder="**********"
+                        accessoryRight={visibilityIcon}
+                        secureTextEntry={secureTextEntry}
                         label="Password"
                         value={password}
-                        onChangeText={setPassword}></Input>
+                        onChangeText={setPassword} />
                     <Layout style={tailwind("flex-row items-center justify-between pt-3")}>
                         <Text
                             style={tailwind("pl-2 font-semibold text-blue-500")}
@@ -62,16 +76,19 @@ export const LoginScreen = ({ navigation }: Props) => {
                         </Text>
                         <Button
                             style={tailwind("pl-10 pr-10")}
-                            onPress={() => loginMutation.mutate({ username, password })}>
+                            onPress={() => { Keyboard.dismiss(), loginMutation.mutate({ username, password }) }}>
                             Sign in
                         </Button>
                     </Layout>
-                    <Text style={styles.text} category="h5">
-                        {loginMutation.error &&
-                            (loginMutation.error.response?.status == 401
-                                ? "Invalid username/password, please try again."
-                                : "Login failed!")}
-                    </Text>
+                    {loginMutation.error && (
+                        <Card style={styles.card} status='danger'>
+                            <Text style={styles.errorText} status="danger" appearance="hint" category="s1">
+                                {loginMutation.error.response?.status == 401
+                                    ? "Invalid username or password, please try again."
+                                    : "Login failed!"}
+                            </Text>
+                        </Card>)
+                    }
                     {loginMutation.isLoading && (
                         <Layout style={styles.spinnerContainer}>
                             <Spinner size="giant" />
@@ -79,7 +96,7 @@ export const LoginScreen = ({ navigation }: Props) => {
                     )}
                 </Layout>
             </Layout>
-        </SafeAreaView>
+        </SafeAreaView >
     );
 };
 
@@ -90,8 +107,9 @@ const styles = StyleSheet.create({
         paddingTop: 16,
         paddingHorizontal: 16,
     },
-    text: {
+    errorText: {
         textAlign: "center",
+        marginVertical: 2,
     },
     registerContainer: {
         width: "100%",
@@ -106,5 +124,9 @@ const styles = StyleSheet.create({
     },
     spinnerContainer: {
         alignSelf: "center",
+    },
+    card: {
+        margin: 2,
+        marginTop: 20,
     },
 });
