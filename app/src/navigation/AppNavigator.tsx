@@ -5,7 +5,7 @@ import { LoginScreen } from "../screens/LoginScreen";
 import { RegisterScreen } from "../screens/RegisterScreen";
 import { HomeScreen } from "../screens/home/HomeScreen";
 import { StickerScreen } from "../screens/home/stickerpack/StickerScreen";
-import { StickerDetailScreen } from "../screens/home/stickerpack/StickerDetailScreen";
+import { StickerPackScreen } from "../screens/home/stickerpack/StickerPackScreen";
 import { StickerPackManageScreen } from "../screens/home/stickerpack/StickerPackManageScreen";
 import { AuthContext } from "../contexts/AuthContext";
 import { Layout, Text } from "@ui-kitten/components";
@@ -50,7 +50,7 @@ const HomeStackScreen = () => (
         />
         <HomeStack.Screen
             name="StickerPackDetailScreen"
-            component={StickerDetailScreen}
+            component={StickerPackScreen}
             options={{ title: "Details", headerBackTitle: " " }}
         />
         <HomeStack.Screen

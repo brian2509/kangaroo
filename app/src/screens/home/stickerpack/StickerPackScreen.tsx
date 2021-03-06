@@ -115,7 +115,7 @@ class ToolBar extends React.Component<StickerPackProps> {
 }
 
 type Props = StackScreenProps<HomeStackParamList, "StickerPackDetailScreen">;
-export class StickerDetailScreen extends React.Component<Props> {
+export class StickerPackScreen extends React.Component<Props> {
     private stickerPack: StickerPackRo;
 
     constructor(props: Props) {
