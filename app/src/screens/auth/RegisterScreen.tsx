@@ -1,50 +1,53 @@
 import React from "react";
 import { Layout, Text, Button, Input, Icon, Card, IconProps } from "@ui-kitten/components";
-import { Alert, Keyboard, Platform, SafeAreaView, StyleSheet, ToastAndroid, TouchableWithoutFeedback } from "react-native";
+import {
+    Alert,
+    Keyboard,
+    Platform,
+    SafeAreaView,
+    ToastAndroid,
+    TouchableWithoutFeedback,
+} from "react-native";
 import { StackScreenProps } from "@react-navigation/stack";
 import { AuthStackParamList } from "../../navigation/AppNavigator";
 import { useMutation } from "react-query";
 import { logErrorResponse } from "../../util/logging";
 import tailwind from "tailwind-rn";
-import validate from "validate.js"
+import validate from "validate.js";
 import { api } from "../../api/generatedApiWrapper";
 import { LoginUserDto, RegisterUserDto } from "../../api/generated-typescript-api-client/src";
 import { AuthContext } from "../../contexts/AuthContext";
 
 type Props = StackScreenProps<AuthStackParamList, "Register">;
 
-
-const AlertIcon = (props: IconProps) => (
-    <Icon {...props} name='alert-circle-outline' />
-);
-
+const AlertIcon = (props: IconProps) => <Icon {...props} name="alert-circle-outline" />;
 
 const constraints = {
     email: {
         email: {
-            message: "must be a valid address"
-        }
+            message: "must be a valid address",
+        },
     },
     username: {
         presence: true,
         length: {
             minimum: 4,
             maximum: 10,
-            message: "must at least contain 4 and at most 20 characters"
+            message: "must at least contain 4 and at most 20 characters",
         },
         format: {
             pattern: "^(?=[a-zA-Z0-9._]{5,20}$)(?!.*[_.]{2})[^_.].*[^_.]$",
-            message: "contains illegal characters"
-        }
+            message: "contains illegal characters",
+        },
     },
     password: {
         presence: true,
         length: {
             minimum: 8,
             maximum: 50,
-            message: "must at least contain 8 and at most 50 characters"
-        }
-    }
+            message: "must at least contain 8 and at most 50 characters",
+        },
+    },
 };
 
 export const RegisterScreen = ({ navigation }: Props) => {
@@ -56,13 +59,12 @@ export const RegisterScreen = ({ navigation }: Props) => {
     const [secureTextEntry, setSecureTextEntry] = React.useState(true);
     const [formInteracted, setFormInteracted] = React.useState(false);
 
-
     const registerMutation = useMutation(
         async (registerUserDto: RegisterUserDto) => (await api.auth.register(registerUserDto)).data,
         {
             onSuccess: (data) => {
-                showRegistrationMessage()
-                loginMutation.mutate({ username, password })
+                showRegistrationMessage();
+                loginMutation.mutate({ username, password });
             },
             onError: (e: any) => {
                 logErrorResponse(e);
@@ -88,25 +90,29 @@ export const RegisterScreen = ({ navigation }: Props) => {
 
     const visibilityIcon = (props: IconProps) => (
         <TouchableWithoutFeedback onPress={toggleSecureEntry}>
-            <Icon {...props} name={secureTextEntry ? 'eye-off' : 'eye'} />
+            <Icon {...props} name={secureTextEntry ? "eye-off" : "eye"} />
         </TouchableWithoutFeedback>
     );
 
-    const showRegistrationMessage =
-        Platform.select({
-            android: () => ToastAndroid.show("Account successfully registered", ToastAndroid.LONG),
-            default: () => Alert.alert("Account successfully registered")
-        });
+    const showRegistrationMessage = Platform.select({
+        android: () => ToastAndroid.show("Account successfully registered", ToastAndroid.LONG),
+        default: () => Alert.alert("Account successfully registered"),
+    });
 
-    const inputValidations = formInteracted && (validate.validate({ "email": email, "username": username, "password": password }, constraints) || "")
-    const isEmailValid = !inputValidations["email"]
-    const isUsernameValid = !inputValidations["username"]
-    const isPasswordValid = !inputValidations["password"]
+    const inputValidations =
+        formInteracted &&
+        (validate.validate({ email: email, username: username, password: password }, constraints) ||
+            "");
+    const isEmailValid = !inputValidations["email"];
+    const isUsernameValid = !inputValidations["username"];
+    const isPasswordValid = !inputValidations["password"];
 
     return (
         <SafeAreaView style={tailwind("flex-1")}>
             <Layout style={tailwind("flex-1 items-center pt-4 px-4")}>
-                <Layout style={tailwind("w-full m-16")} onTouchStart={() => setFormInteracted(true)}>
+                <Layout
+                    style={tailwind("w-full m-16")}
+                    onTouchStart={() => setFormInteracted(true)}>
                     <Text style={tailwind("text-4xl font-bold pb-4")}>Register</Text>
                     <Input
                         style={tailwind("w-full my-4")}
@@ -116,7 +122,8 @@ export const RegisterScreen = ({ navigation }: Props) => {
                         caption={!isEmailValid && inputValidations["email"][0]}
                         status={!isEmailValid ? "danger" : "basic"}
                         captionIcon={!isEmailValid ? AlertIcon : undefined}
-                        onChangeText={setEmail} />
+                        onChangeText={setEmail}
+                    />
                     <Input
                         style={tailwind("w-full my-4")}
                         label="Username"
@@ -125,7 +132,8 @@ export const RegisterScreen = ({ navigation }: Props) => {
                         caption={!isUsernameValid && inputValidations["username"][0]}
                         status={!isUsernameValid ? "danger" : "basic"}
                         captionIcon={!isUsernameValid ? AlertIcon : undefined}
-                        onChangeText={setUsername} />
+                        onChangeText={setUsername}
+                    />
                     <Input
                         style={tailwind("w-full my-4")}
                         placeholder="Enter your password"
@@ -136,7 +144,8 @@ export const RegisterScreen = ({ navigation }: Props) => {
                         label="Password"
                         value={password}
                         status={!isPasswordValid ? "danger" : "basic"}
-                        onChangeText={setPassword} />
+                        onChangeText={setPassword}
+                    />
 
                     <Layout style={tailwind("flex-row items-center justify-between pt-3")}>
                         <Text
@@ -148,35 +157,41 @@ export const RegisterScreen = ({ navigation }: Props) => {
                             style={tailwind("pl-10 pr-10")}
                             onPress={() => {
                                 Keyboard.dismiss(),
-                                    (!inputValidations &&
+                                    !inputValidations &&
                                         registerMutation.mutate({
                                             email,
                                             username,
                                             password,
-                                        }))
-                            }
-                            }
+                                        });
+                            }}
                             disabled={formInteracted && !!inputValidations}>
                             Register
                         </Button>
                     </Layout>
 
-                    {registerMutation.error &&
-                        (<Card style={tailwind("m-2 mt-20")} status='danger'>
-                            <Text style={tailwind("text-center my-2")} status="danger" appearance="hint" category="s1">
+                    {registerMutation.error && (
+                        <Card style={tailwind("m-2 mt-20")} status="danger">
+                            <Text
+                                style={tailwind("text-center my-2")}
+                                status="danger"
+                                appearance="hint"
+                                category="s1">
                                 {registerMutation.error.response?.status == 400
                                     ? registerMutation.error.response.data.message.map(
-                                        (errorMessage: string) => {
-                                            return errorMessage.charAt(0).toUpperCase() +
-                                                errorMessage.slice(1);
-                                        })
+                                          (errorMessage: string) => {
+                                              return (
+                                                  errorMessage.charAt(0).toUpperCase() +
+                                                  errorMessage.slice(1)
+                                              );
+                                          },
+                                      )
                                     : registerMutation.error.response?.status == 403
-                                        ? // 403 Forbidden. Example: user with that username already exists
-                                        registerMutation.error.response?.data.message
-                                        : "Please try again later ..."}
+                                    ? // 403 Forbidden. Example: user with that username already exists
+                                      registerMutation.error.response?.data.message
+                                    : "Please try again later ..."}
                             </Text>
                         </Card>
-                        )}
+                    )}
                 </Layout>
             </Layout>
         </SafeAreaView>

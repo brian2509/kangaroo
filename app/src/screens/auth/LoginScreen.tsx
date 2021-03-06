@@ -1,5 +1,5 @@
 import React from "react";
-import { Layout, Text, Button, Input, Spinner, Card, Icon, InputProps, IconProps } from "@ui-kitten/components";
+import { Layout, Text, Button, Input, Spinner, Card, Icon, IconProps } from "@ui-kitten/components";
 import { Image, Keyboard, SafeAreaView, StyleSheet, TouchableWithoutFeedback } from "react-native";
 import { AuthContext } from "../../contexts/AuthContext";
 import { StackScreenProps } from "@react-navigation/stack";
@@ -33,7 +33,7 @@ export const LoginScreen = ({ navigation }: Props) => {
 
     const visibilityIcon = (props: IconProps) => (
         <TouchableWithoutFeedback onPress={toggleSecureEntry}>
-            <Icon {...props} name={secureTextEntry ? 'eye-off' : 'eye'} />
+            <Icon {...props} name={secureTextEntry ? "eye-off" : "eye"} />
         </TouchableWithoutFeedback>
     );
 
@@ -57,7 +57,8 @@ export const LoginScreen = ({ navigation }: Props) => {
                         label="Username"
                         placeholder="Enter your username"
                         value={username}
-                        onChangeText={setUsername} />
+                        onChangeText={setUsername}
+                    />
                     <Input
                         style={tailwind("w-full my-4")}
                         placeholder="**********"
@@ -65,7 +66,8 @@ export const LoginScreen = ({ navigation }: Props) => {
                         secureTextEntry={secureTextEntry}
                         label="Password"
                         value={password}
-                        onChangeText={setPassword} />
+                        onChangeText={setPassword}
+                    />
                     <Layout style={tailwind("flex-row items-center justify-between pt-3")}>
                         <Text
                             style={tailwind("pl-2 font-semibold text-blue-500")}
@@ -76,19 +78,25 @@ export const LoginScreen = ({ navigation }: Props) => {
                         </Text>
                         <Button
                             style={tailwind("pl-10 pr-10")}
-                            onPress={() => { Keyboard.dismiss(), loginMutation.mutate({ username, password }) }}>
+                            onPress={() => {
+                                Keyboard.dismiss(), loginMutation.mutate({ username, password });
+                            }}>
                             Sign in
                         </Button>
                     </Layout>
                     {loginMutation.error && (
-                        <Card style={tailwind("m-4 mt-20")} status='danger'>
-                            <Text style={tailwind("text-center my-2")} status="danger" appearance="hint" category="s1">
+                        <Card style={tailwind("m-4 mt-20")} status="danger">
+                            <Text
+                                style={tailwind("text-center my-2")}
+                                status="danger"
+                                appearance="hint"
+                                category="s1">
                                 {loginMutation.error.response?.status == 401
                                     ? "Invalid username or password, please try again."
                                     : "Login failed!"}
                             </Text>
-                        </Card>)
-                    }
+                        </Card>
+                    )}
                     {loginMutation.isLoading && (
                         <Layout style={tailwind("self-center")}>
                             <Spinner size="giant" />
@@ -96,6 +104,6 @@ export const LoginScreen = ({ navigation }: Props) => {
                     )}
                 </Layout>
             </Layout>
-        </SafeAreaView >
+        </SafeAreaView>
     );
 };
