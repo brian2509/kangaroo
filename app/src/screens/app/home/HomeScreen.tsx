@@ -103,6 +103,7 @@ export const HomeScreen = ({ navigation }: Props): React.ReactElement => {
                     createStickerPackMutation.mutate({
                         name: generateName(),
                         private: true,
+                        animated: false,
                     })
                 }
                 onLogout={logout}

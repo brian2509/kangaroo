@@ -6,4 +6,5 @@ export * from './login-user-dto';
 export * from './register-user-dto';
 export * from './sticker-pack-ro';
 export * from './sticker-ro';
+export * from './update-sticker-pack-dto';
 export * from './user-ro';

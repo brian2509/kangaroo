@@ -17,27 +17,27 @@
 /**
  * 
  * @export
- * @interface CreateStickerPackDto
+ * @interface UpdateStickerPackDto
  */
-export interface CreateStickerPackDto {
+export interface UpdateStickerPackDto {
     /**
      * 
      * @type {string}
-     * @memberof CreateStickerPackDto
+     * @memberof UpdateStickerPackDto
      */
-    name: string;
+    name?: string;
     /**
      * 
      * @type {boolean}
-     * @memberof CreateStickerPackDto
+     * @memberof UpdateStickerPackDto
      */
-    _private: boolean;
+    _private?: boolean;
     /**
      * 
      * @type {boolean}
-     * @memberof CreateStickerPackDto
+     * @memberof UpdateStickerPackDto
      */
-    animated: boolean;
+    animated?: boolean;
 }
 
 
