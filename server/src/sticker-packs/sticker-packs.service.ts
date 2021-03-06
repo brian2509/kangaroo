@@ -150,7 +150,7 @@ export class StickerPacksService {
 
   async findAllPublicPacks(): Promise<StickerPackRo[]> {
     const stickerPacks = await this.stickerPackRepository.find({
-      where: { private: false },
+      where: { personal: false },
     });
     return stickerPacks.map((stickerPack) => stickerPack.toRO());
   }
@@ -165,7 +165,7 @@ export class StickerPacksService {
     }
 
     if (
-      stickerPack.private &&
+      stickerPack.personal &&
       !stickerPack.isOwner(userId) &&
       !stickerPack.isMember(userId)
     ) {
@@ -186,7 +186,7 @@ export class StickerPacksService {
     if (stickerPack.isOwner(userId)) {
       throw new ForbiddenException("You can't join your own sticker pack.");
     }
-    if (!stickerPack.isOwner(userId) && stickerPack.private) {
+    if (!stickerPack.isOwner(userId) && stickerPack.personal) {
       throw new ForbiddenException(
         "Not allowed to join this private sticker pack."
       );
