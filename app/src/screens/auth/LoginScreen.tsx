@@ -17,7 +17,7 @@ export const LoginScreen = ({ navigation }: Props) => {
 
     const [username, setUsername] = React.useState("username2");
     const [password, setPassword] = React.useState("password123");
-    const [secureTextEntry, setSecureTextEntry] = React.useState(true);
+    const [showPassword, setShowPassword] = React.useState(false);
 
     const loginMutation = useMutation(
         async (loginUserDto: LoginUserDto) => (await api.auth.login(loginUserDto)).data,
@@ -32,13 +32,13 @@ export const LoginScreen = ({ navigation }: Props) => {
     );
 
     const visibilityIcon = (props: IconProps) => (
-        <TouchableWithoutFeedback onPress={toggleSecureEntry}>
-            <Icon {...props} name={secureTextEntry ? "eye-off" : "eye"} />
+        <TouchableWithoutFeedback onPress={toggleShowPassword}>
+            <Icon {...props} name={showPassword ? "eye-off" : "eye"} />
         </TouchableWithoutFeedback>
     );
 
-    const toggleSecureEntry = () => {
-        setSecureTextEntry(!secureTextEntry);
+    const toggleShowPassword = () => {
+        setShowPassword(!showPassword);
     };
 
     return (
@@ -63,7 +63,7 @@ export const LoginScreen = ({ navigation }: Props) => {
                         style={tailwind("w-full my-4")}
                         placeholder="**********"
                         accessoryRight={visibilityIcon}
-                        secureTextEntry={secureTextEntry}
+                        secureTextEntry={!showPassword}
                         label="Password"
                         value={password}
                         onChangeText={setPassword}
