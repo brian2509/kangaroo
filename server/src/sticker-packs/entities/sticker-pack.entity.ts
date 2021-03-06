@@ -23,7 +23,7 @@ export class StickerPack {
   name: string;
 
   @Column()
-  private: boolean;
+  personal: boolean;
 
   @ManyToOne(() => User, (user) => user.stickers)
   author: User;
@@ -58,7 +58,7 @@ export class StickerPack {
     return {
       id: this.id,
       name: this.name,
-      private: this.private,
+      personal: this.personal,
       stickers: !this.stickers
         ? []
         : this.stickers.map((sticker) => sticker.toRO()),

@@ -4,7 +4,7 @@ import { UserRo } from "../../users/dto/response-user.dto";
 export class StickerPackRo {
   id: string;
   name: string;
-  private: boolean;
+  personal: boolean;
   stickers: StickerRo[];
   members: UserRo[];
   views: number;
