@@ -47,7 +47,7 @@ export const LoginScreen = ({ navigation }: Props) => {
                 <Layout style={tailwind("p-2")}>
                     <Image
                         style={tailwind("w-32 h-32 m-14 mt-6 self-center rounded-full")}
-                        source={require("../images/logo.png")}
+                        source={require("../assets/logo/logo.png")}
                     />
 
                     <Text style={tailwind("text-4xl font-bold pb-4")}>Sign In</Text>
