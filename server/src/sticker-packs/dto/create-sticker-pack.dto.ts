@@ -7,4 +7,7 @@ export class CreateStickerPackDto {
 
   @IsNotEmpty()
   private: boolean;
+
+  @IsNotEmpty()
+  animated: boolean;
 }

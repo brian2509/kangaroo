@@ -6,6 +6,7 @@ import {
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { MulterFile } from "../files/file.validation";
+import { WHATSAPP_MAX_PACK_SIZE } from "../stickers/constants/whatsapp.constants";
 import { CreateStickerDto } from "../stickers/dto/create-sticker.dto";
 import { StickersService } from "../stickers/stickers.service";
 import { CreateStickerPackDto } from "./dto/create-sticker-pack.dto";
@@ -26,8 +27,7 @@ export class StickerPacksService {
     userId: string
   ): Promise<StickerPackRo> {
     const stickerPack = this.stickerPackRepository.create({
-      name: createStickerPackDto.name,
-      private: createStickerPackDto.private,
+      ...createStickerPackDto,
       author: { id: userId },
     });
     const result = await this.stickerPackRepository.save(stickerPack);
@@ -49,6 +49,15 @@ export class StickerPacksService {
     if (!stickerPack.isOwner(userId)) {
       throw new ForbiddenException("Not the owner of the pack.");
     }
+    if (
+      stickerPack.stickers.length > 0 &&
+      updateStickerPackDto.animated !== stickerPack.animated
+    ) {
+      throw new ForbiddenException(
+        "You can not change the animation status of this pack, because there are still stickers in it."
+      );
+    }
+
     await this.stickerPackRepository.save({
       ...stickerPack,
       ...updateStickerPackDto,
@@ -105,7 +114,7 @@ export class StickerPacksService {
       );
     }
 
-    if (stickerPack.stickers.length >= 30) {
+    if (stickerPack.stickers.length >= WHATSAPP_MAX_PACK_SIZE) {
       throw new ForbiddenException(
         "This pack is full. The maximum amount of stickers in a pack is 30."
       );
@@ -115,6 +124,7 @@ export class StickerPacksService {
       id,
       createStickerDto,
       file,
+      stickerPack.animated,
       userId
     );
   }

@@ -50,6 +50,18 @@ export interface StickerRo {
      * @memberof StickerRo
      */
     whatsAppIconImageFileUrl: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof StickerRo
+     */
+    createdAt: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof StickerRo
+     */
+    updatedAt: string;
 }
 
 

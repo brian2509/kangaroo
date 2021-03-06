@@ -48,6 +48,8 @@ export class Sticker {
       fileUrl: this.whatsAppStickerImageFile.fileUrl(),
       whatsAppStickerImageFileUrl: this.whatsAppStickerImageFile.fileUrl(),
       whatsAppIconImageFileUrl: this.whatsAppIconImageFile.fileUrl(),
+      createdAt: this.createdAt,
+      updatedAt: this.updatedAt,
     };
   }
 }

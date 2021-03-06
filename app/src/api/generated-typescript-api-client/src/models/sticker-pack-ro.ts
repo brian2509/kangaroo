@@ -42,6 +42,12 @@ export interface StickerPackRo {
     _private: boolean;
     /**
      * 
+     * @type {boolean}
+     * @memberof StickerPackRo
+     */
+    animated: boolean;
+    /**
+     * 
      * @type {Array<StickerRo>}
      * @memberof StickerPackRo
      */
@@ -64,6 +70,18 @@ export interface StickerPackRo {
      * @memberof StickerPackRo
      */
     likes: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof StickerPackRo
+     */
+    createdAt: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof StickerPackRo
+     */
+    updatedAt: string;
 }
 
 
