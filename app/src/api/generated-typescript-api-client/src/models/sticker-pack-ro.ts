@@ -39,7 +39,7 @@ export interface StickerPackRo {
      * @type {boolean}
      * @memberof StickerPackRo
      */
-    _private: boolean;
+    personal: boolean;
     /**
      * 
      * @type {Array<StickerRo>}
