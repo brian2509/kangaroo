@@ -56,7 +56,7 @@ export const RegisterScreen = ({ navigation }: Props) => {
     const [email, setEmail] = React.useState("");
     const [username, setUsername] = React.useState("");
     const [password, setPassword] = React.useState("");
-    const [secureTextEntry, setSecureTextEntry] = React.useState(true);
+    const [showPassword, setShowPassword] = React.useState(false);
     const [formInteracted, setFormInteracted] = React.useState(false);
 
     const registerMutation = useMutation(
@@ -84,13 +84,13 @@ export const RegisterScreen = ({ navigation }: Props) => {
         },
     );
 
-    const toggleSecureEntry = () => {
-        setSecureTextEntry(!secureTextEntry);
+    const toggleShowPassword = () => {
+        setShowPassword(!showPassword);
     };
 
     const visibilityIcon = (props: IconProps) => (
-        <TouchableWithoutFeedback onPress={toggleSecureEntry}>
-            <Icon {...props} name={secureTextEntry ? "eye-off" : "eye"} />
+        <TouchableWithoutFeedback onPress={toggleShowPassword}>
+            <Icon {...props} name={showPassword ? "eye-off" : "eye"} />
         </TouchableWithoutFeedback>
     );
 
@@ -140,7 +140,7 @@ export const RegisterScreen = ({ navigation }: Props) => {
                         caption={!isPasswordValid && inputValidations["password"][0]}
                         accessoryRight={visibilityIcon}
                         captionIcon={!isPasswordValid ? AlertIcon : undefined}
-                        secureTextEntry={secureTextEntry}
+                        secureTextEntry={!showPassword}
                         label="Password"
                         value={password}
                         status={!isPasswordValid ? "danger" : "basic"}
