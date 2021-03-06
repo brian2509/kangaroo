@@ -1,19 +1,22 @@
 import React, { useEffect } from "react";
 import tailwind from "tailwind-rn";
 import { SafeAreaView } from "react-native";
-import { AuthContext } from "../../contexts/AuthContext";
+import { AuthContext } from "../../../contexts/AuthContext";
 import { StackScreenProps } from "@react-navigation/stack";
-import { HomeStackParamList } from "../../navigation/AppNavigator";
-import { uploadSticker } from "../../api/customApiWrappers";
+import { HomeStackParamList } from "../../../navigation/AppNavigator";
+import { uploadSticker } from "../../../api/customApiWrappers";
 import { useMutation, useQuery, useQueryClient } from "react-query";
-import { QUERY_KEYS } from "../../constants/ReactQueryKeys";
-import { logErrorResponse } from "../../util/logging";
+import { QUERY_KEYS } from "../../../constants/ReactQueryKeys";
+import { logErrorResponse } from "../../../util/logging";
 import ImagePicker, { Image as ImageData } from "react-native-image-crop-picker";
-import { api } from "../../api/generatedApiWrapper";
-import { CreateStickerPackDto, StickerPackRo } from "../../api/generated-typescript-api-client/src";
-import { HomeScreenHeader } from "../../components/home/HomeScreenHeader";
-import { StickerPacksList } from "../../components/stickerpack/StickerPackList";
-import { STICKER_FULL_SIZE_PX } from "../../constants/StickerSizes";
+import { api } from "../../../api/generatedApiWrapper";
+import {
+    CreateStickerPackDto,
+    StickerPackRo,
+} from "../../../api/generated-typescript-api-client/src";
+import { HomeScreenHeader } from "../../../components/home/HomeScreenHeader";
+import { StickerPacksList } from "../../../components/stickerpack/StickerPackList";
+import { STICKER_FULL_SIZE_PX } from "../../../constants/StickerSizes";
 
 type Props = StackScreenProps<HomeStackParamList, "Homescreen">;
 
