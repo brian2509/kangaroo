@@ -1,12 +1,12 @@
 import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
-import { LoginScreen } from "../screens/LoginScreen";
-import { RegisterScreen } from "../screens/RegisterScreen";
-import { HomeScreen } from "../screens/HomeScreen";
-import { StickerScreen } from "../screens/StickerScreen";
-import { StickerDetailScreen } from "../screens/StickerDetailScreen";
-import { StickerDetailManageScreen } from "../screens/StickerDetailManageScreen";
+import { LoginScreen } from "../screens/auth/LoginScreen";
+import { RegisterScreen } from "../screens/auth/RegisterScreen";
+import { HomeScreen } from "../screens/app/home/HomeScreen";
+import { StickerScreen } from "../screens/app/home/stickerpack/StickerScreen";
+import { StickerPackScreen } from "../screens/app/home/stickerpack/StickerPackScreen";
+import { StickerPackManageScreen } from "../screens/app/home/stickerpack/StickerPackManageScreen";
 import { AuthContext } from "../contexts/AuthContext";
 import { Layout, Text } from "@ui-kitten/components";
 import { StickerPackRo, StickerRo } from "../api/generated-typescript-api-client/src";
@@ -29,14 +29,14 @@ export const AuthStackScreen = (): JSX.Element => (
 
 export type HomeStackParamList = {
     Homescreen: undefined;
-    StickerDetailScreen: {
+    StickerPackDetailScreen: {
+        stickerPack: StickerPackRo;
+    };
+    StickerPackManageScreen: {
         stickerPack: StickerPackRo;
     };
     StickerScreen: {
         sticker: StickerRo;
-    };
-    StickerDetailManageScreen: {
-        stickerPack: StickerPackRo;
     };
 };
 
@@ -49,8 +49,8 @@ const HomeStackScreen = () => (
             options={{ headerShown: false }}
         />
         <HomeStack.Screen
-            name="StickerDetailScreen"
-            component={StickerDetailScreen}
+            name="StickerPackDetailScreen"
+            component={StickerPackScreen}
             options={{ title: "Details", headerBackTitle: " " }}
         />
         <HomeStack.Screen
@@ -59,8 +59,8 @@ const HomeStackScreen = () => (
             options={{ title: "Sticker", headerBackTitle: " " }}
         />
         <HomeStack.Screen
-            name="StickerDetailManageScreen"
-            component={StickerDetailManageScreen}
+            name="StickerPackManageScreen"
+            component={StickerPackManageScreen}
             options={{ title: "Group Members", headerBackTitle: " " }}
         />
     </HomeStack.Navigator>

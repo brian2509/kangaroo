@@ -14,10 +14,10 @@ import React from "react";
 import { SafeAreaView, TouchableOpacity, View } from "react-native";
 import { HomeStackParamList } from "src/navigation/AppNavigator";
 import tw from "tailwind-react-native-classnames";
-import { StickerPackRo } from "../api/generated-typescript-api-client/src";
+import { StickerPackRo } from "../../../../api/generated-typescript-api-client/src";
 
-type Props = StackScreenProps<HomeStackParamList, "StickerDetailManageScreen">;
-export class StickerDetailManageScreen extends React.Component<Props> {
+type Props = StackScreenProps<HomeStackParamList, "StickerPackManageScreen">;
+export class StickerPackManageScreen extends React.Component<Props> {
     private stickerPack: StickerPackRo;
 
     constructor(props: Props) {
