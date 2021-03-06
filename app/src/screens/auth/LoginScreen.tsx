@@ -1,14 +1,14 @@
 import React from "react";
 import { Layout, Text, Button, Input, Spinner, Card, Icon, InputProps, IconProps } from "@ui-kitten/components";
 import { Image, Keyboard, SafeAreaView, StyleSheet, TouchableWithoutFeedback } from "react-native";
-import { AuthContext } from "../contexts/AuthContext";
+import { AuthContext } from "../../contexts/AuthContext";
 import { StackScreenProps } from "@react-navigation/stack";
-import { AuthStackParamList } from "../navigation/AppNavigator";
+import { AuthStackParamList } from "../../navigation/AppNavigator";
 import { useMutation } from "react-query";
-import { logErrorResponse } from "../util/logging";
+import { logErrorResponse } from "../../util/logging";
 import tailwind from "tailwind-rn";
-import { api } from "../api/generatedApiWrapper";
-import { LoginUserDto } from "../api/generated-typescript-api-client/src";
+import { api } from "../../api/generatedApiWrapper";
+import { LoginUserDto } from "../../api/generated-typescript-api-client/src";
 
 type Props = StackScreenProps<AuthStackParamList, "Login">;
 
@@ -42,24 +42,24 @@ export const LoginScreen = ({ navigation }: Props) => {
     };
 
     return (
-        <SafeAreaView style={{ flex: 1 }}>
-            <Layout style={styles.container}>
+        <SafeAreaView style={tailwind("flex-1")}>
+            <Layout style={tailwind("flex-1 items-center pt-4 px-4")}>
                 <Layout style={tailwind("p-2")}>
                     <Image
                         style={tailwind("w-32 h-32 m-14 mt-6 self-center rounded-full")}
-                        source={require("../assets/logo/logo.png")}
+                        source={require("../../assets/logo/logo.png")}
                     />
 
                     <Text style={tailwind("text-4xl font-bold pb-4")}>Sign In</Text>
                     <Input
-                        style={styles.input}
+                        style={tailwind("w-full my-4")}
                         size="medium"
                         label="Username"
                         placeholder="Enter your username"
                         value={username}
                         onChangeText={setUsername} />
                     <Input
-                        style={styles.input}
+                        style={tailwind("w-full my-4")}
                         placeholder="**********"
                         accessoryRight={visibilityIcon}
                         secureTextEntry={secureTextEntry}
@@ -81,8 +81,8 @@ export const LoginScreen = ({ navigation }: Props) => {
                         </Button>
                     </Layout>
                     {loginMutation.error && (
-                        <Card style={styles.card} status='danger'>
-                            <Text style={styles.errorText} status="danger" appearance="hint" category="s1">
+                        <Card style={tailwind("m-4 mt-20")} status='danger'>
+                            <Text style={tailwind("text-center my-2")} status="danger" appearance="hint" category="s1">
                                 {loginMutation.error.response?.status == 401
                                     ? "Invalid username or password, please try again."
                                     : "Login failed!"}
@@ -90,7 +90,7 @@ export const LoginScreen = ({ navigation }: Props) => {
                         </Card>)
                     }
                     {loginMutation.isLoading && (
-                        <Layout style={styles.spinnerContainer}>
+                        <Layout style={tailwind("self-center")}>
                             <Spinner size="giant" />
                         </Layout>
                     )}
@@ -99,34 +99,3 @@ export const LoginScreen = ({ navigation }: Props) => {
         </SafeAreaView >
     );
 };
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        alignItems: "center",
-        paddingTop: 16,
-        paddingHorizontal: 16,
-    },
-    errorText: {
-        textAlign: "center",
-        marginVertical: 2,
-    },
-    registerContainer: {
-        width: "100%",
-        margin: 16,
-    },
-    input: {
-        width: "100%",
-        marginVertical: 4,
-    },
-    button: {
-        marginVertical: 16,
-    },
-    spinnerContainer: {
-        alignSelf: "center",
-    },
-    card: {
-        margin: 2,
-        marginTop: 20,
-    },
-});
