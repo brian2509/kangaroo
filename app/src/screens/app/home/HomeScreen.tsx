@@ -102,7 +102,7 @@ export const HomeScreen = ({ navigation }: Props): React.ReactElement => {
                 onCreateStickerPack={() =>
                     createStickerPackMutation.mutate({
                         name: generateName(),
-                        private: true,
+                        personal: true,
                         animated: false,
                     })
                 }

@@ -37,7 +37,7 @@ import { UpdateStickerPackDto } from '../models';
 export const StickerPacksApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
         /**
-         *      1. In animated packs only gifs can be uploaded, in non-animated packs only jpg/png.     2. Files uploaded must be square.     3. File must be less than 100 KB for non-animated stickers and 500 KB or animated stickers.     4. Try to keep the dimensions close to 512x96 (whatsapp-spec), however if not possible it will be resized on back-end.
+         *      1. In animated packs only gifs can be uploaded, in non-animated packs only jpg/png.     2. Files uploaded must be square.     3. File must be less than 100 KB for non-animated stickers and 500 KB or animated stickers.     4. Try to keep the dimensions close to 512x512 (whatsapp-spec), however if not possible it will be resized on back-end.
          * @summary Add a sticker to a sticker pack you own or a member of. See description for requirements.
          * @param {string} id 
          * @param {CreateStickerDto} createStickerDto 
@@ -555,7 +555,7 @@ export const StickerPacksApiFp = function(configuration?: Configuration) {
     const localVarAxiosParamCreator = StickerPacksApiAxiosParamCreator(configuration)
     return {
         /**
-         *      1. In animated packs only gifs can be uploaded, in non-animated packs only jpg/png.     2. Files uploaded must be square.     3. File must be less than 100 KB for non-animated stickers and 500 KB or animated stickers.     4. Try to keep the dimensions close to 512x96 (whatsapp-spec), however if not possible it will be resized on back-end.
+         *      1. In animated packs only gifs can be uploaded, in non-animated packs only jpg/png.     2. Files uploaded must be square.     3. File must be less than 100 KB for non-animated stickers and 500 KB or animated stickers.     4. Try to keep the dimensions close to 512x512 (whatsapp-spec), however if not possible it will be resized on back-end.
          * @summary Add a sticker to a sticker pack you own or a member of. See description for requirements.
          * @param {string} id 
          * @param {CreateStickerDto} createStickerDto 
@@ -710,7 +710,7 @@ export const StickerPacksApiFactory = function (configuration?: Configuration, b
     const localVarFp = StickerPacksApiFp(configuration)
     return {
         /**
-         *      1. In animated packs only gifs can be uploaded, in non-animated packs only jpg/png.     2. Files uploaded must be square.     3. File must be less than 100 KB for non-animated stickers and 500 KB or animated stickers.     4. Try to keep the dimensions close to 512x96 (whatsapp-spec), however if not possible it will be resized on back-end.
+         *      1. In animated packs only gifs can be uploaded, in non-animated packs only jpg/png.     2. Files uploaded must be square.     3. File must be less than 100 KB for non-animated stickers and 500 KB or animated stickers.     4. Try to keep the dimensions close to 512x512 (whatsapp-spec), however if not possible it will be resized on back-end.
          * @summary Add a sticker to a sticker pack you own or a member of. See description for requirements.
          * @param {string} id 
          * @param {CreateStickerDto} createStickerDto 
@@ -852,7 +852,7 @@ export const StickerPacksApiFactory = function (configuration?: Configuration, b
  */
 export class StickerPacksApi extends BaseAPI {
     /**
-     *      1. In animated packs only gifs can be uploaded, in non-animated packs only jpg/png.     2. Files uploaded must be square.     3. File must be less than 100 KB for non-animated stickers and 500 KB or animated stickers.     4. Try to keep the dimensions close to 512x96 (whatsapp-spec), however if not possible it will be resized on back-end.
+     *      1. In animated packs only gifs can be uploaded, in non-animated packs only jpg/png.     2. Files uploaded must be square.     3. File must be less than 100 KB for non-animated stickers and 500 KB or animated stickers.     4. Try to keep the dimensions close to 512x512 (whatsapp-spec), however if not possible it will be resized on back-end.
      * @summary Add a sticker to a sticker pack you own or a member of. See description for requirements.
      * @param {string} id 
      * @param {CreateStickerDto} createStickerDto 
