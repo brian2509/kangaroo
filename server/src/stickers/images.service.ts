@@ -1,3 +1,4 @@
+import * as gifResize from "@gumlet/gif-resize";
 import { ForbiddenException, Injectable } from "@nestjs/common";
 import * as sharp from "sharp";
 import {
@@ -35,9 +36,12 @@ export class ImagesService {
     let whatsAppIconImage;
     try {
       if (animated) {
-        // TODO: Resize this animated file somehow.
-        // https://github.com/lovell/sharp/issues/2275
-        whatsAppStickerImage = await sharp(data, {
+        const resizedGif = await this.gifResizeWrapper(
+          data,
+          WHATSAPP_STICKER_WIDTH_PX,
+          WHATSAPP_STICKER_HEIGHT_PX
+        );
+        whatsAppStickerImage = await sharp(resizedGif, {
           animated: true,
         })
           .webp()
@@ -75,5 +79,27 @@ export class ImagesService {
     }
 
     return { whatsAppStickerImage, whatsAppIconImage };
+  }
+
+  async gifResizeWrapper(
+    data: Buffer,
+    width: number,
+    height: number
+  ): Promise<Buffer> {
+    /**
+     * TODO: This function is very slow; either do everything on the client or wait for sharp update.
+     * https://github.com/lovell/sharp/issues/2275
+     */
+    return new Promise<Buffer>((resolve, reject) => {
+      gifResize({
+        width,
+        height,
+        stretch: true,
+      })(data)
+        .then((data) => {
+          resolve(data);
+        })
+        .catch((error) => reject(error));
+    });
   }
 }
