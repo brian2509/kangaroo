@@ -10,46 +10,35 @@ import {
     ListItem,
     Modal,
 } from "@ui-kitten/components";
-import React from "react";
-import { SafeAreaView, TouchableOpacity, View } from "react-native";
+import React, { useEffect, useState } from "react";
+import { SafeAreaView, TouchableOpacity } from "react-native";
 import { HomeStackParamList } from "src/navigation/AppNavigator";
 import tw from "tailwind-react-native-classnames";
-import { StickerPackRo } from "../../../../api/generated-typescript-api-client/src";
 
 type Props = StackScreenProps<HomeStackParamList, "StickerPackManageScreen">;
-export class StickerPackManageScreen extends React.Component<Props> {
-    private stickerPack: StickerPackRo;
+export const StickerPackManageScreen = ({ navigation }: Props): React.ReactElement => {
+    const [visible, setVisible] = useState<boolean>(false);
+    const [clickedMember, setClickedMember] = useState<string>("loading");
 
-    constructor(props: Props) {
-        super(props);
-        this.stickerPack = props.route.params.stickerPack;
-        this.state = {
-            visible: false,
-            clickedMember: "loading",
-        };
-    }
+    const HeaderRight = () => (
+        <Layout style={tw`flex-row mr-4`}>
+            <TouchableOpacity activeOpacity={0.7}>
+                <Text>Share</Text>
+            </TouchableOpacity>
+        </Layout>
+    );
 
-    setVisible(visible: boolean): void {
-        this.setState({ ...this.state, visible });
-    }
-
-    componentDidMount(): void {
-        this.props.navigation.setOptions({
-            // headerTitle: this.stickerPack.name,
-            headerRight: () => (
-                <Layout style={tw`flex-row mr-4`}>
-                    <TouchableOpacity activeOpacity={0.7}>
-                        <Text>Share</Text>
-                    </TouchableOpacity>
-                </Layout>
-            ),
+    useEffect(() => {
+        navigation.setOptions({
+            headerRight: HeaderRight,
         });
-    }
+    }, []);
 
-    renderItem = ({ item }) => (
+    const renderItem = ({ item }: { item: any }) => (
         <ListItem
             onPress={() => {
-                this.setState({ visible: true, member: item.title });
+                setVisible(true);
+                setClickedMember(item.title);
             }}
             title={`${item.title}`}
             description={`${item.description}`}
@@ -58,59 +47,54 @@ export class StickerPackManageScreen extends React.Component<Props> {
         />
     );
 
-    render(): JSX.Element {
-        const data = [
-            {
-                title: "Willem Alexander",
-                description: "3 Stickers",
-            },
-            {
-                title: "Rowdy Planje",
-                description: "5 Stickers",
-            },
-            {
-                title: "Mika Brie",
-                description: "2 Stickers",
-            },
-        ];
+    const data = [
+        {
+            title: "Willem Alexander",
+            description: "3 Stickers",
+        },
+        {
+            title: "Rowdy Planje",
+            description: "5 Stickers",
+        },
+        {
+            title: "Mika Brie",
+            description: "2 Stickers",
+        },
+    ];
 
-        return (
-            <SafeAreaView style={tw`flex justify-center h-full bg-white`}>
-                <List data={data} ItemSeparatorComponent={Divider} renderItem={this.renderItem} />
-                <Modal
-                    visible={this.state.visible}
-                    style={tw`w-60`}
-                    backdropStyle={{
-                        backgroundColor: "rgba(0, 0, 0, 0.5)",
-                    }}
-                    onBackdropPress={() => this.setVisible(false)}>
-                    <Card
-                        disabled={true}
-                        header={() => (
-                            <Text style={tw`p-3 text-xs text-gray-500 text-center`}>
-                                {this.state.member}
-                            </Text>
-                        )}
-                        footer={() => (
-                            <Button
-                                size="medium"
-                                appearance="ghost"
-                                onPress={() => this.setVisible(false)}>
-                                Close
-                            </Button>
-                        )}>
-                        <Button size="medium" appearance="ghost" status="basic">
-                            Show Account
+    return (
+        <SafeAreaView style={tw`flex justify-center h-full bg-white`}>
+            <List data={data} ItemSeparatorComponent={Divider} renderItem={renderItem} />
+            <Modal
+                visible={visible}
+                style={tw`w-60`}
+                backdropStyle={{
+                    backgroundColor: "rgba(0, 0, 0, 0.5)",
+                }}
+                onBackdropPress={() => setVisible(false)}>
+                <Card
+                    disabled={true}
+                    header={() => (
+                        <Text style={tw`p-3 text-xs text-gray-500 text-center`}>
+                            {clickedMember}
+                        </Text>
+                    )}
+                    footer={() => (
+                        <Button size="medium" appearance="ghost" onPress={() => setVisible(false)}>
+                            Close
                         </Button>
-                        <Button size="medium" appearance="ghost" status="basic">
-                            Remove as Admin
-                        </Button>
-                        <Button status="danger" size="medium" appearance="ghost">
-                            Remove from Pack
-                        </Button>
-                    </Card>
-                </Modal>
-            </SafeAreaView>
-        );
-    }
-}
+                    )}>
+                    <Button size="medium" appearance="ghost" status="basic">
+                        Show Account
+                    </Button>
+                    <Button size="medium" appearance="ghost" status="basic">
+                        Remove as Admin
+                    </Button>
+                    <Button status="danger" size="medium" appearance="ghost">
+                        Remove from Pack
+                    </Button>
+                </Card>
+            </Modal>
+        </SafeAreaView>
+    );
+};
