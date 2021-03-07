@@ -68,7 +68,7 @@ const HomeStackScreen = () => (
         <HomeStack.Screen
             name="CreateStickerPackScreen"
             component={CreateStickerPackScreen}
-            options={{ title: "Create sticker pack", headerBackTitle: " " }}
+            options={{ title: "Create Sticker Pack", headerBackTitle: " " }}
         />
     </HomeStack.Navigator>
 );
