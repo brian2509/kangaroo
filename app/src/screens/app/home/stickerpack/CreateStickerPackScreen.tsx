@@ -1,15 +1,33 @@
 import { StackScreenProps } from "@react-navigation/stack";
-import { Button, CheckBox, Input, Layout, Text } from "@ui-kitten/components";
+import { Button, CheckBox, Icon, IconProps, Input, Layout, Text } from "@ui-kitten/components";
 import React, { useState } from "react";
 import { Keyboard } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useMutation, useQueryClient } from "react-query";
 import tailwind from "tailwind-rn";
+import validate from "validate.js";
 import { CreateStickerPackDto } from "../../../../api/generated-typescript-api-client/src";
 import { api } from "../../../../api/generatedApiWrapper";
 import { QUERY_KEYS } from "../../../../constants/ReactQueryKeys";
 import { HomeStackParamList } from "../../../../navigation/AppNavigator";
 import { logErrorResponse } from "../../../../util/logging";
+
+const AlertIcon = (props: IconProps) => <Icon {...props} name="alert-circle-outline" />;
+
+const constraints = {
+    name: {
+        presence: true,
+        length: {
+            minimum: 4,
+            maximum: 20,
+            message: "must at least contain 4 and at most 20 characters",
+        },
+        format: {
+            pattern: "^(?=[a-zA-Z0-9._]{4,20}$)(?!.*[_.]{2})[^_.].*[^_.]$",
+            message: "contains illegal characters",
+        },
+    },
+};
 
 type Props = StackScreenProps<HomeStackParamList, "CreateStickerPackScreen">;
 export const CreateStickerPackScreen = ({ navigation }: Props): React.ReactElement => {
@@ -27,6 +45,9 @@ export const CreateStickerPackScreen = ({ navigation }: Props): React.ReactEleme
         },
     );
 
+    const inputValidation = validate.validate({ name: stickerPackName }, constraints);
+    const isNameValid = inputValidation !== undefined ? !inputValidation["name"] : true;
+
     return (
         <SafeAreaView style={tailwind("flex-1 bg-white")}>
             <Layout style={tailwind("flex-col p-8")}>
@@ -36,8 +57,14 @@ export const CreateStickerPackScreen = ({ navigation }: Props): React.ReactEleme
                     placeholder="Name"
                     value={stickerPackName}
                     autoFocus={true}
+                    caption={
+                        !isNameValid && inputValidation !== undefined && inputValidation["name"][0]
+                    }
+                    status={!isNameValid ? "danger" : "basic"}
+                    captionIcon={!isNameValid ? AlertIcon : undefined}
                     onEndEditing={() => Keyboard.dismiss()}
-                    onChangeText={setStickerPackName}></Input>
+                    onChangeText={setStickerPackName}
+                />
                 <Layout style={tailwind("flex-row justify-between my-3")}>
                     <CheckBox
                         style={tailwind("ml-3 flex-grow")}
