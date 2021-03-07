@@ -18,12 +18,12 @@ const constraints = {
     name: {
         presence: true,
         length: {
-            minimum: 4,
+            minimum: 1,
             maximum: 30,
-            message: "must at least contain 4 and at most 30 characters",
+            message: "must at least contain 1 and at most 30 characters",
         },
         format: {
-            pattern: "[a-zA-Z0-9._ ]{4,30}",
+            pattern: "[a-zA-Z0-9._ ]*",
             message: "contains illegal characters",
         },
     },
@@ -75,20 +75,22 @@ export const CreateStickerPackScreen = ({ navigation }: Props): React.ReactEleme
                     <Button
                         style={tailwind("p-0 pl-2 pr-2")}
                         onPress={() => {
-                            createStickerPackMutation.mutate(
-                                {
-                                    name: stickerPackName,
-                                    personal: stickerPackPrivate,
-                                    animated: false,
-                                },
-                                {
-                                    onSuccess: (data) => {
-                                        navigation.replace("StickerPackDetailScreen", {
-                                            stickerPack: data,
-                                        });
+                            if (isNameValid) {
+                                createStickerPackMutation.mutate(
+                                    {
+                                        name: stickerPackName,
+                                        personal: stickerPackPrivate,
+                                        animated: false,
                                     },
-                                },
-                            );
+                                    {
+                                        onSuccess: (data) => {
+                                            navigation.replace("StickerPackDetailScreen", {
+                                                stickerPack: data,
+                                            });
+                                        },
+                                    },
+                                );
+                            }
                         }}>
                         Create
                     </Button>
