@@ -168,7 +168,7 @@ export const FeedScreen = ({ navigation }: Props): React.ReactElement => {
                 );
             },
         });
-    });
+    }, []);
 
     return (
         <SafeAreaView style={tailwind("w-full h-full")}>

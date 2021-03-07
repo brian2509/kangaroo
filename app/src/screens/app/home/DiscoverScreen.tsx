@@ -89,7 +89,7 @@ export const DiscoverScreen = ({ navigation }: Props): React.ReactElement => {
                 );
             },
         });
-    });
+    }, []);
 
     return (
         <Layout style={tw`flex-col bg-transparent h-4/5`}>
