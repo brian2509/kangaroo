@@ -22,7 +22,7 @@ if (process.env.CLIENT_GEN) {
 async function bootstrap() {
   // Load SSL certificated if set-up.
   let httpsOptions: HttpsOptions = {};
-  if (process.env.SSL) {
+  if (process.env.SSL && process.env.SSL === "true") {
     httpsOptions = {
       key: fs.readFileSync(path.join(__dirname, "..", "ssl", "privkey.pem")),
       cert: fs.readFileSync(path.join(__dirname, "..", "ssl", "cert.pem")),
