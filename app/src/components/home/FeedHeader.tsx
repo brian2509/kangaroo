@@ -5,13 +5,14 @@ import { ProfileIcon } from "../common/ProfileIcon";
 
 interface FeedProps {
     profilePhotoUri?: string;
+    onPress?: () => void;
 }
 
-export const FeedHeader = ({ profilePhotoUri }: FeedProps): React.ReactElement => {
+export const FeedHeader = ({ profilePhotoUri, onPress }: FeedProps): React.ReactElement => {
     return (
         <Layout style={tw`flex-row w-full`}>
             <Layout style={tw`w-full flex-row`}>
-                <ProfileIcon imageUri={profilePhotoUri}></ProfileIcon>
+                <ProfileIcon onPress={onPress} imageUri={profilePhotoUri}></ProfileIcon>
                 <Input
                     accessoryLeft={(props: any) => <Icon {...props} name="search" />}
                     size="small"

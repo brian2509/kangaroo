@@ -12,6 +12,7 @@ import { Icon, Layout, Text } from "@ui-kitten/components";
 import { StickerPackRo, StickerRo, UserRo } from "../api/generated-typescript-api-client/src";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { FeedScreen } from "../screens/app/home/FeedScreen";
+import { AccountScreen } from "../screens/app/home/AccountScreen";
 
 export type AuthStackParamList = {
     Login: undefined;
@@ -40,6 +41,9 @@ export type HomeStackParamList = {
     StickerScreen: {
         sticker: StickerRo;
     };
+};
+
+export type FeedStackParamList = {
     AccountScreen: {
         account: UserRo;
     };
@@ -77,9 +81,13 @@ const FeedStack = createStackNavigator();
 const FeedStackScreen = () => (
     <FeedStack.Navigator>
         <FeedStack.Screen
-            name="Feed"
+            name="FeedScreen"
             component={FeedScreen}
             options={{ title: " ", headerBackTitle: " " }}></FeedStack.Screen>
+        <FeedStack.Screen
+            name="AccountScreen"
+            component={AccountScreen}
+            options={{ title: "Account", headerBackTitle: " " }}></FeedStack.Screen>
     </FeedStack.Navigator>
 );
 

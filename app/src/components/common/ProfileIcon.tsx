@@ -3,14 +3,14 @@ import { Image, TouchableOpacity } from "react-native";
 import tw from "tailwind-react-native-classnames";
 
 export const PLACEHOLDER_STICKER_PATH = "../../assets/placeholders/sticker_placeholder.png";
-export const DEFAULT_IMAGE_STYLE = tw`h-8 w-8 rounded-full`;
 
 interface Props {
     imageUri?: string;
+    size?: number;
     onPress?: () => void;
 }
 
-export const ProfileIcon = ({ imageUri, onPress }: Props): React.ReactElement => {
+export const ProfileIcon = ({ imageUri, size = 8, onPress }: Props): React.ReactElement => {
     return (
         <TouchableOpacity
             disabled={onPress == undefined}
@@ -18,7 +18,7 @@ export const ProfileIcon = ({ imageUri, onPress }: Props): React.ReactElement =>
                 onPress?.();
             }}>
             <Image
-                style={DEFAULT_IMAGE_STYLE}
+                style={tw`h-${size} w-${size} rounded-full`}
                 source={
                     imageUri !== undefined
                         ? {

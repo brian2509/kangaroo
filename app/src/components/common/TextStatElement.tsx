@@ -12,7 +12,7 @@ export const TextStatElement = ({
     return (
         <Layout style={tw`flex-row bg-transparent`}>
             <Text style={tw`pr-2 text-xs`}>{value}</Text>
-            <Text style={tw`pr-6 text-xs text-gray-500`}>{text}</Text>
+            <Text style={tw`pr-6 text-xs text-gray-400`}>{text}</Text>
         </Layout>
     );
 };
