@@ -10,10 +10,7 @@ import { QUERY_KEYS } from "../../../constants/ReactQueryKeys";
 import { logErrorResponse } from "../../../util/logging";
 import ImagePicker, { Image as ImageData } from "react-native-image-crop-picker";
 import { api } from "../../../api/generatedApiWrapper";
-import {
-    CreateStickerPackDto,
-    StickerPackRo,
-} from "../../../api/generated-typescript-api-client/src";
+import { StickerPackRo } from "../../../api/generated-typescript-api-client/src";
 import { HomeScreenHeader } from "../../../components/home/HomeScreenHeader";
 import { StickerPacksList } from "../../../components/stickerpack/StickerPackList";
 import { STICKER_FULL_SIZE_PX } from "../../../constants/StickerSizes";
@@ -37,23 +34,6 @@ export const HomeScreen = ({ navigation }: Props): React.ReactElement => {
         QUERY_KEYS.myStickerPacks,
         async () => (await api.users.getOwnStickerPacks()).data,
         {
-            onError: logErrorResponse,
-        },
-    );
-
-    const createStickerPackMutation = useMutation(
-        async (createStickerPackDto: CreateStickerPackDto) =>
-            (await api.stickerPacks.create(createStickerPackDto)).data,
-        {
-            onSuccess: (data) => {
-                if (myStickerPacksQuery.data) {
-                    queryClient.setQueryData(QUERY_KEYS.myStickerPacks, [
-                        ...myStickerPacksQuery.data,
-                        data,
-                    ]);
-                }
-                () => queryClient.invalidateQueries(QUERY_KEYS.myStickerPacks);
-            },
             onError: logErrorResponse,
         },
     );
@@ -99,22 +79,12 @@ export const HomeScreen = ({ navigation }: Props): React.ReactElement => {
     return (
         <SafeAreaView style={tailwind("flex-1")}>
             <HomeScreenHeader
-                onCreateStickerPack={() =>
-                    createStickerPackMutation.mutate({
-                        name: generateName(),
-                        personal: true,
-                        animated: false,
-                    })
-                }
+                onCreateStickerPack={() => navigation.navigate("CreateStickerPackScreen")}
                 onLogout={logout}
             />
             <StickerPacksList
                 stickerPacks={myStickerPacksQuery.data}
-                refreshing={
-                    myStickerPacksQuery.isLoading ||
-                    createStickerPackMutation.isLoading ||
-                    removeStickerPackMutation.isLoading
-                }
+                refreshing={myStickerPacksQuery.isLoading || removeStickerPackMutation.isLoading}
                 onRefresh={() => queryClient.invalidateQueries(QUERY_KEYS.myStickerPacks)}
                 onPressStickerPack={(stickerPack: StickerPackRo) => {
                     navigation.navigate("StickerPackDetailScreen", {
