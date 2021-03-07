@@ -9,14 +9,16 @@ interface FeedProps {
 
 export const FeedHeader = ({ profilePhotoUri }: FeedProps): React.ReactElement => {
     return (
-        <Layout style={tw`w-full flex-row`}>
-            <ProfileIcon imageUri={profilePhotoUri}></ProfileIcon>
-            <Input
-                accessoryLeft={(props: any) => <Icon {...props} name="search" />}
-                size="small"
-                style={tw`rounded-xl ml-3 flex-1`}
-                placeholder="Search"
-            />
+        <Layout style={tw`flex-row w-full`}>
+            <Layout style={tw`w-full flex-row`}>
+                <ProfileIcon imageUri={profilePhotoUri}></ProfileIcon>
+                <Input
+                    accessoryLeft={(props: any) => <Icon {...props} name="search" />}
+                    size="small"
+                    style={tw`rounded-xl ml-3 flex-1`}
+                    placeholder="Search"
+                />
+            </Layout>
         </Layout>
     );
 };
