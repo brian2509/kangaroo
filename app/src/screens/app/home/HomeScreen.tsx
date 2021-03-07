@@ -17,6 +17,7 @@ import {
 import { HomeScreenHeader } from "../../../components/home/HomeScreenHeader";
 import { StickerPacksList } from "../../../components/stickerpack/StickerPackList";
 import { STICKER_FULL_SIZE_PX } from "../../../constants/StickerSizes";
+import { sortedStickerPacks } from "../../../util/sorting";
 
 type Props = StackScreenProps<HomeStackParamList, "Homescreen">;
 
@@ -109,13 +110,7 @@ export const HomeScreen = ({ navigation }: Props): React.ReactElement => {
                 onLogout={logout}
             />
             <StickerPacksList
-                stickerPacks={
-                    myStickerPacksQuery.data
-                        ? myStickerPacksQuery.data.sort((p1, p2) =>
-                              p1.updatedAt < p2.updatedAt ? 1 : -1,
-                          )
-                        : []
-                }
+                stickerPacks={sortedStickerPacks(myStickerPacksQuery.data || [])}
                 refreshing={
                     myStickerPacksQuery.isLoading ||
                     createStickerPackMutation.isLoading ||
