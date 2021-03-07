@@ -31,7 +31,7 @@ const UserAccount = (): React.ReactElement => {
             <Layout style={tw`flex-col`}>
                 <Layout style={tw`flex-row justify-between my-2`}>
                     <Layout style={tw`border-b border-gray-300 w-9 self-center ml-3`}></Layout>
-                    <Layout style={tw`bg-transparent`}>
+                    <Layout style={tw`bg-transparent shadow-md`}>
                         <ProfileIcon size={16}></ProfileIcon>
                     </Layout>
                     <Layout style={tw`border-b border-gray-300 w-9 self-center mr-3`}></Layout>

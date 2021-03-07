@@ -16,7 +16,7 @@ export const AccountScreen = ({ navigation }: Props): React.ReactElement => {
             <Layout style={tw`flex-col flex-grow`}>
                 <Layout style={tw`flex-row justify-between mt-8 mb-8`}>
                     <Layout style={tw`border-b border-gray-300 w-20 self-center ml-8`}></Layout>
-                    <Layout style={tw`bg-transparent`}>
+                    <Layout style={tw`bg-transparent shadow-md`}>
                         <ProfileIcon size={32}></ProfileIcon>
                     </Layout>
                     <Layout style={tw`border-b border-gray-300 w-20 self-center mr-8`}></Layout>
