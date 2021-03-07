@@ -1,4 +1,3 @@
-import { Injectable } from "@nestjs/common";
 import {
   Column,
   CreateDateColumn,
@@ -23,7 +22,7 @@ export class StickerPack {
   name: string;
 
   @Column()
-  private: boolean;
+  personal: boolean;
 
   @ManyToOne(() => User, (user) => user.stickers)
   author: User;
@@ -38,6 +37,9 @@ export class StickerPack {
 
   @OneToMany(() => Sticker, (sticker) => sticker.stickerPack, { eager: true })
   stickers: Sticker[];
+
+  @Column()
+  animated: boolean;
 
   @CreateDateColumn()
   createdAt: Date;
@@ -58,13 +60,16 @@ export class StickerPack {
     return {
       id: this.id,
       name: this.name,
-      private: this.private,
+      personal: this.personal,
+      animated: this.animated,
       stickers: !this.stickers
         ? []
         : this.stickers.map((sticker) => sticker.toRO()),
       members: !this.members ? [] : this.members.map((member) => member.toRo()),
       views: this.views,
       likes: this.likes,
+      createdAt: this.createdAt,
+      updatedAt: this.updatedAt,
     };
   }
 

@@ -28,6 +28,8 @@ import { CreateStickerPackDto } from '../models';
 import { StickerPackRo } from '../models';
 // @ts-ignore
 import { StickerRo } from '../models';
+// @ts-ignore
+import { UpdateStickerPackDto } from '../models';
 /**
  * StickerPacksApi - axios parameter creator
  * @export
@@ -35,8 +37,8 @@ import { StickerRo } from '../models';
 export const StickerPacksApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
         /**
-         * 
-         * @summary Add a sticker to a sticker pack you own or a member of. The file must be less than 0.10 MB and be of type /jpeg|jpg|png|webp|gif/.
+         *      1. In animated packs only gifs can be uploaded, in non-animated packs only jpg/png.     2. Files uploaded must be square.     3. File must be less than 100 KB for non-animated stickers and 500 KB or animated stickers.     4. Try to keep the dimensions close to 512x512 (whatsapp-spec), however if not possible it will be resized on back-end.
+         * @summary Add a sticker to a sticker pack you own or a member of. See description for requirements.
          * @param {string} id 
          * @param {CreateStickerDto} createStickerDto 
          * @param {*} [options] Override http request option.
@@ -502,15 +504,15 @@ export const StickerPacksApiAxiosParamCreator = function (configuration?: Config
          * 
          * @summary Update a sticker pack.
          * @param {string} id 
-         * @param {object} body 
+         * @param {UpdateStickerPackDto} updateStickerPackDto 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        update: async (id: string, body: object, options: any = {}): Promise<RequestArgs> => {
+        update: async (id: string, updateStickerPackDto: UpdateStickerPackDto, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
             assertParamExists('update', 'id', id)
-            // verify required parameter 'body' is not null or undefined
-            assertParamExists('update', 'body', body)
+            // verify required parameter 'updateStickerPackDto' is not null or undefined
+            assertParamExists('update', 'updateStickerPackDto', updateStickerPackDto)
             const localVarPath = `/api/sticker-packs/{id}`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -535,7 +537,7 @@ export const StickerPacksApiAxiosParamCreator = function (configuration?: Config
             setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(body, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(updateStickerPackDto, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -553,8 +555,8 @@ export const StickerPacksApiFp = function(configuration?: Configuration) {
     const localVarAxiosParamCreator = StickerPacksApiAxiosParamCreator(configuration)
     return {
         /**
-         * 
-         * @summary Add a sticker to a sticker pack you own or a member of. The file must be less than 0.10 MB and be of type /jpeg|jpg|png|webp|gif/.
+         *      1. In animated packs only gifs can be uploaded, in non-animated packs only jpg/png.     2. Files uploaded must be square.     3. File must be less than 100 KB for non-animated stickers and 500 KB or animated stickers.     4. Try to keep the dimensions close to 512x512 (whatsapp-spec), however if not possible it will be resized on back-end.
+         * @summary Add a sticker to a sticker pack you own or a member of. See description for requirements.
          * @param {string} id 
          * @param {CreateStickerDto} createStickerDto 
          * @param {*} [options] Override http request option.
@@ -689,12 +691,12 @@ export const StickerPacksApiFp = function(configuration?: Configuration) {
          * 
          * @summary Update a sticker pack.
          * @param {string} id 
-         * @param {object} body 
+         * @param {UpdateStickerPackDto} updateStickerPackDto 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async update(id: string, body: object, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<StickerPackRo>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.update(id, body, options);
+        async update(id: string, updateStickerPackDto: UpdateStickerPackDto, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<StickerPackRo>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.update(id, updateStickerPackDto, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
     }
@@ -708,8 +710,8 @@ export const StickerPacksApiFactory = function (configuration?: Configuration, b
     const localVarFp = StickerPacksApiFp(configuration)
     return {
         /**
-         * 
-         * @summary Add a sticker to a sticker pack you own or a member of. The file must be less than 0.10 MB and be of type /jpeg|jpg|png|webp|gif/.
+         *      1. In animated packs only gifs can be uploaded, in non-animated packs only jpg/png.     2. Files uploaded must be square.     3. File must be less than 100 KB for non-animated stickers and 500 KB or animated stickers.     4. Try to keep the dimensions close to 512x512 (whatsapp-spec), however if not possible it will be resized on back-end.
+         * @summary Add a sticker to a sticker pack you own or a member of. See description for requirements.
          * @param {string} id 
          * @param {CreateStickerDto} createStickerDto 
          * @param {*} [options] Override http request option.
@@ -832,12 +834,12 @@ export const StickerPacksApiFactory = function (configuration?: Configuration, b
          * 
          * @summary Update a sticker pack.
          * @param {string} id 
-         * @param {object} body 
+         * @param {UpdateStickerPackDto} updateStickerPackDto 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        update(id: string, body: object, options?: any): AxiosPromise<StickerPackRo> {
-            return localVarFp.update(id, body, options).then((request) => request(axios, basePath));
+        update(id: string, updateStickerPackDto: UpdateStickerPackDto, options?: any): AxiosPromise<StickerPackRo> {
+            return localVarFp.update(id, updateStickerPackDto, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -850,8 +852,8 @@ export const StickerPacksApiFactory = function (configuration?: Configuration, b
  */
 export class StickerPacksApi extends BaseAPI {
     /**
-     * 
-     * @summary Add a sticker to a sticker pack you own or a member of. The file must be less than 0.10 MB and be of type /jpeg|jpg|png|webp|gif/.
+     *      1. In animated packs only gifs can be uploaded, in non-animated packs only jpg/png.     2. Files uploaded must be square.     3. File must be less than 100 KB for non-animated stickers and 500 KB or animated stickers.     4. Try to keep the dimensions close to 512x512 (whatsapp-spec), however if not possible it will be resized on back-end.
+     * @summary Add a sticker to a sticker pack you own or a member of. See description for requirements.
      * @param {string} id 
      * @param {CreateStickerDto} createStickerDto 
      * @param {*} [options] Override http request option.
@@ -998,12 +1000,12 @@ export class StickerPacksApi extends BaseAPI {
      * 
      * @summary Update a sticker pack.
      * @param {string} id 
-     * @param {object} body 
+     * @param {UpdateStickerPackDto} updateStickerPackDto 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof StickerPacksApi
      */
-    public update(id: string, body: object, options?: any) {
-        return StickerPacksApiFp(this.configuration).update(id, body, options).then((request) => request(this.axios, this.basePath));
+    public update(id: string, updateStickerPackDto: UpdateStickerPackDto, options?: any) {
+        return StickerPacksApiFp(this.configuration).update(id, updateStickerPackDto, options).then((request) => request(this.axios, this.basePath));
     }
 }

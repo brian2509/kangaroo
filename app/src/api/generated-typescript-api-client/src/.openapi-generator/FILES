@@ -20,4 +20,5 @@ models/login-user-dto.ts
 models/register-user-dto.ts
 models/sticker-pack-ro.ts
 models/sticker-ro.ts
+models/update-sticker-pack-dto.ts
 models/user-ro.ts

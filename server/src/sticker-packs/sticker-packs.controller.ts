@@ -20,6 +20,12 @@ import {
   STICKER_MAX_FILE_SIZE_BYTES,
   STICKER_VALIDATION_MULTER_ALL,
 } from "../files/file.validation";
+import {
+  WHATSAPP_ICON_WIDTH_PX,
+  WHATSAPP_STICKER_HEIGHT_PX,
+  WHATSAPP_STICKER_SIZE_ANIMATED_KB,
+  WHATSAPP_STICKER_SIZE_NON_ANIMATED_KB, WHATSAPP_STICKER_WIDTH_PX,
+} from "../stickers/constants/whatsapp.constants";
 import { CreateStickerDto } from "../stickers/dto/create-sticker.dto";
 import { StickerRo } from "../stickers/dto/response-sticker.dto";
 import { UserRo } from "../users/dto/response-user.dto";
@@ -71,9 +77,12 @@ export class StickerPacksController {
 
   @UseInterceptors(FileInterceptor("file", STICKER_VALIDATION_MULTER_ALL))
   @ApiOperation({
-    summary: `Add a sticker to a sticker pack you own or a member of. The file must be less than ${
-      (STICKER_MAX_FILE_SIZE_BYTES / 1024 / 1024).toFixed(2)
-    } MB and be of type ${STICKER_ALL_FILETYPES_ALLOWED}.`,
+    summary: `Add a sticker to a sticker pack you own or a member of. See description for requirements.`,
+    description: `
+    1. In animated packs only gifs can be uploaded, in non-animated packs only jpg/png.
+    2. Files uploaded must be square.
+    3. File must be less than ${WHATSAPP_STICKER_SIZE_NON_ANIMATED_KB} KB for non-animated stickers and ${WHATSAPP_STICKER_SIZE_ANIMATED_KB} KB or animated stickers.
+    4. Try to keep the dimensions close to ${WHATSAPP_STICKER_HEIGHT_PX}x${WHATSAPP_STICKER_WIDTH_PX} (whatsapp-spec), however if not possible it will be resized on back-end.`,
   })
   @Post(":id/stickers")
   async addSticker(

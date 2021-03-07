@@ -3,7 +3,7 @@ import { Button, CheckBox, Input, Layout, Text } from "@ui-kitten/components";
 import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import tailwind from "tailwind-rn";
-import { HomeStackParamList } from "../../navigation/AppNavigator";
+import { HomeStackParamList } from "../../../../navigation/AppNavigator";
 
 type Props = StackScreenProps<HomeStackParamList, "CreateStickerPackScreen">;
 export const CreateStickerPackScreen = ({ navigation }: Props): React.ReactElement => {

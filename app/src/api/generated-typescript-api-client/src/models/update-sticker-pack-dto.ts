@@ -17,51 +17,27 @@
 /**
  * 
  * @export
- * @interface StickerRo
+ * @interface UpdateStickerPackDto
  */
-export interface StickerRo {
+export interface UpdateStickerPackDto {
     /**
      * 
      * @type {string}
-     * @memberof StickerRo
+     * @memberof UpdateStickerPackDto
      */
-    id: string;
+    name?: string;
     /**
      * 
-     * @type {string}
-     * @memberof StickerRo
+     * @type {boolean}
+     * @memberof UpdateStickerPackDto
      */
-    name: string;
+    personal?: boolean;
     /**
      * 
-     * @type {string}
-     * @memberof StickerRo
+     * @type {boolean}
+     * @memberof UpdateStickerPackDto
      */
-    fileUrl: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof StickerRo
-     */
-    whatsAppStickerImageFileUrl: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof StickerRo
-     */
-    whatsAppIconImageFileUrl: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof StickerRo
-     */
-    createdAt: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof StickerRo
-     */
-    updatedAt: string;
+    animated?: boolean;
 }
 
 
