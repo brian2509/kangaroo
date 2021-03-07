@@ -53,9 +53,9 @@ const constraints = {
 export const RegisterScreen = ({ navigation }: Props) => {
     const { login } = React.useContext(AuthContext);
 
-    const [email, setEmail] = React.useState("");
-    const [username, setUsername] = React.useState("");
-    const [password, setPassword] = React.useState("");
+    const [email, setEmail] = React.useState("test@gmail.com");
+    const [username, setUsername] = React.useState("username2");
+    const [password, setPassword] = React.useState("password123");
     const [showPassword, setShowPassword] = React.useState(false);
     const [formInteracted, setFormInteracted] = React.useState(false);
 
@@ -109,13 +109,13 @@ export const RegisterScreen = ({ navigation }: Props) => {
 
     return (
         <SafeAreaView style={tailwind("flex-1")}>
-            <Layout style={tailwind("flex-1 items-center pt-4 px-4")}>
+            <Layout style={tailwind("flex-1 items-center px-4 pt-0 mt-0")}>
                 <Layout
                     style={tailwind("w-full m-16")}
                     onTouchStart={() => setFormInteracted(true)}>
                     <Text style={tailwind("text-4xl font-bold pb-4")}>Register</Text>
                     <Input
-                        style={tailwind("w-full my-4")}
+                        style={tailwind("w-full")}
                         label="E-mail"
                         value={email}
                         placeholder="Enter your E-mail"
@@ -125,7 +125,7 @@ export const RegisterScreen = ({ navigation }: Props) => {
                         onChangeText={setEmail}
                     />
                     <Input
-                        style={tailwind("w-full my-4")}
+                        style={tailwind("w-full my-3")}
                         label="Username"
                         value={username}
                         placeholder="Enter your username"
@@ -135,7 +135,7 @@ export const RegisterScreen = ({ navigation }: Props) => {
                         onChangeText={setUsername}
                     />
                     <Input
-                        style={tailwind("w-full my-4")}
+                        style={tailwind("w-full")}
                         placeholder="Enter your password"
                         caption={!isPasswordValid && inputValidations["password"][0]}
                         accessoryRight={visibilityIcon}
