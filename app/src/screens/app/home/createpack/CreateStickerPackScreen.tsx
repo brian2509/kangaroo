@@ -55,7 +55,11 @@ export const CreateStickerPackScreen = ({ navigation }: Props): React.ReactEleme
                                     animated: false,
                                 },
                                 {
-                                    onSuccess: () => navigation.pop(),
+                                    onSuccess: (data) => {
+                                        navigation.replace("StickerPackDetailScreen", {
+                                            stickerPack: data,
+                                        });
+                                    },
                                 },
                             );
                         }}>
