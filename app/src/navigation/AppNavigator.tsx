@@ -10,7 +10,7 @@ import { StickerPackManageScreen } from "../screens/app/home/stickerpack/Sticker
 import { AuthContext } from "../contexts/AuthContext";
 import { Layout, Text } from "@ui-kitten/components";
 import { StickerPackRo, StickerRo } from "../api/generated-typescript-api-client/src";
-import { CreateStickerPackScreen } from "../screens/app/home/createpack/CreateStickerPackScreen";
+import { CreateStickerPackScreen } from "../screens/app/home/stickerpack/CreateStickerPackScreen";
 
 export type AuthStackParamList = {
     Login: undefined;
