@@ -14,6 +14,7 @@ import { StickerPackRo } from "../../../api/generated-typescript-api-client/src"
 import { HomeScreenHeader } from "../../../components/home/HomeScreenHeader";
 import { StickerPacksList } from "../../../components/stickerpack/StickerPackList";
 import { STICKER_FULL_SIZE_PX } from "../../../constants/StickerSizes";
+import { sortedStickerPacks } from "../../../util/sorting";
 
 type Props = StackScreenProps<HomeStackParamList, "Homescreen">;
 
@@ -83,7 +84,7 @@ export const HomeScreen = ({ navigation }: Props): React.ReactElement => {
                 onLogout={logout}
             />
             <StickerPacksList
-                stickerPacks={myStickerPacksQuery.data}
+                stickerPacks={sortedStickerPacks(myStickerPacksQuery.data || [])}
                 refreshing={myStickerPacksQuery.isLoading || removeStickerPackMutation.isLoading}
                 onRefresh={() => queryClient.invalidateQueries(QUERY_KEYS.myStickerPacks)}
                 onPressStickerPack={(stickerPack: StickerPackRo) => {
