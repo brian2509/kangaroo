@@ -11,6 +11,7 @@ import { AuthContext } from "../contexts/AuthContext";
 import { Icon, Layout, Text } from "@ui-kitten/components";
 import { StickerPackRo, StickerRo, UserRo } from "../api/generated-typescript-api-client/src";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { FeedScreen } from "../screens/app/home/FeedScreen";
 
 export type AuthStackParamList = {
     Login: undefined;
@@ -42,6 +43,9 @@ export type HomeStackParamList = {
     AccountScreen: {
         account: UserRo;
     };
+    FeedScreen: {
+        account: UserRo;
+    };
 };
 
 const Tab = createBottomTabNavigator();
@@ -51,24 +55,32 @@ const HomeTabNavigator = () => (
     <Tab.Navigator
         initialRouteName="Home"
         screenOptions={({ route }) => ({
-            tabBarIcon: function iconForTabBar({ focused, color, size }: TabProps) {
-                // let iconName;
-                // let fill = "black";
-
-                // if (route.name === "Home") {
-                //     iconName = focused
-                //         ? "ios-information-circle"
-                //         : "ios-information-circle-outline";
-                //     fill = focused ? "black" : "";
-                // } else if (route.name === "Settings") {
-                //     iconName = focused ? "ios-list-box" : "ios-list";
-                // }
-
-                return <Icon name="home-outline" fill={color} width={21} height={21} />;
+            tabBarIcon: function iconForTabBar({ color }: TabProps) {
+                let iconName;
+                switch (route.name) {
+                    case "Feed":
+                        iconName = "home-outline";
+                        break;
+                    case "SharedPacks":
+                        iconName = "message-square-outline";
+                        break;
+                }
+                return <Icon name={iconName} fill={color} width={21} height={21} />;
             },
         })}>
-        <Tab.Screen name="Home" component={HomeStackScreen} />
+        <Tab.Screen name="Feed" component={FeedStackScreen} />
+        <Tab.Screen name="SharedPacks" component={HomeStackScreen} />
     </Tab.Navigator>
+);
+
+const FeedStack = createStackNavigator();
+const FeedStackScreen = () => (
+    <FeedStack.Navigator>
+        <FeedStack.Screen
+            name="Feed"
+            component={FeedScreen}
+            options={{ title: " ", headerBackTitle: " " }}></FeedStack.Screen>
+    </FeedStack.Navigator>
 );
 
 const HomeStack = createStackNavigator();
