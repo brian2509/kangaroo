@@ -109,7 +109,13 @@ export const HomeScreen = ({ navigation }: Props): React.ReactElement => {
                 onLogout={logout}
             />
             <StickerPacksList
-                stickerPacks={myStickerPacksQuery.data}
+                stickerPacks={
+                    myStickerPacksQuery.data
+                        ? myStickerPacksQuery.data.sort((p1, p2) =>
+                              p1.updatedAt < p2.updatedAt ? 1 : -1,
+                          )
+                        : []
+                }
                 refreshing={
                     myStickerPacksQuery.isLoading ||
                     createStickerPackMutation.isLoading ||
