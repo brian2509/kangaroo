@@ -5,7 +5,7 @@ import { FeedHeader } from "../../../components/home/FeedHeader";
 import { DiscoverStackParamList } from "src/navigation/AppNavigator";
 import tailwind from "tailwind-rn";
 import { UserRo } from "src/api/generated-typescript-api-client/src";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { SafeAreaView } from "react-native";
 import tw from "tailwind-react-native-classnames";
 import { TextStatElement } from "../../../components/common/TextStatElement";
 
@@ -62,7 +62,7 @@ export const DiscoverScreen = ({ navigation }: Props): React.ReactElement => {
     });
 
     return (
-        <SafeAreaView style={tailwind("w-full")}>
+        <SafeAreaView>
             <InfoHeader></InfoHeader>
             <List data={data} ItemSeparatorComponent={Divider} renderItem={renderItem} />
         </SafeAreaView>
