@@ -19,11 +19,11 @@ const constraints = {
         presence: true,
         length: {
             minimum: 4,
-            maximum: 20,
-            message: "must at least contain 4 and at most 20 characters",
+            maximum: 30,
+            message: "must at least contain 4 and at most 30 characters",
         },
         format: {
-            pattern: "^(?=[a-zA-Z0-9._]{4,20}$)(?!.*[_.]{2})[^_.].*[^_.]$",
+            pattern: "[a-zA-Z0-9._ ]{4,30}",
             message: "contains illegal characters",
         },
     },
