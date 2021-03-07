@@ -31,7 +31,7 @@ export interface UpdateStickerPackDto {
      * @type {boolean}
      * @memberof UpdateStickerPackDto
      */
-    _private?: boolean;
+    personal?: boolean;
     /**
      * 
      * @type {boolean}

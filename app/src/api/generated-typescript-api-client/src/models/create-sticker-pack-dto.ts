@@ -31,7 +31,7 @@ export interface CreateStickerPackDto {
      * @type {boolean}
      * @memberof CreateStickerPackDto
      */
-    _private: boolean;
+    personal: boolean;
     /**
      * 
      * @type {boolean}
