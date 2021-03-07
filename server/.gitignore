@@ -2,6 +2,9 @@
 openapi.yaml
 openapitools.json
 
+# secrets
+ssl/*
+
 # compiled output
 /dist
 /node_modules
