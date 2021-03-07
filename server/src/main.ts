@@ -20,18 +20,19 @@ if (process.env.CLIENT_GEN) {
 }
 
 async function bootstrap() {
-  // Load SSL certificated if set-up.
-  let httpsOptions: HttpsOptions = {};
+  // Setup Nest.
+  let app;
   if (process.env.SSL && process.env.SSL === "true") {
-    httpsOptions = {
+    const httpsOptions: HttpsOptions = {
       key: fs.readFileSync(path.join(__dirname, "..", "ssl", "privkey.pem")),
       cert: fs.readFileSync(path.join(__dirname, "..", "ssl", "cert.pem")),
       ca: fs.readFileSync(path.join(__dirname, "..", "ssl", "chain.pem")),
     };
+    app = await NestFactory.create(AppModule, { httpsOptions });
+  } else {
+    app = await NestFactory.create(AppModule);
   }
 
-  // Setup Nest.
-  const app = await NestFactory.create(AppModule, { httpsOptions });
   app.setGlobalPrefix("api");
 
   app.useGlobalPipes(
