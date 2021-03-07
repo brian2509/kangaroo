@@ -17,7 +17,7 @@ const mockStickerPack: StickerPackRo = {
     // TODO: replace mock with real objects
     id: "0",
     name: "giraffe",
-    _private: false,
+    personal: false,
     animated: false,
     stickers: [],
     members: [],
