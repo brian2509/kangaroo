@@ -49,11 +49,11 @@ export const CreateStickerPackScreen = ({ navigation }: Props): React.ReactEleme
     const isNameValid = inputValidation !== undefined ? !inputValidation["name"] : true;
 
     return (
-        <SafeAreaView style={tailwind("flex-1 bg-white")}>
-            <Layout style={tailwind("flex-col p-8")}>
+        <SafeAreaView style={tailwind("h-full bg-white p-0")}>
+            <Layout style={tailwind("flex-col p-6 pt-0 mt-0")}>
                 <Input
-                    size="large"
-                    label="Sticker pack name"
+                    size="medium"
+                    label="Sticker Pack Name"
                     placeholder="Name"
                     value={stickerPackName}
                     autoFocus={true}
@@ -67,13 +67,13 @@ export const CreateStickerPackScreen = ({ navigation }: Props): React.ReactEleme
                 />
                 <Layout style={tailwind("flex-row justify-between my-3")}>
                     <CheckBox
-                        style={tailwind("ml-3 flex-grow")}
+                        style={tailwind("ml-3")}
                         checked={stickerPackPrivate}
                         onChange={setStickerPackPrivate}>
-                        {() => <Text style={tailwind("mx-3 text-sm text-gray-400")}>Private</Text>}
+                        {() => <Text style={tailwind("mx-3 text-xs text-gray-400")}>Private</Text>}
                     </CheckBox>
                     <Button
-                        style={tailwind("px-6")}
+                        style={tailwind("p-0 pl-2 pr-2")}
                         onPress={() => {
                             createStickerPackMutation.mutate(
                                 {
@@ -90,7 +90,7 @@ export const CreateStickerPackScreen = ({ navigation }: Props): React.ReactEleme
                                 },
                             );
                         }}>
-                        Create!
+                        Create
                     </Button>
                 </Layout>
             </Layout>
