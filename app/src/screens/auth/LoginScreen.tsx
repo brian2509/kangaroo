@@ -52,7 +52,7 @@ export const LoginScreen = ({ navigation }: Props) => {
 
                     <Text style={tailwind("text-4xl font-bold pb-4")}>Sign In</Text>
                     <Input
-                        style={tailwind("w-full my-4")}
+                        style={tailwind("w-full mb-4")}
                         size="medium"
                         label="Username"
                         placeholder="Enter your username"
@@ -60,7 +60,7 @@ export const LoginScreen = ({ navigation }: Props) => {
                         onChangeText={setUsername}
                     />
                     <Input
-                        style={tailwind("w-full my-4")}
+                        style={tailwind("w-full")}
                         placeholder="**********"
                         accessoryRight={visibilityIcon}
                         secureTextEntry={!showPassword}
