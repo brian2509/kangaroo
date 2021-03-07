@@ -8,7 +8,6 @@ import { ScrollView } from "react-native";
 import tw from "tailwind-react-native-classnames";
 import { TextStatElement } from "../../../components/common/TextStatElement";
 import { ProfileIcon } from "../../../components/common/ProfileIcon";
-import { SafeAreaView } from "react-native";
 
 const mockUser: UserRo = {
     id: "0",
