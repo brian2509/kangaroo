@@ -16,7 +16,7 @@ export const FeedScreen = ({ navigation }: Props): React.ReactElement => {
             headerTitle: function headerComponent() {
                 return (
                     <Layout style={tw`flex-row left-0`}>
-                        <FeedHeader profilePhoto=""></FeedHeader>
+                        <FeedHeader></FeedHeader>
                     </Layout>
                 );
             },
