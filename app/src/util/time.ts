@@ -26,5 +26,6 @@ export const lastUpdatedString = (dateTime: string): string => {
     }
 
     // Longer than a week: '07-03-2021' (with localization)
+    // https://day.js.org/docs/en/plugin/localized-format
     return date.format("l");
 };
