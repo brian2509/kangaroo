@@ -9,6 +9,7 @@ import tw from "tailwind-react-native-classnames";
 import { TextStatElement } from "../../../components/common/TextStatElement";
 import { ProfileIcon } from "../../../components/common/ProfileIcon";
 
+// TODO: Linking
 const mockUser: UserRo = {
     id: "0",
     username: "df",
@@ -43,10 +44,6 @@ const UserAccount = (): React.ReactElement => {
                         style={"text-xs"}
                         value={100}
                         text="Followers"></TextStatElement>
-                    {/* <TextStatElement
-                        style={"text-xs"}
-                        value={100}
-                        text="Following"></TextStatElement> */}
                 </Layout>
                 <Text style={tw`text-xs pt-1 italic text-gray-400`}>23 shared followers</Text>
                 <Button size="tiny" style={tw`text-sm p-2 mt-2 rounded-lg`}>
