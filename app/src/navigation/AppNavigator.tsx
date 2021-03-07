@@ -8,8 +8,9 @@ import { StickerScreen } from "../screens/app/home/stickerpack/StickerScreen";
 import { StickerPackScreen } from "../screens/app/home/stickerpack/StickerPackScreen";
 import { StickerPackManageScreen } from "../screens/app/home/stickerpack/StickerPackManageScreen";
 import { AuthContext } from "../contexts/AuthContext";
-import { Layout, Text } from "@ui-kitten/components";
-import { StickerPackRo, StickerRo } from "../api/generated-typescript-api-client/src";
+import { Icon, Layout, Text } from "@ui-kitten/components";
+import { StickerPackRo, StickerRo, UserRo } from "../api/generated-typescript-api-client/src";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
 export type AuthStackParamList = {
     Login: undefined;
@@ -38,7 +39,37 @@ export type HomeStackParamList = {
     StickerScreen: {
         sticker: StickerRo;
     };
+    AccountScreen: {
+        account: UserRo;
+    };
 };
+
+const Tab = createBottomTabNavigator();
+type TabProps = { focused: boolean; color: string; size: number };
+
+const HomeTabNavigator = () => (
+    <Tab.Navigator
+        initialRouteName="Home"
+        screenOptions={({ route }) => ({
+            tabBarIcon: function iconForTabBar({ focused, color, size }: TabProps) {
+                // let iconName;
+                // let fill = "black";
+
+                // if (route.name === "Home") {
+                //     iconName = focused
+                //         ? "ios-information-circle"
+                //         : "ios-information-circle-outline";
+                //     fill = focused ? "black" : "";
+                // } else if (route.name === "Settings") {
+                //     iconName = focused ? "ios-list-box" : "ios-list";
+                // }
+
+                return <Icon name="home-outline" fill={color} width={21} height={21} />;
+            },
+        })}>
+        <Tab.Screen name="Home" component={HomeStackScreen} />
+    </Tab.Navigator>
+);
 
 const HomeStack = createStackNavigator();
 const HomeStackScreen = () => (
@@ -73,7 +104,7 @@ const RootStackScreen = ({ isAuthenticated }: RootProps) => (
         {isAuthenticated ? (
             <RootStack.Screen
                 name="App"
-                component={HomeStackScreen}
+                component={HomeTabNavigator}
                 options={{
                     animationEnabled: false,
                 }}
