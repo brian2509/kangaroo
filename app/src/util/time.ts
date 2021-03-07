@@ -5,16 +5,16 @@ import dayjs from "dayjs";
 dayjs.extend(LocalizedFormat);
 dayjs.extend(utc);
 
-export const lastUpdatedString = (dateTime: string): string => {
+export const lastUpdatedString = (dateTimeUTC: string): string => {
     const now = dayjs();
-    const date = dayjs(dateTime);
+    const date = dayjs(dateTimeUTC).utc(true);
 
     // Calc day difference based on calendar days, not 24-hour differences between days
     const dayDiff = now.diff(date.add(-date.hour(), "hours"), "days");
 
     if (dayDiff == 0) {
         // Same day: '13:45'
-        return date.format("HH:mm");
+        return date.local().format("HH:mm");
     }
     if (dayDiff == 1) {
         // Yesterday: 'Yesterday'
@@ -22,10 +22,10 @@ export const lastUpdatedString = (dateTime: string): string => {
     }
     if (dayDiff <= 7) {
         // Same week: 'Sunday'
-        return date.format("dddd");
+        return date.local().format("dddd");
     }
 
     // Longer than a week: '07-03-2021' (with localization)
     // https://day.js.org/docs/en/plugin/localized-format
-    return date.format("l");
+    return date.local().format("l");
 };
