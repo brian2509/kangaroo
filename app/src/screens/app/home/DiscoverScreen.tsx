@@ -18,7 +18,7 @@ type Props = StackScreenProps<DiscoverStackParamList, "DiscoverScreen">;
 
 const InfoHeader = (): React.ReactElement => {
     return (
-        <Layout style={tw`flex-row p-1 pl-5 bg-transparent shadow-lg`}>
+        <Layout style={tw`flex-row p-1 pl-5 bg-transparent`}>
             <TextStatElement value={100} text="Following"></TextStatElement>
             <TextStatElement value={1200} text="Followers"></TextStatElement>
         </Layout>
@@ -99,6 +99,7 @@ export const DiscoverScreen = ({ navigation }: Props): React.ReactElement => {
             <InfoHeader></InfoHeader>
             <Layout>
                 <List
+                    style={tw`shadow-md`}
                     scrollEnabled={false}
                     data={data}
                     ItemSeparatorComponent={Divider}

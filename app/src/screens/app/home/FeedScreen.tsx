@@ -48,7 +48,7 @@ const FeedItemHeader = ({
 
 const FeedUserLiked = ({ topMargin }: { topMargin?: string }): React.ReactElement => {
     return (
-        <Layout style={tw`flex-col w-full p-2 pl-6 pr-0 ${topMargin ?? ""}`}>
+        <Layout style={tw`flex-col w-full p-2 pl-6 pr-0 shadow-md ${topMargin ?? ""}`}>
             <FeedItemHeader userName="Willem" text="gave a Kangaroo" time="2h ago"></FeedItemHeader>
 
             <Layout style={tw`flex-row pt-2`}>
@@ -88,7 +88,7 @@ const FeedUserLiked = ({ topMargin }: { topMargin?: string }): React.ReactElemen
 
 const FeedStickerPack = ({ topMargin }: { topMargin?: string }): React.ReactElement => {
     return (
-        <Layout style={tw`flex-col w-full p-2 pl-6 pr-0 ${topMargin ?? ""}`}>
+        <Layout style={tw`flex-col w-full p-2 pl-6 pr-0 shadow-md ${topMargin ?? ""}`}>
             <FeedItemHeader
                 userName="Rick"
                 text="created a new shared sticker pack!"
@@ -114,7 +114,7 @@ const FeedStickerPack = ({ topMargin }: { topMargin?: string }): React.ReactElem
 
 const FeedUserMilestone = ({ topMargin }: { topMargin?: string }): React.ReactElement => {
     return (
-        <Layout style={tw`flex-col p-2 pl-6 pr-0 ${topMargin ?? ""}`}>
+        <Layout style={tw`flex-col p-2 pl-6 pr-0 shadow-md ${topMargin ?? ""}`}>
             <FeedItemHeader
                 userName="Rick"
                 text="reached 100 followers!"
