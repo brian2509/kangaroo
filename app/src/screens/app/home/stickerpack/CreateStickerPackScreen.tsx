@@ -50,7 +50,7 @@ export const CreateStickerPackScreen = ({ navigation }: Props): React.ReactEleme
 
     return (
         <SafeAreaView style={tailwind("h-full bg-white p-0")}>
-            <Layout style={tailwind("flex-col p-6 pt-0 mt-0")}>
+            <Layout style={tailwind("flex-col p-6 pt-4 mt-0")}>
                 <Input
                     size="medium"
                     label="Sticker Pack Name"
