@@ -59,8 +59,8 @@ const UserAccount = (): React.ReactElement => {
 
 const renderItem = ({ item }: { item: { title: string } }) => (
     <ListItem
-        style={tw`h-10`}
-        title={`${item.title}`}
+        style={tw`h-10 p-0 m-0`}
+        title={() => <Text style={tw`text-blue-600 ml-4 text-sm`}>{item.title}</Text>}
         accessoryRight={(props) => <Icon {...props} name="arrow-ios-forward-outline" />}
     />
 );
