@@ -1,17 +1,10 @@
 import { Icon, Layout, Text } from "@ui-kitten/components";
-import {
-    Image,
-    ImageStyle,
-    SafeAreaView,
-    ScrollView,
-    StyleProp,
-    TouchableOpacity,
-} from "react-native";
+import { Image, SafeAreaView, ScrollView, TouchableOpacity } from "react-native";
 import { StackScreenProps } from "@react-navigation/stack";
 import { HomeStackParamList } from "../../../../navigation/AppNavigator";
 import tailwind from "tailwind-rn";
 import tw from "tailwind-react-native-classnames";
-import React from "react";
+import React, { useEffect } from "react";
 import { StickerPackRo, StickerRo } from "../../../../api/generated-typescript-api-client/src";
 import { CoverStickerImage } from "../../../../components/common/CoverStickerImage";
 
@@ -115,60 +108,55 @@ class ToolBar extends React.Component<StickerPackProps> {
 }
 
 type Props = StackScreenProps<HomeStackParamList, "StickerPackDetailScreen">;
-export class StickerPackScreen extends React.Component<Props> {
-    private stickerPack: StickerPackRo;
+export const StickerPackScreen = ({ navigation, route }: Props): React.ReactElement => {
+    const stickerPack: StickerPackRo = route.params.stickerPack as StickerPackRo;
 
-    constructor(props: Props) {
-        super(props);
-        this.stickerPack = props.route.params.stickerPack;
-        this.onStickerPress = this.onStickerPress.bind(this);
-    }
-
-    onStickerPress(data: StickerRo): void {
-        this.props.navigation.navigate("StickerScreen", { sticker: data });
-    }
-
-    componentDidMount(): void {
-        this.props.navigation.setOptions({
-            headerTitle: () => (
-                <Layout style={tw`flex-row left-0`}>
-                    <CoverStickerImage
-                        stickerPack={this.stickerPack}
-                        style={tw.style("w-9 h-9 mr-3 rounded-full")}
-                        onStickerPress={this.onStickerPress}
-                    />
-                    <TouchableOpacity
-                        onPress={() =>
-                            this.props.navigation.navigate("StickerPackManageScreen", {
-                                stickerPack: this.stickerPack,
-                            })
-                        }>
-                        <Layout style={tw`flex-col`}>
-                            <Text>{this.stickerPack.name}</Text>
-                            <Text style={tw`text-gray-500 text-xs`}>
-                                Willem, Brian, Mika, Rowdy
-                            </Text>
-                        </Layout>
-                    </TouchableOpacity>
-                </Layout>
-            ),
+    useEffect(() => {
+        navigation.setOptions({
+            headerTitle: HeaderTitle,
             headerTitleAlign: "left",
-            headerRight: () => (
-                <Layout style={tw`flex-row mr-4`}>
-                    <TouchableOpacity activeOpacity={0.7}>
-                        <Text> Share</Text>
-                    </TouchableOpacity>
-                </Layout>
-            ),
+            headerRight: HeaderRight,
         });
-    }
+    }, []);
 
-    render(): JSX.Element {
-        return (
-            <SafeAreaView style={tailwind("flex-1 bg-white")}>
-                <Body stickerPack={this.stickerPack} onStickerPress={this.onStickerPress} />
-                <ToolBar stickerPack={this.stickerPack} />
-            </SafeAreaView>
-        );
-    }
-}
+    const onStickerPress = (data: StickerRo): void => {
+        navigation.navigate("StickerScreen", { sticker: data });
+    };
+
+    const onHeaderPress = () => {
+        navigation.navigate("StickerPackManageScreen", {
+            stickerPack,
+        });
+    };
+
+    const HeaderTitle = () => (
+        <Layout style={tw`flex-row left-0`}>
+            <CoverStickerImage
+                stickerPack={stickerPack}
+                style={tw.style("w-9 h-9 mr-3 rounded-full")}
+                onStickerPress={onStickerPress}
+            />
+            <TouchableOpacity onPress={onHeaderPress}>
+                <Layout style={tw`flex-col`}>
+                    <Text>{stickerPack.name}</Text>
+                    <Text style={tw`text-gray-500 text-xs`}>Willem, Brian, Mika, Rowdy</Text>
+                </Layout>
+            </TouchableOpacity>
+        </Layout>
+    );
+
+    const HeaderRight = () => (
+        <Layout style={tw`flex-row mr-4`}>
+            <TouchableOpacity activeOpacity={0.7}>
+                <Text> Share</Text>
+            </TouchableOpacity>
+        </Layout>
+    );
+
+    return (
+        <SafeAreaView style={tailwind("flex-1 bg-white")}>
+            <Body stickerPack={stickerPack} onStickerPress={onStickerPress} />
+            <ToolBar stickerPack={stickerPack} />
+        </SafeAreaView>
+    );
+};
