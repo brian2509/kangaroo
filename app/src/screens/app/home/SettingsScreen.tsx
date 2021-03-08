@@ -17,7 +17,7 @@ interface settingItem {
     onPress?: () => void;
 }
 
-const InfoHeader = (): React.ReactElement => {
+export const SettingsHeader = (): React.ReactElement => {
     return (
         <Layout style={tw`w-full flex-row justify-between border-b border-gray-300 p-2 shadow-md`}>
             <Layout style={tw`flex-row bg-white`}>
@@ -57,9 +57,13 @@ export const SettingsScreen = ({ navigation }: Props): React.ReactElement => {
     const data = [
         {
             title: "Change email",
+            onPress: () =>
+                navigation.navigate("SettingsUpdateScreen", { updateValueTitle: "New Email" }),
         },
         {
             title: "Change password",
+            onPress: () =>
+                navigation.navigate("SettingsUpdateScreen", { updateValueTitle: "New Password" }),
         },
         {
             title: "Log out",
@@ -70,21 +74,31 @@ export const SettingsScreen = ({ navigation }: Props): React.ReactElement => {
 
     return (
         <SafeAreaView style={tailwind("flex-1")}>
-            <InfoHeader></InfoHeader>
-            <Layout style={tw`mt-2 shadow-md`}>
-                <List
-                    scrollEnabled={false}
-                    data={data}
-                    ItemSeparatorComponent={Divider}
-                    renderItem={renderItem}
-                />
+            <Layout style={tw`flex-col h-full flex-grow justify-between bg-transparent`}>
+                <Layout style={tw`bg-transparent`}>
+                    <SettingsHeader></SettingsHeader>
+                    <Layout style={tw`mt-2 shadow-md`}>
+                        <List
+                            scrollEnabled={false}
+                            data={data}
+                            ItemSeparatorComponent={Divider}
+                            renderItem={renderItem}
+                        />
+                    </Layout>
+                    <Button
+                        appearance="ghost"
+                        style={tailwind("mr-3 mt-2 self-center")}
+                        onPress={() => Linking.openURL("mailto:support@example.com")}>
+                        Send Feedback
+                    </Button>
+                </Layout>
+                <Button
+                    appearance="ghost"
+                    status="danger"
+                    style={tailwind("mr-3 mt-2 self-center")}>
+                    Delete Account
+                </Button>
             </Layout>
-            <Button
-                appearance="ghost"
-                style={tailwind("mr-3 self-center")}
-                onPress={() => Linking.openURL("mailto:support@example.com")}>
-                Send Feedback
-            </Button>
         </SafeAreaView>
     );
 };

@@ -16,6 +16,7 @@ import { FeedScreen } from "../screens/app/home/FeedScreen";
 import { AccountScreen } from "../screens/app/home/AccountScreen";
 import { DiscoverScreen } from "../screens/app/home/DiscoverScreen";
 import { SettingsScreen } from "../screens/app/home/SettingsScreen";
+import { SettingsUpdateScreen } from "../screens/app/home/SettingsUpdateScreen";
 
 export type AuthStackParamList = {
     Login: undefined;
@@ -55,6 +56,10 @@ export type FeedStackParamList = {
         account: UserRo;
     };
     SettingsScreen: undefined;
+    SettingsUpdateScreen: {
+        updateValueTitle: string;
+        onSave?: () => void;
+    };
 };
 
 export type DiscoverStackParamList = {
@@ -63,6 +68,10 @@ export type DiscoverStackParamList = {
         account: UserRo;
     };
     SettingsScreen: undefined;
+    SettingsUpdateScreen: {
+        updateValueTitle: string;
+        onSave?: () => void;
+    };
 };
 
 const Tab = createBottomTabNavigator();
@@ -110,6 +119,10 @@ const FeedStackScreen = () => (
             component={SettingsScreen}
             options={{ title: "Settings", headerBackTitle: " " }}></FeedStack.Screen>
         <FeedStack.Screen
+            name="SettingsUpdateScreen"
+            component={SettingsUpdateScreen}
+            options={{ title: "Settings", headerBackTitle: " " }}></FeedStack.Screen>
+        <FeedStack.Screen
             name="DiscoverScreen"
             component={DiscoverStackScreen}
             options={{ title: " ", headerBackTitle: " " }}></FeedStack.Screen>
@@ -155,10 +168,14 @@ const DiscoverStackScreen = () => (
             name="AccountScreen"
             component={AccountScreen}
             options={{ title: "Account", headerBackTitle: " " }}></DiscoverStack.Screen>
-        <DiscoverStack.Screen
+        <FeedStack.Screen
             name="SettingsScreen"
             component={SettingsScreen}
-            options={{ title: "Settings", headerBackTitle: " " }}></DiscoverStack.Screen>
+            options={{ title: "Settings", headerBackTitle: " " }}></FeedStack.Screen>
+        <FeedStack.Screen
+            name="SettingsUpdateScreen"
+            component={SettingsUpdateScreen}
+            options={{ title: "SettingsUpdate", headerBackTitle: " " }}></FeedStack.Screen>
     </DiscoverStack.Navigator>
 );
 
