@@ -11,6 +11,7 @@
 	},
 	"dependencies": {
 		"@eva-design/eva": "^2.0.0",
+		"@react-native-clipboard/clipboard": "^1.7.0",
 		"@react-native-community/async-storage": "^1.12.1",
 		"@react-native-community/masked-view": "^0.1.10",
 		"@react-navigation/bottom-tabs": "^5.11.8",
@@ -20,6 +21,7 @@
 		"@ui-kitten/components": "^5.0.0",
 		"@ui-kitten/eva-icons": "5.0.0",
 		"axios": "^0.21.1",
+		"dayjs": "^1.10.4",
 		"prop-types": "^15.7.2",
 		"react": "16.13.1",
 		"react-native": "^0.63.4",

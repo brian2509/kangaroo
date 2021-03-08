@@ -9,6 +9,7 @@ import { logErrorResponse } from "../../util/logging";
 import tailwind from "tailwind-rn";
 import { api } from "../../api/generatedApiWrapper";
 import { LoginUserDto } from "../../api/generated-typescript-api-client/src";
+import { TextFieldActions } from "../../components/common/TextFieldActions";
 
 type Props = StackScreenProps<AuthStackParamList, "Login">;
 
@@ -52,7 +53,7 @@ export const LoginScreen = ({ navigation }: Props) => {
 
                     <Text style={tailwind("text-4xl font-bold pb-4")}>Sign In</Text>
                     <Input
-                        style={tailwind("w-full my-4")}
+                        style={tailwind("w-full mb-4")}
                         size="medium"
                         label="Username"
                         placeholder="Enter your username"
@@ -60,7 +61,7 @@ export const LoginScreen = ({ navigation }: Props) => {
                         onChangeText={setUsername}
                     />
                     <Input
-                        style={tailwind("w-full my-4")}
+                        style={tailwind("w-full")}
                         placeholder="**********"
                         accessoryRight={visibilityIcon}
                         secureTextEntry={!showPassword}
@@ -68,22 +69,14 @@ export const LoginScreen = ({ navigation }: Props) => {
                         value={password}
                         onChangeText={setPassword}
                     />
-                    <Layout style={tailwind("flex-row items-center justify-between pt-3")}>
-                        <Text
-                            style={tailwind("pl-2 font-semibold text-blue-500")}
-                            onPress={() => {
-                                navigation.push("Register");
-                            }}>
-                            Register
-                        </Text>
-                        <Button
-                            style={tailwind("pl-10 pr-10")}
-                            onPress={() => {
-                                Keyboard.dismiss(), loginMutation.mutate({ username, password });
-                            }}>
-                            Sign in
-                        </Button>
-                    </Layout>
+                    <TextFieldActions
+                        cancelTitle="Register"
+                        doneTitle="Sign In"
+                        onCancelPress={() => navigation.push("Register")}
+                        onDonePress={() => {
+                            Keyboard.dismiss(), loginMutation.mutate({ username, password });
+                        }}></TextFieldActions>
+
                     {loginMutation.error && (
                         <Card style={tailwind("m-4 mt-20")} status="danger">
                             <Text

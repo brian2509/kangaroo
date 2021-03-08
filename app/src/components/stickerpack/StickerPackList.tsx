@@ -18,7 +18,7 @@ interface Props {
 export class StickerPacksList extends React.Component<Props> {
     StickerPackComponent = ({ item }: { item: StickerPackRo }): React.ReactElement => {
         //TODO: add number of notifications to stickerpacks
-        const numberOfNotifications = 1;
+        const numberOfNotifications = 0;
 
         return (
             <TouchableOpacity

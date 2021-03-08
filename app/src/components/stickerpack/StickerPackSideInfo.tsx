@@ -2,6 +2,7 @@ import React from "react";
 import tailwind from "tailwind-rn";
 import { Layout, Text } from "@ui-kitten/components";
 import { StickerPackRo } from "../../api/generated-typescript-api-client/src";
+import { lastUpdatedString } from "../../util/time";
 
 interface Props {
     stickerPack: StickerPackRo;
@@ -15,7 +16,7 @@ export class StickerPackSideInfo extends React.Component<Props> {
         return (
             <Layout style={tailwind("flex-col items-end")}>
                 <Text style={tailwind("pb-2 py-1 text-gray-500")} category="p2">
-                    19:09
+                    {lastUpdatedString(stickerPack.updatedAt)}
                 </Text>
                 {notifications > 0 && (
                     <Layout

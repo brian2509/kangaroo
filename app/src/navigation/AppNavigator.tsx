@@ -10,9 +10,14 @@ import { StickerPackManageScreen } from "../screens/app/home/stickerpack/Sticker
 import { AuthContext } from "../contexts/AuthContext";
 import { Icon, Layout, Text } from "@ui-kitten/components";
 import { StickerPackRo, StickerRo, UserRo } from "../api/generated-typescript-api-client/src";
+import { CreateStickerPackScreen } from "../screens/app/home/stickerpack/CreateStickerPackScreen";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { FeedScreen } from "../screens/app/home/FeedScreen";
 import { AccountScreen } from "../screens/app/home/AccountScreen";
+import { DiscoverScreen } from "../screens/app/home/DiscoverScreen";
+import { SettingsScreen } from "../screens/app/home/SettingsScreen";
+import { SettingsUpdateScreen } from "../screens/app/home/SettingsUpdateScreen";
+import { CreateAddMembersScreen } from "../screens/app/home/stickerpack/CreateAddMembersScreen";
 
 export type AuthStackParamList = {
     Login: undefined;
@@ -41,6 +46,11 @@ export type HomeStackParamList = {
     StickerScreen: {
         sticker: StickerRo;
     };
+    CreateStickerPackScreen: undefined;
+    CreateAddMembersScreen: {
+        name: string;
+        personal: boolean;
+    };
 };
 
 export type FeedStackParamList = {
@@ -49,6 +59,23 @@ export type FeedStackParamList = {
     };
     FeedScreen: {
         account: UserRo;
+    };
+    SettingsScreen: undefined;
+    SettingsUpdateScreen: {
+        updateValueTitle: string;
+        onSave?: () => void;
+    };
+};
+
+export type DiscoverStackParamList = {
+    DiscoverScreen: undefined;
+    AccountScreen: {
+        account: UserRo;
+    };
+    SettingsScreen: undefined;
+    SettingsUpdateScreen: {
+        updateValueTitle: string;
+        onSave?: () => void;
     };
 };
 
@@ -68,12 +95,16 @@ const HomeTabNavigator = () => (
                     case "SharedPacks":
                         iconName = "message-square-outline";
                         break;
+                    case "Discover":
+                        iconName = "people-outline";
+                        break;
                 }
                 return <Icon name={iconName} fill={color} width={21} height={21} />;
             },
         })}>
         <Tab.Screen name="Feed" component={FeedStackScreen} />
         <Tab.Screen name="SharedPacks" component={HomeStackScreen} />
+        <Tab.Screen name="Discover" component={DiscoverStackScreen} />
     </Tab.Navigator>
 );
 
@@ -88,6 +119,18 @@ const FeedStackScreen = () => (
             name="AccountScreen"
             component={AccountScreen}
             options={{ title: "Account", headerBackTitle: " " }}></FeedStack.Screen>
+        <FeedStack.Screen
+            name="SettingsScreen"
+            component={SettingsScreen}
+            options={{ title: "Settings", headerBackTitle: " " }}></FeedStack.Screen>
+        <FeedStack.Screen
+            name="SettingsUpdateScreen"
+            component={SettingsUpdateScreen}
+            options={{ title: "Settings", headerBackTitle: " " }}></FeedStack.Screen>
+        <FeedStack.Screen
+            name="DiscoverScreen"
+            component={DiscoverStackScreen}
+            options={{ title: " ", headerBackTitle: " " }}></FeedStack.Screen>
     </FeedStack.Navigator>
 );
 
@@ -114,7 +157,36 @@ const HomeStackScreen = () => (
             component={StickerPackManageScreen}
             options={{ title: "Group Members", headerBackTitle: " " }}
         />
+        <HomeStack.Screen
+            name="CreateStickerPackScreen"
+            component={CreateStickerPackScreen}
+            options={{ title: "Create Sticker Pack", headerBackTitle: " " }}
+        />
+        <HomeStack.Screen
+            name="CreateAddMembersScreen"
+            component={CreateAddMembersScreen}
+            options={{ title: "Create Sticker Pack", headerBackTitle: " " }}
+        />
     </HomeStack.Navigator>
+);
+
+const DiscoverStack = createStackNavigator();
+const DiscoverStackScreen = () => (
+    <DiscoverStack.Navigator>
+        <DiscoverStack.Screen name="DiscoverScreen" component={DiscoverScreen} />
+        <DiscoverStack.Screen
+            name="AccountScreen"
+            component={AccountScreen}
+            options={{ title: "Account", headerBackTitle: " " }}></DiscoverStack.Screen>
+        <FeedStack.Screen
+            name="SettingsScreen"
+            component={SettingsScreen}
+            options={{ title: "Settings", headerBackTitle: " " }}></FeedStack.Screen>
+        <FeedStack.Screen
+            name="SettingsUpdateScreen"
+            component={SettingsUpdateScreen}
+            options={{ title: "SettingsUpdate", headerBackTitle: " " }}></FeedStack.Screen>
+    </DiscoverStack.Navigator>
 );
 
 type RootProps = { isAuthenticated: boolean };
