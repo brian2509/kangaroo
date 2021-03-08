@@ -2,14 +2,9 @@ import { StackScreenProps } from "@react-navigation/stack";
 import { Button, CheckBox, Icon, IconProps, Input, Layout, Text } from "@ui-kitten/components";
 import React, { useState } from "react";
 import { Keyboard, SafeAreaView } from "react-native";
-import { useMutation, useQueryClient } from "react-query";
 import tailwind from "tailwind-rn";
 import validate from "validate.js";
-import { CreateStickerPackDto } from "../../../../api/generated-typescript-api-client/src";
-import { api } from "../../../../api/generatedApiWrapper";
-import { QUERY_KEYS } from "../../../../constants/ReactQueryKeys";
 import { HomeStackParamList } from "../../../../navigation/AppNavigator";
-import { logErrorResponse } from "../../../../util/logging";
 
 const AlertIcon = (props: IconProps) => <Icon {...props} name="alert-circle-outline" />;
 
