@@ -15,6 +15,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { FeedScreen } from "../screens/app/home/FeedScreen";
 import { AccountScreen } from "../screens/app/home/AccountScreen";
 import { DiscoverScreen } from "../screens/app/home/DiscoverScreen";
+import { SettingsScreen } from "../screens/app/home/SettingsScreen";
 
 export type AuthStackParamList = {
     Login: undefined;
@@ -53,6 +54,7 @@ export type FeedStackParamList = {
     FeedScreen: {
         account: UserRo;
     };
+    SettingsScreen: undefined;
 };
 
 export type DiscoverStackParamList = {
@@ -60,6 +62,7 @@ export type DiscoverStackParamList = {
     AccountScreen: {
         account: UserRo;
     };
+    SettingsScreen: undefined;
 };
 
 const Tab = createBottomTabNavigator();
@@ -102,6 +105,10 @@ const FeedStackScreen = () => (
             name="AccountScreen"
             component={AccountScreen}
             options={{ title: "Account", headerBackTitle: " " }}></FeedStack.Screen>
+        <FeedStack.Screen
+            name="SettingsScreen"
+            component={SettingsScreen}
+            options={{ title: "Settings", headerBackTitle: " " }}></FeedStack.Screen>
         <FeedStack.Screen
             name="DiscoverScreen"
             component={DiscoverStackScreen}
@@ -148,6 +155,10 @@ const DiscoverStackScreen = () => (
             name="AccountScreen"
             component={AccountScreen}
             options={{ title: "Account", headerBackTitle: " " }}></DiscoverStack.Screen>
+        <DiscoverStack.Screen
+            name="SettingsScreen"
+            component={SettingsScreen}
+            options={{ title: "Settings", headerBackTitle: " " }}></DiscoverStack.Screen>
     </DiscoverStack.Navigator>
 );
 
