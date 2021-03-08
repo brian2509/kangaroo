@@ -1,16 +1,10 @@
 import { StackScreenProps } from "@react-navigation/stack";
 import { Button, CheckBox, Icon, IconProps, Input, Layout, Text } from "@ui-kitten/components";
 import React, { useState } from "react";
-import { Keyboard } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { useMutation, useQueryClient } from "react-query";
+import { Keyboard, SafeAreaView } from "react-native";
 import tailwind from "tailwind-rn";
 import validate from "validate.js";
-import { CreateStickerPackDto } from "../../../../api/generated-typescript-api-client/src";
-import { api } from "../../../../api/generatedApiWrapper";
-import { QUERY_KEYS } from "../../../../constants/ReactQueryKeys";
 import { HomeStackParamList } from "../../../../navigation/AppNavigator";
-import { logErrorResponse } from "../../../../util/logging";
 
 const AlertIcon = (props: IconProps) => <Icon {...props} name="alert-circle-outline" />;
 
@@ -34,23 +28,12 @@ export const CreateStickerPackScreen = ({ navigation }: Props): React.ReactEleme
     const [stickerPackName, setStickerPackName] = useState("");
     const [stickerPackPrivate, setStickerPackPrivate] = useState(false);
 
-    const queryClient = useQueryClient();
-
-    const createStickerPackMutation = useMutation(
-        async (createStickerPackDto: CreateStickerPackDto) =>
-            (await api.stickerPacks.create(createStickerPackDto)).data,
-        {
-            onSuccess: () => queryClient.invalidateQueries(QUERY_KEYS.myStickerPacks),
-            onError: logErrorResponse,
-        },
-    );
-
     const inputValidation = validate.validate({ name: stickerPackName }, constraints);
     const isNameValid = inputValidation !== undefined ? !inputValidation["name"] : true;
 
     return (
         <SafeAreaView style={tailwind("h-full bg-white p-0")}>
-            <Layout style={tailwind("flex-col p-6 pt-4 mt-0")}>
+            <Layout style={tailwind("flex-col p-6 mt-0")}>
                 <Input
                     size="medium"
                     label="Sticker Pack Name"
@@ -76,23 +59,13 @@ export const CreateStickerPackScreen = ({ navigation }: Props): React.ReactEleme
                         style={tailwind("p-0 pl-2 pr-2")}
                         onPress={() => {
                             if (isNameValid) {
-                                createStickerPackMutation.mutate(
-                                    {
-                                        name: stickerPackName,
-                                        personal: stickerPackPrivate,
-                                        animated: false,
-                                    },
-                                    {
-                                        onSuccess: (data) => {
-                                            navigation.replace("StickerPackDetailScreen", {
-                                                stickerPack: data,
-                                            });
-                                        },
-                                    },
-                                );
+                                navigation.navigate("CreateAddMembersScreen", {
+                                    name: stickerPackName,
+                                    personal: stickerPackPrivate,
+                                });
                             }
                         }}>
-                        Create
+                        Next
                     </Button>
                 </Layout>
             </Layout>

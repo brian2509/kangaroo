@@ -6,6 +6,7 @@ import { FeedStackParamList } from "../../../navigation/AppNavigator";
 import { Button, Icon, IconProps, Input, Layout, Text } from "@ui-kitten/components";
 import tw from "tailwind-react-native-classnames";
 import { SettingsHeader } from "./SettingsScreen";
+import { TextFieldActions } from "../../../components/common/TextFieldActions";
 
 type Props = StackScreenProps<FeedStackParamList, "SettingsUpdateScreen">;
 
@@ -53,21 +54,11 @@ export const SettingsUpdateScreen = ({ route, navigation }: Props): React.ReactE
                     value={password}
                     onChangeText={setPassword}
                 />
-                <Layout
-                    style={tailwind("flex-row items-center justify-between pt-3 bg-transparent")}>
-                    <Button
-                        appearance="ghost"
-                        onPress={() => navigation.pop()}
-                        style={tailwind("pl-2 font-semibold text-blue-500")}>
-                        Cancel
-                    </Button>
-                    <Button
-                        size="medium"
-                        style={tailwind("px-8 py-2")}
-                        onPress={() => route.params.onSave}>
-                        Save
-                    </Button>
-                </Layout>
+                <TextFieldActions
+                    cancelTitle="Cancel"
+                    doneTitle="Save"
+                    onCancelPress={() => navigation.pop()}
+                    onDonePress={() => route.params.onSave}></TextFieldActions>
             </Layout>
         </SafeAreaView>
     );
