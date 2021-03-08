@@ -94,9 +94,8 @@ export const DiscoverScreen = ({ navigation }: Props): React.ReactElement => {
     return (
         <Layout style={tw`flex-col bg-transparent h-4/5`}>
             <InfoHeader></InfoHeader>
-            <Layout>
+            <Layout style={tw`shadow-md`}>
                 <List
-                    style={tw`shadow-md`}
                     scrollEnabled={false}
                     data={data}
                     ItemSeparatorComponent={Divider}

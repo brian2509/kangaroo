@@ -1,16 +1,32 @@
-import React from "react";
+import React, { useEffect } from "react";
 import tailwind from "tailwind-rn";
-import { SafeAreaView } from "react-native";
+import { SafeAreaView, TouchableOpacity } from "react-native";
 import { StackScreenProps } from "@react-navigation/stack";
 import { FeedStackParamList } from "../../../navigation/AppNavigator";
 import { ProfileIcon } from "../../../components/common/ProfileIcon";
-import { Layout, Text } from "@ui-kitten/components";
+import { Icon, Layout, Text } from "@ui-kitten/components";
 import tw from "tailwind-react-native-classnames";
 import { TextStatElement } from "../../../components/common/TextStatElement";
 
 type Props = StackScreenProps<FeedStackParamList, "AccountScreen">;
 
 export const AccountScreen = ({ navigation }: Props): React.ReactElement => {
+    useEffect(() => {
+        navigation.setOptions({
+            headerRight: function navigationRightIcon() {
+                return (
+                    <Layout style={tw`flex-row mr-4`}>
+                        <TouchableOpacity
+                            // activeOpacity={0.7}
+                            onPress={() => navigation.navigate("SettingsScreen")}>
+                            <Icon name="settings-outline" fill="black" width={25} height={25} />
+                        </TouchableOpacity>
+                    </Layout>
+                );
+            },
+        });
+    }, []);
+
     return (
         <SafeAreaView style={tailwind("flex-1 bg-white")}>
             <Layout style={tw`flex-col flex-grow`}>
