@@ -1,6 +1,15 @@
 version: "3.8"
 
 services:
+  nginx:
+    image: nginx:latest
+    container_name: nginx
+    volumes:
+      - ./nginx:/etc/nginx
+    ports:
+      - 80:80
+      - 443:443
+
   server:
     image: ghcr.io/brian2509/kangaroo-server:latest
     container_name: server
