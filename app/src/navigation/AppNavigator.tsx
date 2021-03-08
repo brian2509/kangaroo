@@ -14,6 +14,7 @@ import { CreateStickerPackScreen } from "../screens/app/home/stickerpack/CreateS
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { FeedScreen } from "../screens/app/home/FeedScreen";
 import { AccountScreen } from "../screens/app/home/AccountScreen";
+import { DiscoverScreen } from "../screens/app/home/DiscoverScreen";
 
 export type AuthStackParamList = {
     Login: undefined;
@@ -54,6 +55,13 @@ export type FeedStackParamList = {
     };
 };
 
+export type DiscoverStackParamList = {
+    DiscoverScreen: undefined;
+    AccountScreen: {
+        account: UserRo;
+    };
+};
+
 const Tab = createBottomTabNavigator();
 type TabProps = { focused: boolean; color: string; size: number };
 
@@ -70,12 +78,16 @@ const HomeTabNavigator = () => (
                     case "SharedPacks":
                         iconName = "message-square-outline";
                         break;
+                    case "Discover":
+                        iconName = "people-outline";
+                        break;
                 }
                 return <Icon name={iconName} fill={color} width={21} height={21} />;
             },
         })}>
         <Tab.Screen name="Feed" component={FeedStackScreen} />
         <Tab.Screen name="SharedPacks" component={HomeStackScreen} />
+        <Tab.Screen name="Discover" component={DiscoverStackScreen} />
     </Tab.Navigator>
 );
 
@@ -90,6 +102,10 @@ const FeedStackScreen = () => (
             name="AccountScreen"
             component={AccountScreen}
             options={{ title: "Account", headerBackTitle: " " }}></FeedStack.Screen>
+        <FeedStack.Screen
+            name="DiscoverScreen"
+            component={DiscoverStackScreen}
+            options={{ title: " ", headerBackTitle: " " }}></FeedStack.Screen>
     </FeedStack.Navigator>
 );
 
@@ -122,6 +138,17 @@ const HomeStackScreen = () => (
             options={{ title: "Create Sticker Pack", headerBackTitle: " " }}
         />
     </HomeStack.Navigator>
+);
+
+const DiscoverStack = createStackNavigator();
+const DiscoverStackScreen = () => (
+    <DiscoverStack.Navigator>
+        <DiscoverStack.Screen name="DiscoverScreen" component={DiscoverScreen} />
+        <DiscoverStack.Screen
+            name="AccountScreen"
+            component={AccountScreen}
+            options={{ title: "Account", headerBackTitle: " " }}></DiscoverStack.Screen>
+    </DiscoverStack.Navigator>
 );
 
 type RootProps = { isAuthenticated: boolean };
