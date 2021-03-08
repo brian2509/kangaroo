@@ -1,34 +1,90 @@
 import React from "react";
 import tailwind from "tailwind-rn";
-import { SafeAreaView } from "react-native";
+import { Linking, SafeAreaView } from "react-native";
 import { StackScreenProps } from "@react-navigation/stack";
 import { FeedStackParamList } from "../../../navigation/AppNavigator";
 import { ProfileIcon } from "../../../components/common/ProfileIcon";
-import { Layout, Text } from "@ui-kitten/components";
+import { Button, Divider, Icon, Layout, List, ListItem, Text } from "@ui-kitten/components";
 import tw from "tailwind-react-native-classnames";
 import { TextStatElement } from "../../../components/common/TextStatElement";
+import { AuthContext } from "../../../contexts/AuthContext";
 
 type Props = StackScreenProps<FeedStackParamList, "SettingsScreen">;
 
-export const SettingsScreen = ({ navigation }: Props): React.ReactElement => {
+interface settingItem {
+    title: string;
+    color?: string;
+    onPress?: () => void;
+}
+
+const InfoHeader = (): React.ReactElement => {
     return (
-        <SafeAreaView style={tailwind("flex-1 bg-white")}>
-            <Layout style={tw`flex-col flex-grow`}>
-                <Layout style={tw`flex-row justify-between mt-8 mb-8`}>
-                    <Layout style={tw`border-b border-gray-300 w-20 self-center ml-8`}></Layout>
-                    <Layout style={tw`bg-transparent shadow-md`}>
-                        <ProfileIcon size={32}></ProfileIcon>
-                    </Layout>
-                    <Layout style={tw`border-b border-gray-300 w-20 self-center mr-8`}></Layout>
+        <Layout style={tw`w-full flex-row justify-between border-b border-gray-300 p-2 shadow-md`}>
+            <Layout style={tw`flex-row bg-white`}>
+                <Layout style={tw`bg-transparent ml-3`}>
+                    <ProfileIcon size={14}></ProfileIcon>
                 </Layout>
-                <Text style={tw`font-semibold text-2xl pl-4`}>Marco Joling</Text>
-                <Text style={tw`text-gray-400 text-xs pl-4`}>@Marco_Joling</Text>
-                <Layout style={tw`p-4 pt-3 flex-row`}>
-                    <TextStatElement value={100} text="Following"></TextStatElement>
-                    <TextStatElement value={100} text="Followers"></TextStatElement>
-                    <TextStatElement value={100} text="Kangaroos"></TextStatElement>
+                <Layout style={tw`flex-col ml-4 self-center`}>
+                    <Text style={tw`font-semibold mb-2`}>Willem Alexander</Text>
+                    <Layout style={tw`flex-row`}>
+                        <TextStatElement value={100} text="Following"></TextStatElement>
+                        <TextStatElement value={100} text="Followers"></TextStatElement>
+                    </Layout>
                 </Layout>
             </Layout>
+            <Button size="small" style={tailwind("mr-3 self-center")}>
+                Share
+            </Button>
+        </Layout>
+    );
+};
+
+const renderItem = ({ item }: { item: settingItem }) => {
+    const color = item.color ?? "";
+    return (
+        <ListItem
+            style={tw`h-10 p-0 m-0`}
+            title={() => <Text style={tw`text-blue-600 ml-4 text-sm ${color}`}>{item.title}</Text>}
+            accessoryRight={(props) => <Icon {...props} name="arrow-ios-forward-outline" />}
+            onPress={item.onPress}
+        />
+    );
+};
+
+export const SettingsScreen = ({ navigation }: Props): React.ReactElement => {
+    const { logout } = React.useContext(AuthContext);
+
+    const data = [
+        {
+            title: "Change email",
+        },
+        {
+            title: "Change password",
+        },
+        {
+            title: "Log out",
+            color: "text-red-600",
+            onPress: () => logout(),
+        },
+    ];
+
+    return (
+        <SafeAreaView style={tailwind("flex-1")}>
+            <InfoHeader></InfoHeader>
+            <Layout style={tw`mt-2 shadow-md`}>
+                <List
+                    scrollEnabled={false}
+                    data={data}
+                    ItemSeparatorComponent={Divider}
+                    renderItem={renderItem}
+                />
+            </Layout>
+            <Button
+                appearance="ghost"
+                style={tailwind("mr-3 self-center")}
+                onPress={() => Linking.openURL("mailto:support@example.com")}>
+                Send Feedback
+            </Button>
         </SafeAreaView>
     );
 };
