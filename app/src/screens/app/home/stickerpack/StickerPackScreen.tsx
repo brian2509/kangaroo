@@ -1,4 +1,4 @@
-import { Icon, Layout, Text } from "@ui-kitten/components";
+import { Button, Icon, Layout, Text } from "@ui-kitten/components";
 import { Image, SafeAreaView, ScrollView, TouchableOpacity } from "react-native";
 import { StackScreenProps } from "@react-navigation/stack";
 import { HomeStackParamList } from "../../../../navigation/AppNavigator";
@@ -7,6 +7,13 @@ import tw from "tailwind-react-native-classnames";
 import React, { useEffect } from "react";
 import { StickerPackRo, StickerRo } from "../../../../api/generated-typescript-api-client/src";
 import { CoverStickerImage } from "../../../../components/common/CoverStickerImage";
+import ImagePicker, { Image as ImageData } from "react-native-image-crop-picker";
+import { STICKER_FULL_SIZE_PX } from "../../../../constants/StickerSizes";
+import { generateName } from "../../../../util/placeholder_generation";
+import { uploadSticker } from "../../../../api/customApiWrappers";
+import { logErrorResponse } from "../../../../util/logging";
+import { QUERY_KEYS } from "../../../../constants/ReactQueryKeys";
+import { useMutation, useQueryClient } from "react-query";
 
 type StickerPackProps = {
     stickerPack: StickerPackRo;
@@ -109,7 +116,9 @@ class ToolBar extends React.Component<StickerPackProps> {
 
 type Props = StackScreenProps<HomeStackParamList, "StickerPackDetailScreen">;
 export const StickerPackScreen = ({ navigation, route }: Props): React.ReactElement => {
-    const stickerPack: StickerPackRo = route.params.stickerPack as StickerPackRo;
+    const stickerPack = route.params.stickerPack as StickerPackRo;
+
+    const queryClient = useQueryClient();
 
     useEffect(() => {
         navigation.setOptions({
@@ -125,7 +134,7 @@ export const StickerPackScreen = ({ navigation, route }: Props): React.ReactElem
 
     const onHeaderPress = () => {
         navigation.navigate("StickerPackManageScreen", {
-            stickerPack,
+            stickerPack: stickerPack,
         });
     };
 
@@ -145,11 +154,51 @@ export const StickerPackScreen = ({ navigation, route }: Props): React.ReactElem
         </Layout>
     );
 
+    const AddIcon = (props: any) => (
+        <Icon style={tw.style("w-6 h-6", { tintColor: props.style.tintColor })} name="plus" />
+    );
+
+    const uploadStickerMutation = useMutation(uploadSticker, {
+        onSuccess: (data) => {
+            // TODO: Invalidate individual sticker queries once we have those set-up
+            queryClient.invalidateQueries(QUERY_KEYS.myStickerPacks);
+        },
+        onError: logErrorResponse,
+    });
+
+    const pickAndUploadSticker = async (stickerPackId: string) => {
+        ImagePicker.openPicker({
+            width: STICKER_FULL_SIZE_PX,
+            height: STICKER_FULL_SIZE_PX,
+            cropping: true,
+            mediaType: "photo",
+        })
+            .then((image: ImageData) => {
+                const stickerName = generateName();
+
+                const file = {
+                    uri: image.path,
+                    name: image.path.split("/").slice(-1)[0],
+                    type: image.mime,
+                };
+
+                uploadStickerMutation.mutate({ stickerPackId, stickerName, file });
+            })
+            .catch((error) => {
+                if (error.code !== "E_PICKER_CANCELLED") {
+                    console.log(error);
+                }
+            });
+    };
+
     const HeaderRight = () => (
         <Layout style={tw`flex-row mr-4`}>
-            <TouchableOpacity activeOpacity={0.7}>
-                <Text> Share</Text>
-            </TouchableOpacity>
+            <Button
+                appearance="ghost"
+                style={tailwind("px-1")}
+                onPress={() => pickAndUploadSticker(stickerPack.id)}
+                accessoryLeft={AddIcon}
+            />
         </Layout>
     );
 
