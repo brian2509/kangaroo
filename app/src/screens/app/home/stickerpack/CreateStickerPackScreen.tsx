@@ -1,8 +1,7 @@
 import { StackScreenProps } from "@react-navigation/stack";
 import { Button, CheckBox, Icon, IconProps, Input, Layout, Text } from "@ui-kitten/components";
 import React, { useState } from "react";
-import { Keyboard } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { Keyboard, SafeAreaView } from "react-native";
 import { useMutation, useQueryClient } from "react-query";
 import tailwind from "tailwind-rn";
 import validate from "validate.js";
@@ -50,7 +49,7 @@ export const CreateStickerPackScreen = ({ navigation }: Props): React.ReactEleme
 
     return (
         <SafeAreaView style={tailwind("h-full bg-white p-0")}>
-            <Layout style={tailwind("flex-col p-6 pt-4 mt-0")}>
+            <Layout style={tailwind("flex-col p-6 mt-0")}>
                 <Input
                     size="medium"
                     label="Sticker Pack Name"
