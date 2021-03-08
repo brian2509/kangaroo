@@ -33,17 +33,6 @@ export const CreateStickerPackScreen = ({ navigation }: Props): React.ReactEleme
     const [stickerPackName, setStickerPackName] = useState("");
     const [stickerPackPrivate, setStickerPackPrivate] = useState(false);
 
-    const queryClient = useQueryClient();
-
-    const createStickerPackMutation = useMutation(
-        async (createStickerPackDto: CreateStickerPackDto) =>
-            (await api.stickerPacks.create(createStickerPackDto)).data,
-        {
-            onSuccess: () => queryClient.invalidateQueries(QUERY_KEYS.myStickerPacks),
-            onError: logErrorResponse,
-        },
-    );
-
     const inputValidation = validate.validate({ name: stickerPackName }, constraints);
     const isNameValid = inputValidation !== undefined ? !inputValidation["name"] : true;
 
@@ -75,23 +64,13 @@ export const CreateStickerPackScreen = ({ navigation }: Props): React.ReactEleme
                         style={tailwind("p-0 pl-2 pr-2")}
                         onPress={() => {
                             if (isNameValid) {
-                                createStickerPackMutation.mutate(
-                                    {
-                                        name: stickerPackName,
-                                        personal: stickerPackPrivate,
-                                        animated: false,
-                                    },
-                                    {
-                                        onSuccess: (data) => {
-                                            navigation.replace("StickerPackDetailScreen", {
-                                                stickerPack: data,
-                                            });
-                                        },
-                                    },
-                                );
+                                navigation.navigate("CreateAddMembersScreen", {
+                                    name: stickerPackName,
+                                    personal: stickerPackPrivate,
+                                });
                             }
                         }}>
-                        Create
+                        Next
                     </Button>
                 </Layout>
             </Layout>

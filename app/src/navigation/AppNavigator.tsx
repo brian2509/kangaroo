@@ -17,6 +17,7 @@ import { AccountScreen } from "../screens/app/home/AccountScreen";
 import { DiscoverScreen } from "../screens/app/home/DiscoverScreen";
 import { SettingsScreen } from "../screens/app/home/SettingsScreen";
 import { SettingsUpdateScreen } from "../screens/app/home/SettingsUpdateScreen";
+import { CreateAddMembersScreen } from "../screens/app/home/stickerpack/CreateAddMembersScreen";
 
 export type AuthStackParamList = {
     Login: undefined;
@@ -46,6 +47,10 @@ export type HomeStackParamList = {
         sticker: StickerRo;
     };
     CreateStickerPackScreen: undefined;
+    CreateAddMembersScreen: {
+        name: string;
+        personal: boolean;
+    };
 };
 
 export type FeedStackParamList = {
@@ -155,6 +160,11 @@ const HomeStackScreen = () => (
         <HomeStack.Screen
             name="CreateStickerPackScreen"
             component={CreateStickerPackScreen}
+            options={{ title: "Create Sticker Pack", headerBackTitle: " " }}
+        />
+        <HomeStack.Screen
+            name="CreateAddMembersScreen"
+            component={CreateAddMembersScreen}
             options={{ title: "Create Sticker Pack", headerBackTitle: " " }}
         />
     </HomeStack.Navigator>
