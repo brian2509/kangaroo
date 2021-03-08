@@ -2,6 +2,10 @@
 openapi.yaml
 openapitools.json
 
+# production
+nginx/*
+nging.conf
+
 # compiled output
 /dist
 /node_modules
