@@ -1,19 +1,19 @@
-import { Icon, Layout, Text } from "@ui-kitten/components";
-import {
-    Image,
-    ImageStyle,
-    SafeAreaView,
-    ScrollView,
-    StyleProp,
-    TouchableOpacity,
-} from "react-native";
+import { Button, Icon, Layout, Text } from "@ui-kitten/components";
+import { Image, SafeAreaView, ScrollView, TouchableOpacity } from "react-native";
 import { StackScreenProps } from "@react-navigation/stack";
 import { HomeStackParamList } from "../../../../navigation/AppNavigator";
 import tailwind from "tailwind-rn";
 import tw from "tailwind-react-native-classnames";
-import React from "react";
+import React, { useEffect } from "react";
 import { StickerPackRo, StickerRo } from "../../../../api/generated-typescript-api-client/src";
 import { CoverStickerImage } from "../../../../components/common/CoverStickerImage";
+import ImagePicker, { Image as ImageData } from "react-native-image-crop-picker";
+import { STICKER_FULL_SIZE_PX } from "../../../../constants/StickerSizes";
+import { generateName } from "../../../../util/placeholder_generation";
+import { uploadSticker } from "../../../../api/customApiWrappers";
+import { logErrorResponse } from "../../../../util/logging";
+import { QUERY_KEYS } from "../../../../constants/ReactQueryKeys";
+import { useMutation, useQueryClient } from "react-query";
 
 type StickerPackProps = {
     stickerPack: StickerPackRo;
@@ -115,60 +115,97 @@ class ToolBar extends React.Component<StickerPackProps> {
 }
 
 type Props = StackScreenProps<HomeStackParamList, "StickerPackDetailScreen">;
-export class StickerPackScreen extends React.Component<Props> {
-    private stickerPack: StickerPackRo;
+export const StickerPackScreen = ({ navigation, route }: Props): React.ReactElement => {
+    const stickerPack = route.params.stickerPack as StickerPackRo;
 
-    constructor(props: Props) {
-        super(props);
-        this.stickerPack = props.route.params.stickerPack;
-        this.onStickerPress = this.onStickerPress.bind(this);
-    }
+    const queryClient = useQueryClient();
 
-    onStickerPress(data: StickerRo): void {
-        this.props.navigation.navigate("StickerScreen", { sticker: data });
-    }
-
-    componentDidMount(): void {
-        this.props.navigation.setOptions({
-            headerTitle: () => (
-                <Layout style={tw`flex-row left-0`}>
-                    <CoverStickerImage
-                        stickerPack={this.stickerPack}
-                        style={tw.style("w-9 h-9 mr-3 rounded-full")}
-                        onStickerPress={this.onStickerPress}
-                    />
-                    <TouchableOpacity
-                        onPress={() =>
-                            this.props.navigation.navigate("StickerPackManageScreen", {
-                                stickerPack: this.stickerPack,
-                            })
-                        }>
-                        <Layout style={tw`flex-col`}>
-                            <Text>{this.stickerPack.name}</Text>
-                            <Text style={tw`text-gray-500 text-xs`}>
-                                Willem, Brian, Mika, Rowdy
-                            </Text>
-                        </Layout>
-                    </TouchableOpacity>
-                </Layout>
-            ),
+    useEffect(() => {
+        navigation.setOptions({
+            headerTitle: HeaderTitle,
             headerTitleAlign: "left",
-            headerRight: () => (
-                <Layout style={tw`flex-row mr-4`}>
-                    <TouchableOpacity activeOpacity={0.7}>
-                        <Text> Share</Text>
-                    </TouchableOpacity>
-                </Layout>
-            ),
+            headerRight: HeaderRight,
         });
-    }
+    }, []);
 
-    render(): JSX.Element {
-        return (
-            <SafeAreaView style={tailwind("flex-1 bg-white")}>
-                <Body stickerPack={this.stickerPack} onStickerPress={this.onStickerPress} />
-                <ToolBar stickerPack={this.stickerPack} />
-            </SafeAreaView>
-        );
-    }
-}
+    const onStickerPress = (data: StickerRo): void => {
+        navigation.navigate("StickerScreen", { sticker: data });
+    };
+
+    const onHeaderPress = () => {
+        navigation.navigate("StickerPackManageScreen", {
+            stickerPack: stickerPack,
+        });
+    };
+
+    const HeaderTitle = () => (
+        <Layout style={tw`flex-row left-0`}>
+            <CoverStickerImage
+                stickerPack={stickerPack}
+                style={tw.style("w-9 h-9 mr-3 rounded-full")}
+                onStickerPress={onStickerPress}
+            />
+            <TouchableOpacity onPress={onHeaderPress}>
+                <Layout style={tw`flex-col`}>
+                    <Text>{stickerPack.name}</Text>
+                    <Text style={tw`text-gray-500 text-xs`}>Willem, Brian, Mika, Rowdy</Text>
+                </Layout>
+            </TouchableOpacity>
+        </Layout>
+    );
+
+    const AddIcon = (props: any) => (
+        <Icon style={tw.style("w-6 h-6", { tintColor: props.style.tintColor })} name="plus" />
+    );
+
+    const uploadStickerMutation = useMutation(uploadSticker, {
+        onSuccess: (data) => {
+            // TODO: Invalidate individual sticker queries once we have those set-up
+            queryClient.invalidateQueries(QUERY_KEYS.myStickerPacks);
+        },
+        onError: logErrorResponse,
+    });
+
+    const pickAndUploadSticker = async (stickerPackId: string) => {
+        ImagePicker.openPicker({
+            width: STICKER_FULL_SIZE_PX,
+            height: STICKER_FULL_SIZE_PX,
+            cropping: true,
+            mediaType: "photo",
+        })
+            .then((image: ImageData) => {
+                const stickerName = generateName();
+
+                const file = {
+                    uri: image.path,
+                    name: image.path.split("/").slice(-1)[0],
+                    type: image.mime,
+                };
+
+                uploadStickerMutation.mutate({ stickerPackId, stickerName, file });
+            })
+            .catch((error) => {
+                if (error.code !== "E_PICKER_CANCELLED") {
+                    console.log(error);
+                }
+            });
+    };
+
+    const HeaderRight = () => (
+        <Layout style={tw`flex-row mr-4`}>
+            <Button
+                appearance="ghost"
+                style={tailwind("px-1")}
+                onPress={() => pickAndUploadSticker(stickerPack.id)}
+                accessoryLeft={AddIcon}
+            />
+        </Layout>
+    );
+
+    return (
+        <SafeAreaView style={tailwind("flex-1 bg-white")}>
+            <Body stickerPack={stickerPack} onStickerPress={onStickerPress} />
+            <ToolBar stickerPack={stickerPack} />
+        </SafeAreaView>
+    );
+};
