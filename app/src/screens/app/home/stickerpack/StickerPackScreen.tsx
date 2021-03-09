@@ -1,4 +1,4 @@
-import { Button, Icon, Layout, Text } from "@ui-kitten/components";
+import { Button, Icon, Layout, Spinner, Text } from "@ui-kitten/components";
 import { Image, SafeAreaView, ScrollView, TouchableOpacity } from "react-native";
 import { StackScreenProps } from "@react-navigation/stack";
 import { HomeStackParamList } from "../../../../navigation/AppNavigator";
@@ -14,6 +14,8 @@ import { uploadSticker } from "../../../../api/customApiWrappers";
 import { logErrorResponse } from "../../../../util/logging";
 import { QUERY_KEYS } from "../../../../constants/ReactQueryKeys";
 import { useMutation, useQueryClient } from "react-query";
+import { useStickerPack } from "../../../../api/hooks/query/useStickerPack";
+import { PlaceholderImage } from "../../../../components/common/PlaceholderImage";
 
 type StickerPackProps = {
     stickerPack: StickerPackRo;
@@ -116,9 +118,16 @@ class ToolBar extends React.Component<StickerPackProps> {
 
 type Props = StackScreenProps<HomeStackParamList, "StickerPackDetailScreen">;
 export const StickerPackScreen = ({ navigation, route }: Props): React.ReactElement => {
-    const stickerPack = route.params.stickerPack as StickerPackRo;
-
     const queryClient = useQueryClient();
+
+    const { data } = useStickerPack(route.params.stickerPack.id);
+
+    const uploadStickerMutation = useMutation(uploadSticker, {
+        onSuccess: (data, variables) => {
+            queryClient.invalidateQueries([QUERY_KEYS.stickerPack, variables.stickerPackId]);
+        },
+        onError: logErrorResponse,
+    });
 
     useEffect(() => {
         navigation.setOptions({
@@ -126,45 +135,49 @@ export const StickerPackScreen = ({ navigation, route }: Props): React.ReactElem
             headerTitleAlign: "left",
             headerRight: HeaderRight,
         });
-    }, []);
+    }, [data]);
 
     const onStickerPress = (data: StickerRo): void => {
         navigation.navigate("StickerScreen", { sticker: data });
     };
 
     const onHeaderPress = () => {
+        if (data == undefined) {
+            return;
+        }
+
         navigation.navigate("StickerPackManageScreen", {
-            stickerPack: stickerPack,
+            stickerPack: data,
         });
     };
 
     const HeaderTitle = () => (
         <Layout style={tw`flex-row left-0`}>
-            <CoverStickerImage
-                stickerPack={stickerPack}
-                style={tw.style("w-9 h-9 mr-3 rounded-full")}
-                onStickerPress={onStickerPress}
-            />
-            <TouchableOpacity onPress={onHeaderPress}>
-                <Layout style={tw`flex-col`}>
-                    <Text>{stickerPack.name}</Text>
-                    <Text style={tw`text-gray-500 text-xs`}>Willem, Brian, Mika, Rowdy</Text>
-                </Layout>
-            </TouchableOpacity>
+            {data == undefined ? (
+                <PlaceholderImage style={tw.style("w-9 h-9 mr-3 rounded-full")} />
+            ) : (
+                <>
+                    <CoverStickerImage
+                        stickerPack={data}
+                        style={tw.style("w-9 h-9 mr-3 rounded-full")}
+                        onStickerPress={onStickerPress}
+                    />
+                    <TouchableOpacity onPress={onHeaderPress}>
+                        <Layout style={tw`flex-col`}>
+                            <Text>{data.name}</Text>
+                            <Text style={tw`text-gray-500 text-xs`}>
+                                Willem, Brian, Mika, Rowdy
+                            </Text>
+                        </Layout>
+                    </TouchableOpacity>
+                </>
+            )}
         </Layout>
     );
 
     const AddIcon = (props: any) => (
         <Icon style={tw.style("w-6 h-6", { tintColor: props.style.tintColor })} name="plus" />
     );
-
-    const uploadStickerMutation = useMutation(uploadSticker, {
-        onSuccess: (data) => {
-            // TODO: Invalidate individual sticker queries once we have those set-up
-            queryClient.invalidateQueries(QUERY_KEYS.myStickerPacks);
-        },
-        onError: logErrorResponse,
-    });
 
     const pickAndUploadSticker = async (stickerPackId: string) => {
         ImagePicker.openPicker({
@@ -191,12 +204,21 @@ export const StickerPackScreen = ({ navigation, route }: Props): React.ReactElem
             });
     };
 
+    const onPressUpload = async () => {
+        if (data == undefined) {
+            return;
+        }
+
+        pickAndUploadSticker(data.id);
+    };
+
     const HeaderRight = () => (
         <Layout style={tw`flex-row mr-4`}>
             <Button
+                disabled={data == undefined}
                 appearance="ghost"
                 style={tailwind("px-1")}
-                onPress={() => pickAndUploadSticker(stickerPack.id)}
+                onPress={onPressUpload}
                 accessoryLeft={AddIcon}
             />
         </Layout>
@@ -204,8 +226,16 @@ export const StickerPackScreen = ({ navigation, route }: Props): React.ReactElem
 
     return (
         <SafeAreaView style={tailwind("flex-1 bg-white")}>
-            <Body stickerPack={stickerPack} onStickerPress={onStickerPress} />
-            <ToolBar stickerPack={stickerPack} />
+            {data == undefined ? (
+                <Layout style={tw`flex-1 items-center mt-20`}>
+                    <Spinner size="giant" />
+                </Layout>
+            ) : (
+                <>
+                    <Body stickerPack={data} onStickerPress={onStickerPress} />
+                    <ToolBar stickerPack={data} />
+                </>
+            )}
         </SafeAreaView>
     );
 };

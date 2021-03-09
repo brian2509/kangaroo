@@ -12,6 +12,7 @@ import { StickerPackRo } from "../../../api/generated-typescript-api-client/src"
 import { HomeScreenHeader } from "../../../components/home/HomeScreenHeader";
 import { StickerPacksList } from "../../../components/stickerpack/StickerPackList";
 import { sortedStickerPacks } from "../../../util/sorting";
+import { useStickerPacks } from "../../../api/hooks/query/useStickerPacks";
 
 type Props = StackScreenProps<HomeStackParamList, "Homescreen">;
 
@@ -24,13 +25,7 @@ export const HomeScreen = ({ navigation }: Props): React.ReactElement => {
         () => queryClient.invalidateQueries(QUERY_KEYS.myStickerPacks);
     }, [accessToken]);
 
-    const myStickerPacksQuery = useQuery(
-        QUERY_KEYS.myStickerPacks,
-        async () => (await api.users.getOwnStickerPacks()).data,
-        {
-            onError: logErrorResponse,
-        },
-    );
+    const myStickerPacksQuery = useStickerPacks();
 
     const removeStickerPackMutation = useMutation(
         async (stickerPackId: string) => (await api.stickerPacks.remove(stickerPackId)).data,
