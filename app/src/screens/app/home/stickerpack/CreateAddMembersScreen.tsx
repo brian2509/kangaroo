@@ -2,34 +2,25 @@ import { StackScreenProps } from "@react-navigation/stack";
 import { Button, Icon, IconProps, Input, Layout, Text } from "@ui-kitten/components";
 import React, { useEffect } from "react";
 import { Keyboard, SafeAreaView } from "react-native";
-import { useMutation, useQueryClient } from "react-query";
+import { useQueryClient } from "react-query";
 import tailwind from "tailwind-rn";
-import { CreateStickerPackDto } from "../../../../api/generated-typescript-api-client/src";
-import { api } from "../../../../api/generatedApiWrapper";
-import { QUERY_KEYS } from "../../../../constants/ReactQueryKeys";
 import { HomeStackParamList } from "../../../../navigation/AppNavigator";
-import { logErrorResponse } from "../../../../util/logging";
 import tw from "tailwind-react-native-classnames";
 import Clipboard from "@react-native-clipboard/clipboard";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { AccountProfileImage } from "../../../../components/common/AccountProfileImage";
 import { TextFieldActions } from "../../../../components/common/TextFieldActions";
+import { useCreateStickerPackMutation } from "../../../../api/hooks/mutations/createStickerPack";
 
 type Props = StackScreenProps<HomeStackParamList, "CreateAddMembersScreen">;
 export const CreateAddMembersScreen = ({ route, navigation }: Props): React.ReactElement => {
     const exportUrlPlaceholder = "http://kangaroo.nl/user/123123/placeholder";
-    const queryClient = useQueryClient();
     const [copied, setCopied] = React.useState(false);
     const [addUser, setAddUser] = React.useState("");
 
-    const createStickerPackMutation = useMutation(
-        async (createStickerPackDto: CreateStickerPackDto) =>
-            (await api.stickerPacks.create(createStickerPackDto)).data,
-        {
-            onSuccess: () => queryClient.invalidateQueries(QUERY_KEYS.myStickerPacks),
-            onError: logErrorResponse,
-        },
-    );
+    const queryClient = useQueryClient();
+
+    const createStickerPackMutation = useCreateStickerPackMutation(queryClient);
 
     const createStickerPack = () => {
         createStickerPackMutation.mutate(

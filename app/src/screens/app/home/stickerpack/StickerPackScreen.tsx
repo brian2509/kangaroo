@@ -125,6 +125,7 @@ export const StickerPackScreen = ({ navigation, route }: Props): React.ReactElem
     const uploadStickerMutation = useMutation(uploadSticker, {
         onSuccess: (data, variables) => {
             queryClient.invalidateQueries([QUERY_KEYS.stickerPack, variables.stickerPackId]);
+            queryClient.invalidateQueries(QUERY_KEYS.myStickerPacks);
         },
         onError: logErrorResponse,
     });
