@@ -1,8 +1,10 @@
-import { Controller, Get, UseGuards } from "@nestjs/common";
+import { Controller, Get, Param, UseGuards } from "@nestjs/common";
 import { ApiBearerAuth, ApiOperation, ApiTags } from "@nestjs/swagger";
 import { User } from "../auth/decorators/user.decorator";
 import { JwtAuthGuard } from "../auth/guards/jwt.guard";
 import { StickerPackRo } from "../sticker-packs/dto/sticker-pack-ro.dto";
+import { UserPrivateRo } from "./dto/response-user-private.dto";
+import { UserPublicRo } from "./dto/response-user-public.dto";
 import { UserRo } from "./dto/response-user.dto";
 import { UsersService } from "./user.service";
 
@@ -37,5 +39,21 @@ export class UsersController {
   @Get("/me/sticker-packs/joined")
   async getJoinedStickerPacks(@User() user: UserRo): Promise<StickerPackRo[]> {
     return this.usersService.getJoinedStickerPacks(user.id);
+  }
+
+  @ApiOperation({
+    summary: "Get private profile of currently logged in user.",
+  })
+  @Get("/me")
+  async getOwnPrivateProfile(@User() user: UserRo): Promise<UserPrivateRo> {
+    return this.usersService.getPrivateUser(user.id);
+  }
+
+  @ApiOperation({
+    summary: "Get public profile of someone else.",
+  })
+  @Get("/users/:userId")
+  async getPublicProfile(@Param("userId") userId: string): Promise<UserPublicRo> {
+    return this.usersService.getPublicUser(userId);
   }
 }
