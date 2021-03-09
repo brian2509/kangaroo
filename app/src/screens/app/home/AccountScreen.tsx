@@ -3,15 +3,17 @@ import tailwind from "tailwind-rn";
 import { SafeAreaView, TouchableOpacity } from "react-native";
 import { StackScreenProps } from "@react-navigation/stack";
 import { FeedStackParamList } from "../../../navigation/AppNavigator";
-import { ProfileIcon } from "../../../components/common/ProfileIcon";
 import { Icon, Layout, Text } from "@ui-kitten/components";
 import tw from "tailwind-react-native-classnames";
 import { TextStatElement } from "../../../components/common/TextStatElement";
 import { AccountProfileImage } from "../../../components/common/AccountProfileImage";
+import { useQueryClient } from "react-query";
 
 type Props = StackScreenProps<FeedStackParamList, "AccountScreen">;
 
 export const AccountScreen = ({ navigation }: Props): React.ReactElement => {
+    const queryClient = useQueryClient();
+
     useEffect(() => {
         navigation.setOptions({
             headerRight: function navigationRightIcon() {
