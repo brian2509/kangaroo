@@ -1,4 +1,4 @@
-# Giraffe Server
+# Kangaroo Server
 Kangaroo backend using the [Nest](https://github.com/nestjs/nest) framework and Postgres.
 
 - **Docker containers** available in the private registry for easy deployment.
@@ -38,7 +38,7 @@ $ psql -U {{ POSTGRES_USER }} -W -d {{ POSTGRES_DB }}
 ```bash
 # Clear all database files (virtual volume)
 $ npm run docker:postgres:stop
-$ docker volume rm server_kangaroo-db
+$ docker volume rm kangaroo-server_kangaroo-db
 or
 $ npm run docker:postgres:clear
 ```
