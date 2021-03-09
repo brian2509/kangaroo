@@ -8,13 +8,20 @@ import tw from "tailwind-react-native-classnames";
 import { TextStatElement } from "../../../components/common/TextStatElement";
 import { AccountProfileImage } from "../../../components/common/AccountProfileImage";
 import { useQueryClient } from "react-query";
+import { useMe } from "../../../api/hooks/query/user";
+import { useStickerPacks } from "../../../api/hooks/query/stickerPack";
+import { QUERY_KEYS } from "../../../constants/ReactQueryKeys";
 
 type Props = StackScreenProps<FeedStackParamList, "AccountScreen">;
 
 export const AccountScreen = ({ navigation }: Props): React.ReactElement => {
     const queryClient = useQueryClient();
+    const myUserQuery = useMe();
+    const myStickerPacksQuery = useStickerPacks();
 
     useEffect(() => {
+        () => queryClient.invalidateQueries(QUERY_KEYS.me);
+
         navigation.setOptions({
             headerRight: function navigationRightIcon() {
                 return (
@@ -35,12 +42,16 @@ export const AccountScreen = ({ navigation }: Props): React.ReactElement => {
             <Layout style={tw`flex-col flex-grow`}>
                 <AccountProfileImage></AccountProfileImage>
 
-                <Text style={tw`font-semibold text-2xl pl-4`}>Marco Joling</Text>
-                <Text style={tw`text-gray-400 text-xs pl-4`}>@Marco_Joling</Text>
+                <Text style={tw`font-semibold text-2xl pl-4`}>
+                    {myUserQuery.data?.username || ""}
+                </Text>
+                <Text style={tw`text-gray-400 text-xs pl-4`}>@{myUserQuery.data?.id || ""}</Text>
                 <Layout style={tw`p-4 pt-3 flex-row`}>
                     <TextStatElement value={100} text="Following"></TextStatElement>
                     <TextStatElement value={100} text="Followers"></TextStatElement>
-                    <TextStatElement value={100} text="Kangaroos"></TextStatElement>
+                    <TextStatElement
+                        value={myStickerPacksQuery.data?.length || 0}
+                        text="Stickerpacks"></TextStatElement>
                 </Layout>
             </Layout>
         </SafeAreaView>

@@ -14,7 +14,7 @@ import { uploadSticker } from "../../../../api/customApiWrappers";
 import { logErrorResponse } from "../../../../util/logging";
 import { QUERY_KEYS } from "../../../../constants/ReactQueryKeys";
 import { useMutation, useQueryClient } from "react-query";
-import { useStickerPack } from "../../../../api/hooks/query/useStickerPack";
+import { useStickerPack } from "../../../../api/hooks/query/stickerPack";
 import { PlaceholderImage } from "../../../../components/common/PlaceholderImage";
 
 type StickerPackProps = {
