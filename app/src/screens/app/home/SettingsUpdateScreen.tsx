@@ -3,9 +3,8 @@ import tailwind from "tailwind-rn";
 import { SafeAreaView, TouchableWithoutFeedback } from "react-native";
 import { StackScreenProps } from "@react-navigation/stack";
 import { FeedStackParamList } from "../../../navigation/AppNavigator";
-import { Button, Icon, IconProps, Input, Layout, Text } from "@ui-kitten/components";
+import { Icon, IconProps, Input, Layout, Text } from "@ui-kitten/components";
 import tw from "tailwind-react-native-classnames";
-import { SettingsHeader } from "./SettingsScreen";
 import { TextFieldActions } from "../../../components/common/TextFieldActions";
 
 type Props = StackScreenProps<FeedStackParamList, "SettingsUpdateScreen">;
@@ -29,7 +28,6 @@ export const SettingsUpdateScreen = ({ route, navigation }: Props): React.ReactE
 
     return (
         <SafeAreaView style={tailwind("flex-1")}>
-            <SettingsHeader></SettingsHeader>
             <Layout style={tw`w-full p-4 bg-transparent`}>
                 <Input
                     style={tw`w-full mb-4 bg-white`}

@@ -21,6 +21,7 @@ export const AccountScreen = ({ navigation }: Props): React.ReactElement => {
 
     useEffect(() => {
         () => queryClient.invalidateQueries(QUERY_KEYS.me);
+        () => queryClient.invalidateQueries(QUERY_KEYS.myStickerPacks);
 
         navigation.setOptions({
             headerRight: function navigationRightIcon() {

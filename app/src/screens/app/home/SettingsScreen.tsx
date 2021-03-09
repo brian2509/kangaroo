@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import tailwind from "tailwind-rn";
 import { Linking, SafeAreaView } from "react-native";
 import { StackScreenProps } from "@react-navigation/stack";
@@ -8,6 +8,9 @@ import { Button, Divider, Icon, Layout, List, ListItem, Text } from "@ui-kitten/
 import tw from "tailwind-react-native-classnames";
 import { TextStatElement } from "../../../components/common/TextStatElement";
 import { AuthContext } from "../../../contexts/AuthContext";
+import { useQueryClient } from "react-query";
+import { useMe } from "../../../api/hooks/query/user";
+import { QUERY_KEYS } from "../../../constants/ReactQueryKeys";
 
 type Props = StackScreenProps<FeedStackParamList, "SettingsScreen">;
 
@@ -17,7 +20,7 @@ interface settingItem {
     onPress?: () => void;
 }
 
-export const SettingsHeader = (): React.ReactElement => {
+export const SettingsHeader = ({ username }: { username: string }): React.ReactElement => {
     return (
         <Layout style={tw`w-full flex-row justify-between border-b border-gray-300 p-2 shadow-md`}>
             <Layout style={tw`flex-row bg-white`}>
@@ -25,7 +28,7 @@ export const SettingsHeader = (): React.ReactElement => {
                     <ProfileIcon size={14}></ProfileIcon>
                 </Layout>
                 <Layout style={tw`flex-col ml-4 self-center`}>
-                    <Text style={tw`font-semibold mb-2`}>Willem Alexander</Text>
+                    <Text style={tw`font-semibold mb-2`}>{username}</Text>
                     <Layout style={tw`flex-row`}>
                         <TextStatElement value={100} text="Following"></TextStatElement>
                         <TextStatElement value={100} text="Followers"></TextStatElement>
@@ -53,6 +56,8 @@ const renderItem = ({ item }: { item: settingItem }) => {
 
 export const SettingsScreen = ({ navigation }: Props): React.ReactElement => {
     const { logout } = React.useContext(AuthContext);
+    const queryClient = useQueryClient();
+    const myUserQuery = useMe();
 
     const data = [
         {
@@ -72,11 +77,15 @@ export const SettingsScreen = ({ navigation }: Props): React.ReactElement => {
         },
     ];
 
+    useEffect(() => {
+        () => queryClient.invalidateQueries(QUERY_KEYS.me);
+    }, []);
+
     return (
         <SafeAreaView style={tailwind("flex-1")}>
             <Layout style={tw`flex-col h-full flex-grow justify-between bg-transparent`}>
                 <Layout style={tw`bg-transparent`}>
-                    <SettingsHeader></SettingsHeader>
+                    <SettingsHeader username={myUserQuery.data?.username ?? ""}></SettingsHeader>
                     <Layout style={tw`mt-2 shadow-md`}>
                         <List
                             scrollEnabled={false}
