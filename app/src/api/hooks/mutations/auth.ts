@@ -1,6 +1,6 @@
 import { useMutation } from "react-query";
 import { logErrorResponse } from "../../../util/logging";
-import { JwtToken, LoginUserDto, RegisterUserDto } from "../../generated-typescript-api-client/src";
+import { LoginUserDto, RegisterUserDto } from "../../generated-typescript-api-client/src";
 import { api } from "../../generatedApiWrapper";
 
 const loginUser = async (loginUserDto: LoginUserDto) => {
@@ -8,11 +8,8 @@ const loginUser = async (loginUserDto: LoginUserDto) => {
     return data;
 };
 
-export const useLoginMutation = (loginCallback?: (token: JwtToken) => void) =>
+export const useLoginMutation = () =>
     useMutation(loginUser, {
-        onSuccess: (data) => {
-            loginCallback && loginCallback(data);
-        },
         onError: (e: any) => {
             logErrorResponse(e);
         },

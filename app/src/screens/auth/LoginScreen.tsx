@@ -17,11 +17,16 @@ export const LoginScreen = ({ navigation }: Props) => {
     const [password, setPassword] = React.useState("password123");
     const [showPassword, setShowPassword] = React.useState(false);
 
-    const loginMutation = useLoginMutation(login);
+    const loginMutation = useLoginMutation();
 
     const onLogin = () => {
         const dto = { username, password };
-        loginMutation.mutate(dto);
+
+        loginMutation.mutate(dto, {
+            onSuccess: (jwtToken) => {
+                login(jwtToken);
+            },
+        });
     };
 
     const visibilityIcon = (props: IconProps) => (
