@@ -7,4 +7,4 @@ const getMe = async () => {
     return data;
 };
 
-export const useMe = () => useQuery([QUERY_KEYS.me], getMe);
+export const useMe = () => useQuery(QUERY_KEYS.me, getMe);
