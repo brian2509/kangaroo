@@ -14,7 +14,7 @@ import { CoverStickerImage } from "../../../components/common/CoverStickerImage"
 import { StickerPackRo, StickerRo } from "../../../api/generated-typescript-api-client/src";
 import { ScrollView } from "react-native-gesture-handler";
 import { lastUpdatedString } from "../../../util/time";
-import { sortedStickers } from "../../../util/sorting";
+import { sortedStickerPacks, sortedStickers } from "../../../util/sorting";
 import { ACCOUNT_MAX_PREVIEW_STICKERS } from "../../../constants/StickerPack";
 import { TextWithIcon } from "../../../components/common/TextWithIcon";
 
@@ -183,7 +183,7 @@ export const AccountScreen = ({ navigation }: Props): React.ReactElement => {
                             text="Stickerpacks"></TextStatElement>
                     </Layout>
 
-                    {renderStickerPackPreviews(myStickerPacksQuery.data || [])}
+                    {renderStickerPackPreviews(sortedStickerPacks(myStickerPacksQuery.data || []))}
                 </Layout>
             </ScrollView>
         </SafeAreaView>

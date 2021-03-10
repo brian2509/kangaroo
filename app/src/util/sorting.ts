@@ -6,6 +6,6 @@ export const sortedStickerPacks = (stickerPacks: StickerPackRo[]): StickerPackRo
 
 export const sortedStickers = (stickers: StickerRo[], descending = true): StickerRo[] => {
     return descending
-        ? stickers.sort((p1, p2) => (p1.updatedAt > p2.updatedAt ? 1 : -1))
-        : stickers.sort((p1, p2) => (p1.updatedAt < p2.updatedAt ? 1 : -1));
+        ? stickers.sort((p1, p2) => (p1.updatedAt < p2.updatedAt ? 1 : -1))
+        : stickers.sort((p1, p2) => (p1.updatedAt > p2.updatedAt ? 1 : -1));
 };
