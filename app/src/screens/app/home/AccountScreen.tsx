@@ -16,6 +16,7 @@ import { ScrollView } from "react-native-gesture-handler";
 import { lastUpdatedString } from "../../../util/time";
 import { sortedStickers } from "../../../util/sorting";
 import { ACCOUNT_MAX_PREVIEW_STICKERS } from "../../../constants/StickerPack";
+import { TextWithIcon } from "../../../components/common/TextWithIcon";
 
 type Props = StackScreenProps<FeedStackParamList, "AccountScreen">;
 
@@ -67,24 +68,10 @@ export const AccountScreen = ({ navigation }: Props): React.ReactElement => {
         );
     };
 
-    const renderStickerPack = (pack: StickerPackRo): JSX.Element => {
-        const stickers = sortedStickers(pack.stickers).slice(0, ACCOUNT_MAX_PREVIEW_STICKERS);
-
+    const renderStickers = (stickers: StickerRo[]): JSX.Element => {
         return (
-            <Layout style={tw`flex-col mb-4 shadow-md`}>
-                <Layout style={tw`flex-row p-2 px-4 bg-white border-b border-gray-300`}>
-                    <CoverStickerImage stickerPack={pack} style={tw`w-10 h-10 rounded-full`} />
-                    <Layout style={tw`flex-col pl-4 flex-grow self-center`}>
-                        <Text style={tw`font-semibold text-base`}>{pack.name}</Text>
-                        <TextStatElement
-                            value={pack.stickers.length}
-                            text="Stickers"></TextStatElement>
-                    </Layout>
-                    <Text style={tw`text-gray-500 text-xs pt-2`}>
-                        {lastUpdatedString(pack.updatedAt)}
-                    </Text>
-                </Layout>
-                <Layout style={tw`flex-row flex-wrap pt-3`}>
+            <Layout>
+                <Layout style={tw`flex-row flex-wrap pt-3 px-1 border-b border-gray-300`}>
                     {stickers.map((sticker) => {
                         return renderSticker(sticker);
                     })}
@@ -93,11 +80,81 @@ export const AccountScreen = ({ navigation }: Props): React.ReactElement => {
         );
     };
 
-    const renderStickerView = (packs: StickerPackRo[]): JSX.Element => {
+    const showEmptyPackPreview = (): JSX.Element => {
+        return (
+            <Layout>
+                <Text style={tw`text-gray-400 self-center py-4`}>This pack is empty!</Text>
+            </Layout>
+        );
+    };
+
+    const renderPackInfo = (pack: StickerPackRo): JSX.Element => {
+        return (
+            <Layout style={tw`flex-row justify-between`}>
+                <Layout style={tw`flex-row justify-between w-1/3 p-2 pl-4`}>
+                    <TouchableOpacity>
+                        <Icon name="heart-outline" fill="gray" width={25} height={25} />
+                    </TouchableOpacity>
+                    <TouchableOpacity>
+                        <Icon name="paper-plane-outline" fill="gray" width={25} height={25} />
+                    </TouchableOpacity>
+                    <TouchableOpacity>
+                        <Icon name="upload" fill="gray" width={25} height={25} />
+                    </TouchableOpacity>
+                </Layout>
+                <Layout style={tw`flex-row self-center`}>
+                    <TextWithIcon
+                        text={`${pack.likes}`}
+                        iconName={"heart-outline"}
+                        textStyle={tw`text-xs pr-1 text-gray-500`}
+                        isGrayed={true}
+                    />
+                    <TextWithIcon
+                        text={`${pack.views}`}
+                        iconName={"eye-outline"}
+                        textStyle={tw`text-xs pr-1 text-gray-500`}
+                        isGrayed={true}
+                    />
+                </Layout>
+            </Layout>
+        );
+    };
+
+    const renderStickerPackPreview = (pack: StickerPackRo): JSX.Element => {
+        const stickers = sortedStickers(pack.stickers).slice(0, 10);
+
+        return (
+            <Layout style={tw`flex-col mb-4 shadow-md`}>
+                <Layout style={tw`flex-row p-2 px-4 bg-white border-b border-gray-300`}>
+                    <CoverStickerImage stickerPack={pack} style={tw`w-10 h-10 rounded-full`} />
+                    <Layout style={tw`flex-col pl-4 flex-grow self-center`}>
+                        <Text style={tw`font-semibold text-base`}>{pack.name}</Text>
+                        <Layout style={tw`flex-row`}>
+                            <TextStatElement
+                                value={pack.stickers.length}
+                                text={pack.stickers.length == 1 ? "Sticker" : "Stickers"}
+                            />
+                            <TextStatElement
+                                value={pack.members.length}
+                                text={pack.members.length == 1 ? "Member" : "Members"}
+                            />
+                        </Layout>
+                    </Layout>
+                    <Text style={tw`text-gray-500 text-xs pt-2`}>
+                        {lastUpdatedString(pack.updatedAt)}
+                    </Text>
+                </Layout>
+                {stickers.length > 0 ? renderStickers(stickers) : showEmptyPackPreview()}
+                {stickers.length > 0 ? renderPackInfo(pack) : null}
+            </Layout>
+        );
+    };
+
+    const renderStickerPackPreviews = (packs: StickerPackRo[]): JSX.Element => {
         return (
             <Layout style={tw`flex-col bg-transparent`}>
                 {packs.map((pack) => {
-                    return renderStickerPack(pack);
+                    return renderStickerPackPreview(pack);
                 })}
             </Layout>
         );
@@ -123,7 +180,7 @@ export const AccountScreen = ({ navigation }: Props): React.ReactElement => {
                             text="Stickerpacks"></TextStatElement>
                     </Layout>
 
-                    {renderStickerView(myStickerPacksQuery.data || [])}
+                    {renderStickerPackPreviews(myStickerPacksQuery.data || [])}
                 </Layout>
             </ScrollView>
         </SafeAreaView>

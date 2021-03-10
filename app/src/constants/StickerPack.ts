@@ -1,1 +1,1 @@
-export const ACCOUNT_MAX_PREVIEW_STICKERS = 4;
+export const ACCOUNT_MAX_PREVIEW_STICKERS = 8;
