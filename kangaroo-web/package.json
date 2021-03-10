@@ -9,8 +9,11 @@
   },
   "dependencies": {
     "next": "10.0.8",
+    "primeicons": "^4.1.0",
+    "primereact": "^6.1.0",
     "react": "17.0.1",
-    "react-dom": "17.0.1"
+    "react-dom": "17.0.1",
+    "react-transition-group": "^4.4.1"
   },
   "devDependencies": {
     "@types/node": "^14.14.32",
