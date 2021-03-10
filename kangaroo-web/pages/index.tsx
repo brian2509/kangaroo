@@ -16,7 +16,10 @@ const LandingPage = (): JSX.Element => {
               </div>
               <div className="flex space-x-6">
                 <a className="font-semibold tracking-wide">Home</a>
-                <a className="font-semibold tracking-wide text-gray-300 hover:text-yellow-300">
+                <a
+                  className="font-semibold tracking-wide text-gray-300 hover:text-yellow-300"
+                  href={"/login"}
+                >
                   Login
                 </a>
               </div>
