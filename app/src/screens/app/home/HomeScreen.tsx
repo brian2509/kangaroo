@@ -12,7 +12,7 @@ import { StickerPackRo } from "../../../api/generated-typescript-api-client/src"
 import { HomeScreenHeader } from "../../../components/home/HomeScreenHeader";
 import { StickerPacksList } from "../../../components/stickerpack/StickerPackList";
 import { sortedStickerPacks } from "../../../util/sorting";
-import { useStickerPacks } from "../../../api/hooks/query/useStickerPacks";
+import { useStickerPacks } from "../../../api/hooks/query/stickerPack";
 
 type Props = StackScreenProps<HomeStackParamList, "Homescreen">;
 

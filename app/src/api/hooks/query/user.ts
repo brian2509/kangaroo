@@ -3,12 +3,12 @@ import { QUERY_KEYS } from "../../../constants/ReactQueryKeys";
 import { logErrorResponse } from "../../../util/logging";
 import { api } from "../../generatedApiWrapper";
 
-const getStickerPackById = async (id: string) => {
-    const { data } = await api.stickerPacks.findOne(id);
+const getMe = async () => {
+    const { data } = await api.users.getOwnPrivateProfile();
     return data;
 };
 
-export const useStickerPack = (id: string) =>
-    useQuery([QUERY_KEYS.stickerPack, id], () => getStickerPackById(id), {
+export const useMe = () =>
+    useQuery([QUERY_KEYS.me], () => getMe(), {
         onError: logErrorResponse,
     });
