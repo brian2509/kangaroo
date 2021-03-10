@@ -1,5 +1,5 @@
 // https://github.com/facebook/react-native/issues/23922#issuecomment-648096619
-import 'react-native-url-polyfill/auto';
+import "react-native-url-polyfill/auto";
 
 import "react-native-gesture-handler";
 import React from "react";
@@ -12,9 +12,19 @@ import { QueryClient, QueryClientProvider } from "react-query";
 
 // React query sets long timers for cache invalidation, we don't want to see these warnings
 import { LogBox } from "react-native";
+import { logErrorResponse } from "./src/util/logging";
 LogBox.ignoreLogs(["Setting a timer"]);
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+    defaultOptions: {
+        queries: {
+            onError: logErrorResponse,
+        },
+        mutations: {
+            onError: logErrorResponse,
+        },
+    },
+});
 
 export default function App(): React.ReactFragment {
     return (

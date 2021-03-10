@@ -1,5 +1,4 @@
 import { useMutation } from "react-query";
-import { logErrorResponse } from "../../../util/logging";
 import { LoginUserDto, RegisterUserDto } from "../../generated-typescript-api-client/src";
 import { api } from "../../generatedApiWrapper";
 
@@ -8,21 +7,11 @@ const loginUser = async (loginUserDto: LoginUserDto) => {
     return data;
 };
 
-export const useLoginMutation = () =>
-    useMutation(loginUser, {
-        onError: (e: any) => {
-            logErrorResponse(e);
-        },
-    });
+export const useLoginMutation = () => useMutation(loginUser);
 
 const registerUser = async (registerUserDto: RegisterUserDto) => {
     const { data } = await api.auth.register(registerUserDto);
     return data;
 };
 
-export const useRegisterMutation = () =>
-    useMutation(registerUser, {
-        onError: (e: any) => {
-            logErrorResponse(e);
-        },
-    });
+export const useRegisterMutation = () => useMutation(registerUser);
