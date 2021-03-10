@@ -7,7 +7,6 @@ import { AuthStackParamList } from "../../navigation/AppNavigator";
 import tailwind from "tailwind-rn";
 import { TextFieldActions } from "../../components/common/TextFieldActions";
 import { useLoginMutation } from "../../api/hooks/mutations/auth";
-import { LoginUserDto } from "../../api/generated-typescript-api-client/src";
 
 type Props = StackScreenProps<AuthStackParamList, "Login">;
 
@@ -18,16 +17,12 @@ export const LoginScreen = ({ navigation }: Props) => {
     const [password, setPassword] = React.useState("password123");
     const [showPassword, setShowPassword] = React.useState(false);
 
-    const loginMutation = useLoginMutation();
+    const loginMutation = useLoginMutation(login);
 
     const onLogin = () => {
-        const dto = { username } as LoginUserDto;
+        const dto = { username, password };
 
-        loginMutation.mutate(dto, {
-            onSuccess: (jwtToken) => {
-                login(jwtToken);
-            },
-        });
+        loginMutation.mutate(dto);
     };
 
     const visibilityIcon = (props: IconProps) => (

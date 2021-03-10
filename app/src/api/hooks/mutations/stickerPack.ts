@@ -1,7 +1,11 @@
 import { QueryClient, useMutation } from "react-query";
 import { QUERY_KEYS } from "../../../constants/ReactQueryKeys";
-import { uploadSticker } from "../../customApiWrappers";
-import { CreateStickerPackDto } from "../../generated-typescript-api-client/src";
+import { uploadSticker, UploadStickerRo } from "../../customApiWrappers";
+import {
+    CreateStickerPackDto,
+    StickerPackRo,
+    StickerRo,
+} from "../../generated-typescript-api-client/src";
 import { api } from "../../generatedApiWrapper";
 
 const createStickerPack = async (createStickerPackDto: CreateStickerPackDto) => {
@@ -10,7 +14,7 @@ const createStickerPack = async (createStickerPackDto: CreateStickerPackDto) => 
 };
 
 export const useCreateStickerPackMutation = (queryClient: QueryClient) =>
-    useMutation(createStickerPack, {
+    useMutation<StickerPackRo, any, CreateStickerPackDto, unknown>(createStickerPack, {
         onSuccess: () => queryClient.invalidateQueries(QUERY_KEYS.myStickerPacks),
     });
 
@@ -20,12 +24,12 @@ const removeStickerPack = async (stickerPackId: string) => {
 };
 
 export const useRemoveStickerPackMutation = (queryClient: QueryClient) =>
-    useMutation(removeStickerPack, {
+    useMutation<StickerPackRo, any, string, unknown>(removeStickerPack, {
         onSuccess: () => queryClient.invalidateQueries(QUERY_KEYS.myStickerPacks),
     });
 
 export const useUploadStickerMutation = (queryClient: QueryClient) =>
-    useMutation(uploadSticker, {
+    useMutation<StickerRo, any, UploadStickerRo, unknown>(uploadSticker, {
         onSuccess: (data, variables) => {
             queryClient.invalidateQueries([QUERY_KEYS.stickerPack, variables.stickerPackId]);
             queryClient.invalidateQueries(QUERY_KEYS.myStickerPacks);

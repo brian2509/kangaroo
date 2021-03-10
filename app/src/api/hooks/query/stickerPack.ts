@@ -1,5 +1,6 @@
 import { useQuery } from "react-query";
 import { QUERY_KEYS } from "../../../constants/ReactQueryKeys";
+import { StickerPackRo } from "../../generated-typescript-api-client/src";
 import { api } from "../../generatedApiWrapper";
 
 const getStickerPackById = async (id: string) => {
@@ -8,11 +9,14 @@ const getStickerPackById = async (id: string) => {
 };
 
 export const useStickerPack = (id: string) =>
-    useQuery([QUERY_KEYS.stickerPack, id], () => getStickerPackById(id));
+    useQuery<StickerPackRo, any, StickerPackRo>([QUERY_KEYS.stickerPack, id], () =>
+        getStickerPackById(id),
+    );
 
 const getStickerPacks = async () => {
     const { data } = await api.users.getOwnStickerPacks();
     return data;
 };
 
-export const useStickerPacks = () => useQuery(QUERY_KEYS.myStickerPacks, getStickerPacks);
+export const useStickerPacks = () =>
+    useQuery<StickerPackRo[], any, StickerPackRo[]>(QUERY_KEYS.myStickerPacks, getStickerPacks);
