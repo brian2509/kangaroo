@@ -57,6 +57,9 @@ export type FeedStackParamList = {
     AccountScreen: {
         account: UserRo;
     };
+    StickerScreen: {
+        sticker: StickerRo;
+    };
     FeedScreen: {
         account: UserRo;
     };
@@ -71,6 +74,9 @@ export type DiscoverStackParamList = {
     DiscoverScreen: undefined;
     AccountScreen: {
         account: UserRo;
+    };
+    StickerScreen: {
+        sticker: StickerRo;
     };
     SettingsScreen: undefined;
     SettingsUpdateScreen: {
@@ -114,23 +120,33 @@ const FeedStackScreen = () => (
         <FeedStack.Screen
             name="FeedScreen"
             component={FeedScreen}
-            options={{ title: " ", headerBackTitle: " " }}></FeedStack.Screen>
+            options={{ title: " ", headerBackTitle: " " }}
+        />
         <FeedStack.Screen
             name="AccountScreen"
             component={AccountScreen}
-            options={{ title: "Account", headerBackTitle: " " }}></FeedStack.Screen>
+            options={{ title: "Account", headerBackTitle: " " }}
+        />
+        <FeedStack.Screen
+            name="StickerScreen"
+            component={StickerScreen}
+            options={{ title: "Sticker", headerBackTitle: " " }}
+        />
         <FeedStack.Screen
             name="SettingsScreen"
             component={SettingsScreen}
-            options={{ title: "Settings", headerBackTitle: " " }}></FeedStack.Screen>
+            options={{ title: "Settings", headerBackTitle: " " }}
+        />
         <FeedStack.Screen
             name="SettingsUpdateScreen"
             component={SettingsUpdateScreen}
-            options={{ title: "Settings", headerBackTitle: " " }}></FeedStack.Screen>
+            options={{ title: "Settings", headerBackTitle: " " }}
+        />
         <FeedStack.Screen
             name="DiscoverScreen"
             component={DiscoverStackScreen}
-            options={{ title: " ", headerBackTitle: " " }}></FeedStack.Screen>
+            options={{ title: " ", headerBackTitle: " " }}
+        />
     </FeedStack.Navigator>
 );
 
@@ -177,15 +193,23 @@ const DiscoverStackScreen = () => (
         <DiscoverStack.Screen
             name="AccountScreen"
             component={AccountScreen}
-            options={{ title: "Account", headerBackTitle: " " }}></DiscoverStack.Screen>
+            options={{ title: "Account", headerBackTitle: " " }}
+        />
+        <DiscoverStack.Screen
+            name="StickerScreen"
+            component={StickerScreen}
+            options={{ title: "Sticker", headerBackTitle: " " }}
+        />
         <FeedStack.Screen
             name="SettingsScreen"
             component={SettingsScreen}
-            options={{ title: "Settings", headerBackTitle: " " }}></FeedStack.Screen>
+            options={{ title: "Settings", headerBackTitle: " " }}
+        />
         <FeedStack.Screen
             name="SettingsUpdateScreen"
             component={SettingsUpdateScreen}
-            options={{ title: "SettingsUpdate", headerBackTitle: " " }}></FeedStack.Screen>
+            options={{ title: "SettingsUpdate", headerBackTitle: " " }}
+        />
     </DiscoverStack.Navigator>
 );
 

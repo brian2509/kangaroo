@@ -22,3 +22,14 @@ export const useStickerPacks = () =>
     useQuery(QUERY_KEYS.myStickerPacks, getStickerPacks, {
         onError: logErrorResponse,
     });
+
+const getStickerPackLike = async (id: string) => {
+    const { data } = await api.stickerPacks.likeStickerPack(id);
+    return data;
+};
+
+export const useStickerPackLike = (id: string) =>
+    useQuery([QUERY_KEYS.like, id], () => getStickerPackLike(id), {
+        onError: logErrorResponse,
+        enabled: false, // not automatically called, refetch needed
+    });

@@ -53,6 +53,9 @@ export const AccountScreen = ({ navigation }: Props): React.ReactElement => {
                     height: "auto",
                     marginHorizontal: "2%",
                     marginBottom: "3.5%",
+                }}
+                onPress={() => {
+                    navigation.navigate("StickerScreen", { sticker });
                 }}>
                 <Image
                     style={tw.style("rounded-lg", {
@@ -121,7 +124,7 @@ export const AccountScreen = ({ navigation }: Props): React.ReactElement => {
     };
 
     const renderStickerPackPreview = (pack: StickerPackRo): JSX.Element => {
-        const stickers = sortedStickers(pack.stickers).slice(0, 10);
+        const stickers = sortedStickers(pack.stickers).slice(0, ACCOUNT_MAX_PREVIEW_STICKERS);
 
         return (
             <Layout style={tw`flex-col mb-4 shadow-md`}>
