@@ -4,15 +4,14 @@ import { SafeAreaView } from "react-native";
 import { AuthContext } from "../../../contexts/AuthContext";
 import { StackScreenProps } from "@react-navigation/stack";
 import { HomeStackParamList } from "../../../navigation/AppNavigator";
-import { useMutation, useQuery, useQueryClient } from "react-query";
+import { useQueryClient } from "react-query";
 import { QUERY_KEYS } from "../../../constants/ReactQueryKeys";
-import { logErrorResponse } from "../../../util/logging";
-import { api } from "../../../api/generatedApiWrapper";
 import { StickerPackRo } from "../../../api/generated-typescript-api-client/src";
 import { HomeScreenHeader } from "../../../components/home/HomeScreenHeader";
 import { StickerPacksList } from "../../../components/stickerpack/StickerPackList";
 import { sortedStickerPacks } from "../../../util/sorting";
 import { useStickerPacks } from "../../../api/hooks/query/stickerPack";
+import { useRemoveStickerPackMutation } from "../../../api/hooks/mutations/stickerPack";
 
 type Props = StackScreenProps<HomeStackParamList, "Homescreen">;
 
@@ -27,14 +26,6 @@ export const HomeScreen = ({ navigation }: Props): React.ReactElement => {
 
     const myStickerPacksQuery = useStickerPacks();
 
-    const removeStickerPackMutation = useMutation(
-        async (stickerPackId: string) => (await api.stickerPacks.remove(stickerPackId)).data,
-        {
-            onSuccess: () => queryClient.invalidateQueries(QUERY_KEYS.myStickerPacks),
-            onError: logErrorResponse,
-        },
-    );
-
     return (
         <SafeAreaView style={tailwind("flex-1")}>
             <HomeScreenHeader
@@ -43,7 +34,7 @@ export const HomeScreen = ({ navigation }: Props): React.ReactElement => {
             />
             <StickerPacksList
                 stickerPacks={sortedStickerPacks(myStickerPacksQuery.data || [])}
-                refreshing={myStickerPacksQuery.isLoading || removeStickerPackMutation.isLoading}
+                refreshing={myStickerPacksQuery.isLoading}
                 onRefresh={() => queryClient.invalidateQueries(QUERY_KEYS.myStickerPacks)}
                 onPressStickerPack={(stickerPack: StickerPackRo) => {
                     navigation.navigate("StickerPackDetailScreen", {

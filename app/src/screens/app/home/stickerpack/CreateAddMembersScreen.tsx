@@ -10,7 +10,7 @@ import Clipboard from "@react-native-clipboard/clipboard";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { AccountProfileImage } from "../../../../components/common/AccountProfileImage";
 import { TextFieldActions } from "../../../../components/common/TextFieldActions";
-import { useCreateStickerPackMutation } from "../../../../api/hooks/mutations/createStickerPack";
+import { useCreateStickerPackMutation } from "../../../../api/hooks/mutations/stickerPack";
 
 type Props = StackScreenProps<HomeStackParamList, "CreateAddMembersScreen">;
 export const CreateAddMembersScreen = ({ route, navigation }: Props): React.ReactElement => {
@@ -21,22 +21,20 @@ export const CreateAddMembersScreen = ({ route, navigation }: Props): React.Reac
     const queryClient = useQueryClient();
 
     const createStickerPackMutation = useCreateStickerPackMutation(queryClient);
-
     const createStickerPack = () => {
-        createStickerPackMutation.mutate(
-            {
-                name: route.params.name,
-                personal: route.params.personal,
-                animated: false,
+        const dto = {
+            name: route.params.name,
+            personal: route.params.personal,
+            animated: false,
+        };
+
+        createStickerPackMutation.mutate(dto, {
+            onSuccess: (data) => {
+                navigation.replace("StickerPackDetailScreen", {
+                    stickerPack: data,
+                });
             },
-            {
-                onSuccess: (data) => {
-                    navigation.replace("StickerPackDetailScreen", {
-                        stickerPack: data,
-                    });
-                },
-            },
-        );
+        });
     };
 
     const copyIcon = (props: IconProps) => (

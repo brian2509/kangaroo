@@ -10,13 +10,10 @@ import {
 } from "react-native";
 import { StackScreenProps } from "@react-navigation/stack";
 import { AuthStackParamList } from "../../navigation/AppNavigator";
-import { useMutation } from "react-query";
-import { logErrorResponse } from "../../util/logging";
 import tailwind from "tailwind-rn";
 import validate from "validate.js";
-import { api } from "../../api/generatedApiWrapper";
-import { LoginUserDto, RegisterUserDto } from "../../api/generated-typescript-api-client/src";
 import { AuthContext } from "../../contexts/AuthContext";
+import { useLoginMutation, useRegisterMutation } from "../../api/hooks/mutations/auth";
 
 type Props = StackScreenProps<AuthStackParamList, "Register">;
 
@@ -59,30 +56,29 @@ export const RegisterScreen = ({ navigation }: Props) => {
     const [showPassword, setShowPassword] = React.useState(false);
     const [formInteracted, setFormInteracted] = React.useState(false);
 
-    const registerMutation = useMutation(
-        async (registerUserDto: RegisterUserDto) => (await api.auth.register(registerUserDto)).data,
-        {
-            onSuccess: (data) => {
-                showRegistrationMessage();
-                loginMutation.mutate({ username, password });
-            },
-            onError: (e: any) => {
-                logErrorResponse(e);
-            },
-        },
-    );
+    const registerMutation = useRegisterMutation();
 
-    const loginMutation = useMutation(
-        async (loginUserDto: LoginUserDto) => (await api.auth.login(loginUserDto)).data,
-        {
-            onSuccess: (data) => {
-                login(data.access_token);
+    const loginMutation = useLoginMutation(login);
+
+    const onRegister = () => {
+        const dto = {
+            email,
+            username,
+            password,
+        };
+
+        registerMutation.mutate(dto, {
+            onSuccess: (data, variables) => {
+                showRegistrationMessage();
+
+                const loginDto = {
+                    username: variables.username,
+                    password: variables.password,
+                };
+                loginMutation.mutate(loginDto);
             },
-            onError: (e: any) => {
-                logErrorResponse(e);
-            },
-        },
-    );
+        });
+    };
 
     const toggleShowPassword = () => {
         setShowPassword(!showPassword);
@@ -156,13 +152,8 @@ export const RegisterScreen = ({ navigation }: Props) => {
                         <Button
                             style={tailwind("pl-10 pr-10")}
                             onPress={() => {
-                                Keyboard.dismiss(),
-                                    !inputValidations &&
-                                        registerMutation.mutate({
-                                            email,
-                                            username,
-                                            password,
-                                        });
+                                Keyboard.dismiss();
+                                !inputValidations && onRegister();
                             }}
                             disabled={formInteracted && !!inputValidations}>
                             Register

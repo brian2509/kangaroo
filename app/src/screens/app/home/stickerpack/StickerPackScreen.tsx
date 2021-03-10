@@ -10,12 +10,10 @@ import { CoverStickerImage } from "../../../../components/common/CoverStickerIma
 import ImagePicker, { Image as ImageData } from "react-native-image-crop-picker";
 import { STICKER_FULL_SIZE_PX } from "../../../../constants/StickerSizes";
 import { generateName } from "../../../../util/placeholder_generation";
-import { uploadSticker } from "../../../../api/customApiWrappers";
-import { logErrorResponse } from "../../../../util/logging";
-import { QUERY_KEYS } from "../../../../constants/ReactQueryKeys";
-import { useMutation, useQueryClient } from "react-query";
+import { useQueryClient } from "react-query";
 import { useStickerPack } from "../../../../api/hooks/query/stickerPack";
 import { PlaceholderImage } from "../../../../components/common/PlaceholderImage";
+import { useUploadStickerMutation } from "../../../../api/hooks/mutations/stickerPack";
 
 type StickerPackProps = {
     stickerPack: StickerPackRo;
@@ -122,13 +120,7 @@ export const StickerPackScreen = ({ navigation, route }: Props): React.ReactElem
 
     const { data } = useStickerPack(route.params.stickerPack.id);
 
-    const uploadStickerMutation = useMutation(uploadSticker, {
-        onSuccess: (data, variables) => {
-            queryClient.invalidateQueries([QUERY_KEYS.stickerPack, variables.stickerPackId]);
-            queryClient.invalidateQueries(QUERY_KEYS.myStickerPacks);
-        },
-        onError: logErrorResponse,
-    });
+    const uploadStickerMutation = useUploadStickerMutation(queryClient);
 
     useEffect(() => {
         navigation.setOptions({
@@ -196,7 +188,9 @@ export const StickerPackScreen = ({ navigation, route }: Props): React.ReactElem
                     type: image.mime,
                 };
 
-                uploadStickerMutation.mutate({ stickerPackId, stickerName, file });
+                const dto = { stickerPackId, stickerName, file };
+
+                uploadStickerMutation.mutate(dto);
             })
             .catch((error) => {
                 if (error.code !== "E_PICKER_CANCELLED") {
