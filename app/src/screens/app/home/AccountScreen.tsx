@@ -135,7 +135,7 @@ export const AccountScreen = ({ navigation }: Props): React.ReactElement => {
                         <Text
                             numberOfLines={1}
                             style={tw`font-semibold text-base flex-shrink w-full`}>
-                            aoijfaiodsfjafjiadspfjasjfidpasjfdoiasjfaiosjfpaidojsfioj
+                            {pack.name}
                         </Text>
                         <Layout style={tw`flex-row`}>
                             <TextStatElement
