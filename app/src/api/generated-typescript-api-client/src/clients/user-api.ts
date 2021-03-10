@@ -22,6 +22,10 @@ import { DUMMY_BASE_URL, assertParamExists, setApiKeyToObject, setBasicAuthToObj
 import { BASE_PATH, COLLECTION_FORMATS, RequestArgs, BaseAPI, RequiredError } from '../base';
 // @ts-ignore
 import { StickerPackRo } from '../models';
+// @ts-ignore
+import { UserPrivateRo } from '../models';
+// @ts-ignore
+import { UserPublicRo } from '../models';
 /**
  * UserApi - axios parameter creator
  * @export
@@ -98,12 +102,84 @@ export const UserApiAxiosParamCreator = function (configuration?: Configuration)
         },
         /**
          * 
+         * @summary Get private profile of currently logged in user.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getOwnPrivateProfile: async (options: any = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/me`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication bearer required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
          * @summary Get all owned sticker packs of logged in user.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
         getOwnStickerPacks: async (options: any = {}): Promise<RequestArgs> => {
             const localVarPath = `/api/me/sticker-packs/owned`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication bearer required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Get public profile of someone else.
+         * @param {string} userId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getPublicProfile: async (userId: string, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'userId' is not null or undefined
+            assertParamExists('getPublicProfile', 'userId', userId)
+            const localVarPath = `/api/users/{userId}`
+                .replace(`{${"userId"}}`, encodeURIComponent(String(userId)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -162,12 +238,33 @@ export const UserApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @summary Get private profile of currently logged in user.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getOwnPrivateProfile(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<UserPrivateRo>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getOwnPrivateProfile(options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
          * @summary Get all owned sticker packs of logged in user.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
         async getOwnStickerPacks(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<StickerPackRo>>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getOwnStickerPacks(options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @summary Get public profile of someone else.
+         * @param {string} userId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getPublicProfile(userId: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<UserPublicRo>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getPublicProfile(userId, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
     }
@@ -200,12 +297,31 @@ export const UserApiFactory = function (configuration?: Configuration, basePath?
         },
         /**
          * 
+         * @summary Get private profile of currently logged in user.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getOwnPrivateProfile(options?: any): AxiosPromise<UserPrivateRo> {
+            return localVarFp.getOwnPrivateProfile(options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
          * @summary Get all owned sticker packs of logged in user.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
         getOwnStickerPacks(options?: any): AxiosPromise<Array<StickerPackRo>> {
             return localVarFp.getOwnStickerPacks(options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Get public profile of someone else.
+         * @param {string} userId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getPublicProfile(userId: string, options?: any): AxiosPromise<UserPublicRo> {
+            return localVarFp.getPublicProfile(userId, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -241,6 +357,17 @@ export class UserApi extends BaseAPI {
 
     /**
      * 
+     * @summary Get private profile of currently logged in user.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof UserApi
+     */
+    public getOwnPrivateProfile(options?: any) {
+        return UserApiFp(this.configuration).getOwnPrivateProfile(options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
      * @summary Get all owned sticker packs of logged in user.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -248,5 +375,17 @@ export class UserApi extends BaseAPI {
      */
     public getOwnStickerPacks(options?: any) {
         return UserApiFp(this.configuration).getOwnStickerPacks(options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Get public profile of someone else.
+     * @param {string} userId 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof UserApi
+     */
+    public getPublicProfile(userId: string, options?: any) {
+        return UserApiFp(this.configuration).getPublicProfile(userId, options).then((request) => request(this.axios, this.basePath));
     }
 }
