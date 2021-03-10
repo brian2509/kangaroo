@@ -130,8 +130,10 @@ export const AccountScreen = ({ navigation }: Props): React.ReactElement => {
             <Layout style={tw`flex-col mb-4 shadow-md`}>
                 <Layout style={tw`flex-row p-2 px-4 bg-white border-b border-gray-300`}>
                     <CoverStickerImage stickerPack={pack} style={tw`w-10 h-10 rounded-full`} />
-                    <Layout style={tw`flex-col pl-4 flex-grow self-center`}>
-                        <Text style={tw`font-semibold text-base`}>{pack.name}</Text>
+                    <Layout style={tw`flex-col pl-4 flex-grow self-center flex-wrap w-full`}>
+                        <Text numberOfLines={1} style={tw`font-semibold text-base w-4/5`}>
+                            {pack.name}
+                        </Text>
                         <Layout style={tw`flex-row`}>
                             <TextStatElement
                                 value={pack.stickers.length}
