@@ -1,5 +1,5 @@
 {
-  "name": "giraffe-server",
+  "name": "kangaroo-server",
   "version": "0.0.1",
   "description": "",
   "author": "",
@@ -14,7 +14,7 @@
     "docker:dev": "npm run docker:postgres && nest start --watch",
     "docker:postgres": "docker-compose -f docker-compose.postgres.yml up -d",
     "docker:postgres:stop": "docker-compose -f docker-compose.postgres.yml down && docker-compose -f docker-compose.postgres.yml down",
-    "docker:postgres:clear": "docker rm -f postgres && docker volume rm server_kangaroo-db",
+    "docker:postgres:clear": "docker rm -f postgres && docker volume rm kangaroo-server_kangaroo-db",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
     "test": "jest",

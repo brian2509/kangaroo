@@ -1,7 +1,9 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { StickerPack } from "../sticker-packs/entities/sticker-pack.entity";
+import { UserPrivateRo } from "./dto/response-user-private.dto";
+import { UserPublicRo } from "./dto/response-user-public.dto";
 import { User } from "./entities/user.entity";
 
 @Injectable()
@@ -46,14 +48,45 @@ export class UsersService {
     return stickerPacks.map((stickerPack) => stickerPack.toRO());
   }
 
+  async getPrivateUser(userId: string): Promise<UserPrivateRo> {
+    const user = await this.userRepository.findOne({ where: { id: userId } });
+    if (!user) {
+      throw new NotFoundException();
+    }
+
+    return {
+      id: user.id,
+      username: user.username,
+      email: user.email,
+    };
+  }
+
+  async getPublicUser(userId: string): Promise<UserPublicRo> {
+    const user = await this.userRepository.findOne({ where: { id: userId } });
+    if (!user) {
+      throw new NotFoundException();
+    }
+
+    return {
+      id: user.id,
+      username: user.username,
+    };
+  }
+
   async getJoinedStickerPacks(userId: string) {
     const stickerPacks = await this.stickerPackRepository
       .createQueryBuilder("stickerpack")
       .leftJoinAndSelect("stickerpack.author", "author")
       .leftJoinAndSelect("stickerpack.members", "member")
       .leftJoinAndSelect("stickerpack.stickers", "sticker")
-      .leftJoinAndSelect("sticker.whatsAppStickerImageFile", "whatsAppStickerImageFile")
-      .leftJoinAndSelect("sticker.whatsAppIconImageFile", "whatsAppIconImageFile")
+      .leftJoinAndSelect(
+        "sticker.whatsAppStickerImageFile",
+        "whatsAppStickerImageFile"
+      )
+      .leftJoinAndSelect(
+        "sticker.whatsAppIconImageFile",
+        "whatsAppIconImageFile"
+      )
       .where("member.id = :id", { id: userId })
       .getMany();
 
@@ -66,8 +99,14 @@ export class UsersService {
       .leftJoinAndSelect("stickerpack.author", "author")
       .leftJoinAndSelect("stickerpack.members", "member")
       .leftJoinAndSelect("stickerpack.stickers", "sticker")
-      .leftJoinAndSelect("sticker.whatsAppStickerImageFile", "whatsAppStickerImageFile")
-      .leftJoinAndSelect("sticker.whatsAppIconImageFile", "whatsAppIconImageFile")
+      .leftJoinAndSelect(
+        "sticker.whatsAppStickerImageFile",
+        "whatsAppStickerImageFile"
+      )
+      .leftJoinAndSelect(
+        "sticker.whatsAppIconImageFile",
+        "whatsAppIconImageFile"
+      )
       .where("member.id = :id", { id: userId })
       .orWhere("author.id =:id", { id: userId })
       .getMany();

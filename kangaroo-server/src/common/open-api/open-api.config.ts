@@ -1,7 +1,7 @@
 import { DocumentBuilder } from "@nestjs/swagger";
 
 const config = new DocumentBuilder()
-  .setTitle("Giraffe Server")
+  .setTitle("Kangaroo Server")
   .setDescription(
     "In order to interact with the API from this documentation alone follow the following steps:\n" +
       "1. Register at the register route.\n" +
