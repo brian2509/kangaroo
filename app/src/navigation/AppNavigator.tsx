@@ -8,16 +8,21 @@ import { StickerScreen } from "../screens/app/home/stickerpack/StickerScreen";
 import { StickerPackScreen } from "../screens/app/home/stickerpack/StickerPackScreen";
 import { StickerPackManageScreen } from "../screens/app/home/stickerpack/StickerPackManageScreen";
 import { AuthContext } from "../contexts/AuthContext";
-import { Icon, Layout, Text } from "@ui-kitten/components";
+import { BottomNavigation, BottomNavigationTab, Icon, Layout, Text } from "@ui-kitten/components";
 import { StickerPackRo, StickerRo, UserRo } from "../api/generated-typescript-api-client/src";
 import { CreateStickerPackScreen } from "../screens/app/home/stickerpack/CreateStickerPackScreen";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import {
+    BottomTabBarOptions,
+    BottomTabBarProps,
+    createBottomTabNavigator,
+} from "@react-navigation/bottom-tabs";
 import { FeedScreen } from "../screens/app/home/FeedScreen";
 import { AccountScreen } from "../screens/app/home/AccountScreen";
 import { DiscoverScreen } from "../screens/app/home/DiscoverScreen";
 import { SettingsScreen } from "../screens/app/home/SettingsScreen";
 import { SettingsUpdateScreen } from "../screens/app/home/SettingsUpdateScreen";
 import { CreateAddMembersScreen } from "../screens/app/home/stickerpack/CreateAddMembersScreen";
+import tw from "tailwind-react-native-classnames";
 
 export type AuthStackParamList = {
     Login: undefined;
@@ -79,29 +84,34 @@ export type DiscoverStackParamList = {
     };
 };
 
-const Tab = createBottomTabNavigator();
-type TabProps = { focused: boolean; color: string; size: number };
+const BottomTabBar = ({ navigation, state }: BottomTabBarProps<BottomTabBarOptions>) => {
+    const TabIcon = (props: any) => <Icon {...props} height={21} width={21} />;
 
+    return (
+        <BottomNavigation
+            style={tw`py-1`}
+            indicatorStyle={{ height: 2 }}
+            selectedIndex={state.index}
+            onSelect={(index) => navigation.navigate(state.routeNames[index])}>
+            <BottomNavigationTab
+                title="Feed"
+                icon={(props) => <TabIcon {...props} name={"home-outline"} />}
+            />
+            <BottomNavigationTab
+                title="SharedPacks"
+                icon={(props) => <TabIcon {...props} name={"message-square-outline"} />}
+            />
+            <BottomNavigationTab
+                title="Discover"
+                icon={(props) => <TabIcon {...props} name={"people-outline"} />}
+            />
+        </BottomNavigation>
+    );
+};
+
+const Tab = createBottomTabNavigator();
 const HomeTabNavigator = () => (
-    <Tab.Navigator
-        initialRouteName="Home"
-        screenOptions={({ route }) => ({
-            tabBarIcon: function iconForTabBar({ color }: TabProps) {
-                let iconName;
-                switch (route.name) {
-                    case "Feed":
-                        iconName = "home-outline";
-                        break;
-                    case "SharedPacks":
-                        iconName = "message-square-outline";
-                        break;
-                    case "Discover":
-                        iconName = "people-outline";
-                        break;
-                }
-                return <Icon name={iconName} fill={color} width={21} height={21} />;
-            },
-        })}>
+    <Tab.Navigator initialRouteName="Home" tabBar={(props) => <BottomTabBar {...props} />}>
         <Tab.Screen name="Feed" component={FeedStackScreen} />
         <Tab.Screen name="SharedPacks" component={HomeStackScreen} />
         <Tab.Screen name="Discover" component={DiscoverStackScreen} />
