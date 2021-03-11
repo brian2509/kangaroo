@@ -2,18 +2,19 @@ import AsyncStorage from "@react-native-community/async-storage";
 import React, { useEffect } from "react";
 import { STORAGE_KEYS } from "../constants/StorageKeys";
 import { api, instance } from "../api/generatedApiWrapper";
+import { JwtToken } from "../api/generated-typescript-api-client/src";
 
 export interface AuthContextProps {
     accessToken: string | undefined;
     isAuthenticated: boolean | undefined;
-    login: (token: string) => void;
+    login: (token: JwtToken) => void;
     logout: () => void;
 }
 
 export const AuthContext = React.createContext<AuthContextProps>({
     accessToken: undefined,
     isAuthenticated: undefined,
-    login: (token: string) => {},
+    login: (token: JwtToken) => {},
     logout: () => {},
 });
 
@@ -64,8 +65,8 @@ export const AuthContextProvider = ({ children }: any): React.ReactElement => {
         storeAccessToken(undefined);
     };
 
-    const login = (accessToken: string) => {
-        storeAccessToken(accessToken);
+    const login = (jwtToken: JwtToken) => {
+        storeAccessToken(jwtToken.access_token);
     };
 
     return (

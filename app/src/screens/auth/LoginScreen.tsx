@@ -1,15 +1,12 @@
 import React from "react";
-import { Layout, Text, Button, Input, Spinner, Card, Icon, IconProps } from "@ui-kitten/components";
-import { Image, Keyboard, SafeAreaView, StyleSheet, TouchableWithoutFeedback } from "react-native";
+import { Layout, Text, Input, Spinner, Card, Icon, IconProps } from "@ui-kitten/components";
+import { Image, Keyboard, SafeAreaView, TouchableWithoutFeedback } from "react-native";
 import { AuthContext } from "../../contexts/AuthContext";
 import { StackScreenProps } from "@react-navigation/stack";
 import { AuthStackParamList } from "../../navigation/AppNavigator";
-import { useMutation } from "react-query";
-import { logErrorResponse } from "../../util/logging";
 import tailwind from "tailwind-rn";
-import { api } from "../../api/generatedApiWrapper";
-import { LoginUserDto } from "../../api/generated-typescript-api-client/src";
 import { TextFieldActions } from "../../components/common/TextFieldActions";
+import { useLoginMutation } from "../../api/hooks/mutations/auth";
 
 type Props = StackScreenProps<AuthStackParamList, "Login">;
 
@@ -20,17 +17,13 @@ export const LoginScreen = ({ navigation }: Props) => {
     const [password, setPassword] = React.useState("password123");
     const [showPassword, setShowPassword] = React.useState(false);
 
-    const loginMutation = useMutation(
-        async (loginUserDto: LoginUserDto) => (await api.auth.login(loginUserDto)).data,
-        {
-            onSuccess: (data) => {
-                login(data.access_token);
-            },
-            onError: (e: any) => {
-                logErrorResponse(e);
-            },
-        },
-    );
+    const loginMutation = useLoginMutation(login);
+
+    const onLogin = () => {
+        const dto = { username, password };
+
+        loginMutation.mutate(dto);
+    };
 
     const visibilityIcon = (props: IconProps) => (
         <TouchableWithoutFeedback onPress={toggleShowPassword}>
@@ -74,7 +67,8 @@ export const LoginScreen = ({ navigation }: Props) => {
                         doneTitle="Sign In"
                         onCancelPress={() => navigation.push("Register")}
                         onDonePress={() => {
-                            Keyboard.dismiss(), loginMutation.mutate({ username, password });
+                            Keyboard.dismiss();
+                            onLogin();
                         }}></TextFieldActions>
 
                     {loginMutation.error && (
