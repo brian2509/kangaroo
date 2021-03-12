@@ -1,5 +1,5 @@
 import { Button, Icon, Layout, Spinner, Text } from "@ui-kitten/components";
-import { Image, SafeAreaView, ScrollView, TouchableOpacity } from "react-native";
+import { Image, SafeAreaView, ScrollView, TouchableOpacity, Platform } from "react-native";
 import { StackScreenProps } from "@react-navigation/stack";
 import { HomeStackParamList } from "../../../../navigation/AppNavigator";
 import tailwind from "tailwind-rn";
@@ -14,6 +14,7 @@ import { useQueryClient } from "react-query";
 import { useStickerPack } from "../../../../api/hooks/query/stickerPack";
 import { PlaceholderImage } from "../../../../components/common/PlaceholderImage";
 import { useUploadStickerMutation } from "../../../../api/hooks/mutations/stickerPack";
+import RNWhatsAppStickers from "react-native-whatsapp-stickers";
 
 type StickerPackProps = {
     stickerPack: StickerPackRo;
@@ -219,6 +220,63 @@ export const StickerPackScreen = ({ navigation, route }: Props): React.ReactElem
         </Layout>
     );
 
+    const onAddToWhatsapp = async () => {
+        if (data == undefined) {
+            return;
+        }
+
+        // Should be the equal to "android/app/src/main/assets/contents.json"
+        // - Android only uses the 'identifier' and 'name' fiels of this config
+        // - iOS generates a stickerpack based on this config
+        const stickerConfig = {
+            identifier: "test_pack",
+            name: "Test Pack",
+            publisher: "John Doe",
+            trayImageFileName: "icon.webp",
+            publisherEmail: "contact@myproject.com",
+            publisherWebsite: "https://myproject.com",
+            privacyPolicyWebsite: "https://myproject.com/legal",
+            licenseAgreementWebsite: "https://myproject.com/license",
+            stickers: [
+                {
+                    fileName: "1.webp",
+                    emojis: ["✌️"],
+                },
+                {
+                    fileName: "2.webp",
+                    emojis: ["😍", "😻"],
+                },
+                {
+                    fileName: "3.webp",
+                    emojis: ["😎"],
+                },
+            ],
+        };
+
+        const { stickers, ...packConfig } = stickerConfig;
+
+        RNWhatsAppStickers.isWhatsAppAvailable()
+            .then((isWhatsAppAvailable: boolean) => {
+                if (isWhatsAppAvailable) {
+                    if (Platform.OS === "ios") {
+                        return RNWhatsAppStickers.createStickerPack(packConfig)
+                            .then(() => {
+                                const promises = stickers.map((item) =>
+                                    RNWhatsAppStickers.addSticker(item.fileName, item.emojis),
+                                );
+                                Promise.all(promises).then(() => RNWhatsAppStickers.send());
+                            })
+                            .catch((e: any) => console.log(e));
+                    }
+
+                    return RNWhatsAppStickers.send(packConfig.identifier, packConfig.name);
+                }
+
+                return undefined;
+            })
+            .catch((e: any) => console.log(e));
+    };
+
     return (
         <SafeAreaView style={tailwind("flex-1 bg-white")}>
             {data == undefined ? (
@@ -227,6 +285,9 @@ export const StickerPackScreen = ({ navigation, route }: Props): React.ReactElem
                 </Layout>
             ) : (
                 <>
+                    <Button status={"success"} onPress={onAddToWhatsapp}>
+                        Add to WhatsApp!
+                    </Button>
                     <Body stickerPack={data} onStickerPress={onStickerPress} />
                     <ToolBar stickerPack={data} />
                 </>

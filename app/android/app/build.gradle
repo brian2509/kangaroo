@@ -178,6 +178,10 @@ android {
 
         }
     }
+    
+    aaptOptions {
+        noCompress "webp"
+    }
 }
 
 dependencies {

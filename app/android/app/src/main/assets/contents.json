@@ -1,0 +1,37 @@
+{
+    "android_play_store_link": "https://play.google.com/store/apps/details?id=com.myapp",
+    "ios_app_store_link": "https://itunes.apple.com/app/myapp/id123456",
+    "sticker_packs": [
+        {
+            "identifier": "test_pack",
+            "name": "Test Pack",
+            "publisher": "John Doe",
+            "tray_image_file": "icon.webp",
+            "publisher_email": "contact@myproject.com",
+            "publisher_website": "https://myproject.com",
+            "privacy_policy_website": "https://myproject.com/legal",
+            "license_agreement_website": "https://myproject.com/license",
+            "stickers": [
+                {
+                    "image_file": "1.webp",
+                    "emojis": [
+                        "✌️"
+                    ]
+                },
+                {
+                    "image_file": "2.webp",
+                    "emojis": [
+                        "😍",
+                        "😻"
+                    ]
+                },
+                {
+                    "image_file": "3.webp",
+                    "emojis": [
+                        "😎"
+                    ]
+                }
+            ]
+        }
+    ]
+}
