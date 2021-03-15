@@ -22,6 +22,20 @@
         </intent-filter>
       </activity>
       <activity android:name="com.facebook.react.devsupport.DevSettingsActivity" />
+      <activity android:name="ENABLE_STICKER_PACK" android:label="@string/app_name">  
+        <intent-filter> 
+          <action android:name="com.whatsapp.intent.action.ENABLE_STICKER_PACK" />  
+          <category android:name="android.intent.category.DEFAULT" />  
+        </intent-filter>   
+      </activity>
+
+      <provider
+        android:name=".StickerContentProvider"
+        android:authorities="com.giraffe"
+        android:enabled="true"
+        android:exported="true"
+        android:readPermission="com.whatsapp.sticker.READ" />
+
     </application>
 
 </manifest>
