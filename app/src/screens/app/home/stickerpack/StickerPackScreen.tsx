@@ -14,8 +14,6 @@ import { useQueryClient } from "react-query";
 import { useStickerPack } from "../../../../api/hooks/query/stickerPack";
 import { PlaceholderImage } from "../../../../components/common/PlaceholderImage";
 import { useUploadStickerMutation } from "../../../../api/hooks/mutations/stickerPack";
-import RNWhatsAppStickers from "react-native-whatsapp-stickers";
-import RNFS from "react-native-fs";
 import { sendStickerPackToWhatsApp } from "../../../../util/whatsappStickerPack";
 
 type StickerPackProps = {
@@ -232,112 +230,6 @@ export const StickerPackScreen = ({ navigation, route }: Props): React.ReactElem
             image_data_version: "1",
             avoid_cache: false,
         });
-        return;
-
-        const config = {
-            identifier: "test_pack",
-            title: "Test Pack",
-            author: "John Doe",
-            trayImage: "https://api.sticker.place/v2/images/5dc96428e4b0e670e6ec2d34",
-            publisherEmail: "vwpo@roborox.org",
-            publisherURL: "https://roborox.org",
-            privacyPolicyURL: "https://roborox.org/privacy",
-            licenseURL: "https://roborox.org/license",
-            stickers: [
-                {
-                    url: "https://api.sticker.place/v2/images/5dc96428e4b0e670e6ec2d3a",
-                },
-                {
-                    url: "https://api.sticker.place/v2/images/5dc96428e4b0e670e6ec2d38",
-                },
-                {
-                    url: "https://api.sticker.place/v2/images/5dc96429e4b0e670e6ec2d3c",
-                },
-            ],
-        };
-
-        // try {
-        //     if (await RNWhatsAppStickersShare.isWhatsAppAvailable()) {
-        //         return await RNWhatsAppStickersShare.share(config);
-        //     }
-        //     Alert.alert("You should install WhatsApp first");
-        // } catch (error) {
-        //     Alert.alert("An error occured", error);
-        // }
-        return;
-
-        // RNFS.readDirAssets("").then((results) => {
-        //     const contentsFiles = results.filter((result) => result.name == "contents.json");
-        //     if (contentsFiles.length > 0) {
-        //         const contentFile = contentsFiles[0];
-        //         console.log(contentFile);
-        //     }
-        // });
-
-        // const readStickerConfig = await RNFS.readFileAssets("contents.json").then((res) =>
-        //     JSON.parse(res),
-        // );
-
-        // console.log(readStickerConfig);
-
-        // RNFS.writeFile(RNFS.copyAssetsVideoIOS);
-
-        // const newStickerConfig = await RNFS.readFileAssets("contents.json").then((res) =>
-        //     JSON.parse(res),
-        // );
-        // console.log(newStickerConfig);
-        // return;
-
-        // Should be the equal to "android/app/src/main/assets/contents.json"
-        // - Android only uses the 'identifier' and 'name' fiels of this config
-        // - iOS generates a stickerpack based on this config
-        const stickerConfig = {
-            identifier: "test_pack",
-            name: "Test Pack",
-            publisher: "John Doe",
-            trayImageFileName: "icon.webp",
-            publisherEmail: "contact@myproject.com",
-            publisherWebsite: "https://myproject.com",
-            privacyPolicyWebsite: "https://myproject.com/legal",
-            licenseAgreementWebsite: "https://myproject.com/license",
-            stickers: [
-                {
-                    fileName: "1.webp",
-                    emojis: ["✌️"],
-                },
-                {
-                    fileName: "2.webp",
-                    emojis: ["😍", "😻"],
-                },
-                {
-                    fileName: "3.webp",
-                    emojis: ["😎"],
-                },
-            ],
-        };
-
-        const { stickers, ...packConfig } = stickerConfig;
-
-        RNWhatsAppStickers.isWhatsAppAvailable()
-            .then((isWhatsAppAvailable: boolean) => {
-                if (isWhatsAppAvailable) {
-                    if (Platform.OS === "ios") {
-                        return RNWhatsAppStickers.createStickerPack(packConfig)
-                            .then(() => {
-                                const promises = stickers.map((item: any) =>
-                                    RNWhatsAppStickers.addSticker(item.fileName, item.emojis),
-                                );
-                                Promise.all(promises).then(() => RNWhatsAppStickers.send());
-                            })
-                            .catch((e: any) => console.log(e));
-                    }
-
-                    return RNWhatsAppStickers.send(packConfig.identifier, packConfig.name);
-                }
-
-                return undefined;
-            })
-            .catch((e: any) => console.log(e));
     };
 
     return (
