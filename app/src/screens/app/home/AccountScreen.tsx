@@ -127,7 +127,7 @@ export const AccountScreen = ({ navigation }: Props): React.ReactElement => {
         const stickers = sortedStickers(pack.stickers).slice(0, ACCOUNT_MAX_PREVIEW_STICKERS);
 
         return (
-            <Layout style={tw`flex-col mb-4 shadow-md`}>
+            <Layout key={pack.id} style={tw`flex-col mb-4 shadow-md`}>
                 <Layout
                     style={tw`flex-row p-2 px-4 bg-white border-b border-gray-300 w-full flex-1`}>
                     <CoverStickerImage stickerPack={pack} style={tw`w-10 h-10 rounded-full`} />
