@@ -118,7 +118,7 @@ type Props = StackScreenProps<HomeStackParamList, "StickerPackDetailScreen">;
 export const StickerPackScreen = ({ navigation, route }: Props): React.ReactElement => {
     const queryClient = useQueryClient();
 
-    const { data } = useStickerPack(route.params.stickerPack.id);
+    const { data } = useStickerPack(route.params.stickerPackId);
 
     const uploadStickerMutation = useUploadStickerMutation(queryClient);
 

@@ -1,5 +1,5 @@
 import React from "react";
-import { NavigationContainer } from "@react-navigation/native";
+import { LinkingOptions, NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { LoginScreen } from "../screens/auth/LoginScreen";
 import { RegisterScreen } from "../screens/auth/RegisterScreen";
@@ -38,7 +38,7 @@ export const AuthStackScreen = (): JSX.Element => (
 export type HomeStackParamList = {
     Homescreen: undefined;
     StickerPackDetailScreen: {
-        stickerPack: StickerPackRo;
+        stickerPackId: string;
     };
     StickerPackManageScreen: {
         stickerPack: StickerPackRo;
@@ -90,7 +90,7 @@ type TabProps = { focused: boolean; color: string; size: number };
 
 const HomeTabNavigator = () => (
     <Tab.Navigator
-        initialRouteName="Home"
+        initialRouteName="SharedPacks"
         screenOptions={({ route }) => ({
             tabBarIcon: function iconForTabBar({ color }: TabProps) {
                 let iconName;
@@ -255,8 +255,26 @@ export const AppNavigator = (): React.ReactElement => {
         );
     }
 
+    const linkingOptions: LinkingOptions = {
+        prefixes: ["kangaroo://", "https://www.stickr.cf"],
+        config: {
+            screens: {
+                App: {
+                    screens: {
+                        SharedPacks: {
+                            screens: {
+                                initialRouteName: "SharedPacks",
+                                StickerPackDetailScreen: "pack/:stickerPackId",
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    };
+
     return (
-        <NavigationContainer>
+        <NavigationContainer linking={linkingOptions}>
             <RootStackScreen isAuthenticated={isAuthenticated} />
         </NavigationContainer>
     );

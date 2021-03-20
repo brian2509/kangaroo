@@ -38,7 +38,7 @@ export const HomeScreen = ({ navigation }: Props): React.ReactElement => {
                 onRefresh={() => queryClient.invalidateQueries(QUERY_KEYS.myStickerPacks)}
                 onPressStickerPack={(stickerPack: StickerPackRo) => {
                     navigation.navigate("StickerPackDetailScreen", {
-                        stickerPack,
+                        stickerPackId: stickerPack.id,
                     });
                 }}
             />
