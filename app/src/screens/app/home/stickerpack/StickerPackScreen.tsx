@@ -1,5 +1,5 @@
 import { Button, Icon, Layout, Spinner, Text } from "@ui-kitten/components";
-import { Image, SafeAreaView, ScrollView, TouchableOpacity } from "react-native";
+import { Alert, Image, Platform, SafeAreaView, ScrollView, TouchableOpacity } from "react-native";
 import { StackScreenProps } from "@react-navigation/stack";
 import { HomeStackParamList } from "../../../../navigation/AppNavigator";
 import tailwind from "tailwind-rn";
@@ -14,6 +14,9 @@ import { useQueryClient } from "react-query";
 import { useStickerPack } from "../../../../api/hooks/query/stickerPack";
 import { PlaceholderImage } from "../../../../components/common/PlaceholderImage";
 import { useUploadStickerMutation } from "../../../../api/hooks/mutations/stickerPack";
+import { NativeModules } from "react-native";
+
+const { WhatsAppStickersModule } = NativeModules;
 
 type StickerPackProps = {
     stickerPack: StickerPackRo;
@@ -219,6 +222,28 @@ export const StickerPackScreen = ({ navigation, route }: Props): React.ReactElem
         </Layout>
     );
 
+    const onAddToWhatsapp = async () => {
+        const stickerMap: { [id: string]: String } = {};
+        for (let sticker of data?.stickers || []) {
+            stickerMap[sticker.id + ".webp"] = "♥";
+        }
+
+        WhatsAppStickersModule.addStickerPackToWhatsApp(
+            data?.id,
+            "hello123",
+            "Brian Planje",
+            "tray_icon.png",
+            "",
+            "",
+            "",
+            "",
+            "3",
+            false,
+            false,
+            stickerMap,
+        );
+    };
+
     return (
         <SafeAreaView style={tailwind("flex-1 bg-white")}>
             {data == undefined ? (
@@ -227,6 +252,9 @@ export const StickerPackScreen = ({ navigation, route }: Props): React.ReactElem
                 </Layout>
             ) : (
                 <>
+                    <Button status={"success"} onPress={onAddToWhatsapp}>
+                        Add to WhatsApp!
+                    </Button>
                     <Body stickerPack={data} onStickerPress={onStickerPress} />
                     <ToolBar stickerPack={data} />
                 </>
