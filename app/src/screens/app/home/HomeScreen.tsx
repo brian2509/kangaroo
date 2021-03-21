@@ -11,7 +11,7 @@ import { HomeScreenHeader } from "../../../components/home/HomeScreenHeader";
 import { StickerPacksList } from "../../../components/stickerpack/StickerPackList";
 import { sortedStickerPacks } from "../../../util/sorting";
 import { useStickerPacks } from "../../../api/hooks/query/stickerPack";
-import { useRemoveStickerPackMutation } from "../../../api/hooks/mutations/stickerPack";
+import { storeImages } from "../../../util/image_storing";
 
 type Props = StackScreenProps<HomeStackParamList, "Homescreen">;
 
@@ -25,6 +25,10 @@ export const HomeScreen = ({ navigation }: Props): React.ReactElement => {
     }, [accessToken]);
 
     const myStickerPacksQuery = useStickerPacks();
+
+    useEffect(() => {
+        myStickerPacksQuery.data && storeImages(myStickerPacksQuery.data);
+    }, [myStickerPacksQuery.dataUpdatedAt]);
 
     return (
         <SafeAreaView style={tailwind("flex-1")}>
