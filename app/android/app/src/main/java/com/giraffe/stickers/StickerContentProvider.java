@@ -12,12 +12,14 @@ import android.content.ContentProvider;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.UriMatcher;
 import android.content.res.AssetFileDescriptor;
 import android.content.res.AssetManager;
 import android.database.Cursor;
 import android.database.MatrixCursor;
 import android.net.Uri;
+import android.os.ParcelFileDescriptor;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -25,13 +27,17 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.giraffe.BuildConfig;
+import com.giraffe.R;
+import com.google.gson.Gson;
 
+import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 public class StickerContentProvider extends ContentProvider {
 
@@ -59,6 +65,12 @@ public class StickerContentProvider extends ContentProvider {
     public static final Uri AUTHORITY_URI = new Uri.Builder().scheme(ContentResolver.SCHEME_CONTENT).authority(BuildConfig.CONTENT_PROVIDER_AUTHORITY).appendPath(StickerContentProvider.METADATA).build();
 
     /**
+     * Non-default statics.
+     */
+    public static final String STICKER_KEY_VALUE = "sticker_pack";
+    public static final String STICKER_FOLDER = "sticker_packs";
+
+    /**
      * Do not change the values in the UriMatcher because otherwise, WhatsApp will not be able to fetch the stickers from the ContentProvider.
      */
     private static final UriMatcher MATCHER = new UriMatcher(UriMatcher.NO_MATCH);
@@ -75,7 +87,7 @@ public class StickerContentProvider extends ContentProvider {
 
     private static final int STICKER_PACK_TRAY_ICON_CODE = 5;
 
-    private List<StickerPack> stickerPackList;
+    private List<StickerPack> stickerPackList = new ArrayList<>();
 
     @Override
     public boolean onCreate() {
@@ -149,18 +161,39 @@ public class StickerContentProvider extends ContentProvider {
     }
 
     private synchronized void readContentFile(@NonNull Context context) {
-        try (InputStream contentsInputStream = context.getAssets().open(CONTENT_FILE_NAME)) {
-            stickerPackList = ContentFileParser.parseStickerPacks(contentsInputStream);
-        } catch (IOException | IllegalStateException e) {
-            throw new RuntimeException(CONTENT_FILE_NAME + " file has some issues: " + e.getMessage(), e);
+//        try (InputStream contentsInputStream = context.getAssets().open(CONTENT_FILE_NAME)) {
+//            stickerPackList = ContentFileParser.parseStickerPacks(contentsInputStream);
+//        } catch (IOException | IllegalStateException e) {
+//            throw new RuntimeException(CONTENT_FILE_NAME + " file has some issues: " + e.getMessage(), e);
+//        }
+        String stickerFile = getContext().getResources().getString(R.string.sticker_preferences);
+        SharedPreferences sharedPreferences = getContext().getSharedPreferences(stickerFile, Context.MODE_PRIVATE);
+
+        // Parse from JSON.
+        Set<String> serializedStickerPacks = sharedPreferences.getStringSet(STICKER_KEY_VALUE, new HashSet<>());
+        ArrayList<StickerPack> stickerPacks = new ArrayList<>(serializedStickerPacks.size());
+        for (String s : serializedStickerPacks) {
+            stickerPacks.add(new Gson().fromJson(s, StickerPack.class));
         }
+        stickerPackList.addAll(stickerPacks);
     }
 
     private List<StickerPack> getStickerPackList() {
-        if (stickerPackList == null) {
-            readContentFile(Objects.requireNonNull(getContext()));
+        // Get sticker preferences.
+        String stickerFile = getContext().getResources().getString(R.string.sticker_preferences);
+        SharedPreferences sharedPreferences = getContext().getSharedPreferences(stickerFile, Context.MODE_PRIVATE);
+
+        // Parse from JSON.
+        Set<String> serializedStickerPacks = sharedPreferences.getStringSet(STICKER_KEY_VALUE, new HashSet<>());
+        ArrayList<StickerPack> stickerPacks = new ArrayList<>(serializedStickerPacks.size());
+        for (String s : serializedStickerPacks) {
+            stickerPacks.add(new Gson().fromJson(s, StickerPack.class));
         }
-        return stickerPackList;
+        return stickerPacks;
+//        if (stickerPackList == null) {
+//            readContentFile(Objects.requireNonNull(getContext()));
+//        }
+//        return stickerPackList;
     }
 
     private Cursor getPackForAllStickerPacks(@NonNull Uri uri) {
@@ -264,7 +297,17 @@ public class StickerContentProvider extends ContentProvider {
 
     private AssetFileDescriptor fetchFile(@NonNull Uri uri, @NonNull AssetManager am, @NonNull String fileName, @NonNull String identifier) {
         try {
-            return am.openFd(identifier + "/" + fileName);
+            File file;
+            if (fileName.endsWith(".png")) {
+                return am.openFd("kangaroo" + "/" + fileName);
+            } else {
+                file = new File(getContext().getFilesDir() + "/" + STICKER_FOLDER + "/" + identifier + "/", fileName);
+            }
+            if (!file.exists()) {
+                Log.d("StickerContentProvider", "StickerPack dir not found");
+            }
+            Log.d("StickerContentProvider", "StickerPack " + file.getPath());
+            return new AssetFileDescriptor(ParcelFileDescriptor.open(file, ParcelFileDescriptor.MODE_READ_ONLY), 0L, -1L);
         } catch (IOException e) {
             Log.e(Objects.requireNonNull(getContext()).getPackageName(), "IOException when getting asset file, uri:" + uri, e);
             return null;

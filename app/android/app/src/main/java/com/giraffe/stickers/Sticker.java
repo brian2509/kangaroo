@@ -13,12 +13,12 @@ import android.os.Parcelable;
 
 import java.util.List;
 
-class Sticker implements Parcelable {
+public class Sticker implements Parcelable {
     final String imageFileName;
     final List<String> emojis;
     long size;
 
-    Sticker(String imageFileName, List<String> emojis) {
+    public Sticker(String imageFileName, List<String> emojis) {
         this.imageFileName = imageFileName;
         this.emojis = emojis;
     }

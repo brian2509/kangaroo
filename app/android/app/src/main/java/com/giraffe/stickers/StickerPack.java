@@ -13,7 +13,7 @@ import android.os.Parcelable;
 
 import java.util.List;
 
-class StickerPack implements Parcelable {
+public class StickerPack implements Parcelable {
     final String identifier;
     final String name;
     final String publisher;
@@ -32,7 +32,7 @@ class StickerPack implements Parcelable {
     String androidPlayStoreLink;
     private boolean isWhitelisted;
 
-    StickerPack(String identifier, String name, String publisher, String trayImageFile, String publisherEmail, String publisherWebsite, String privacyPolicyWebsite, String licenseAgreementWebsite, String imageDataVersion, boolean avoidCache, boolean animatedStickerPack) {
+    public StickerPack(String identifier, String name, String publisher, String trayImageFile, String publisherEmail, String publisherWebsite, String privacyPolicyWebsite, String licenseAgreementWebsite, String imageDataVersion, boolean avoidCache, boolean animatedStickerPack) {
         this.identifier = identifier;
         this.name = name;
         this.publisher = publisher;
@@ -85,7 +85,7 @@ class StickerPack implements Parcelable {
         }
     };
 
-    void setStickers(List<Sticker> stickers) {
+    public void setStickers(List<Sticker> stickers) {
         this.stickers = stickers;
         totalSize = 0;
         for (Sticker sticker : stickers) {
@@ -93,7 +93,7 @@ class StickerPack implements Parcelable {
         }
     }
 
-    void setAndroidPlayStoreLink(String androidPlayStoreLink) {
+    public void setAndroidPlayStoreLink(String androidPlayStoreLink) {
         this.androidPlayStoreLink = androidPlayStoreLink;
     }
 
