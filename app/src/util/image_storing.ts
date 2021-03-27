@@ -3,6 +3,9 @@ import RNFS from "react-native-fs";
 
 const STICKER_FOLDER_NAME = "/sticker_packs";
 const STICKER_FILE_EXTENSION = ".webp";
+
+// TODO: Add removal of images.
+
 export const storeImages = (data: StickerPackRo[]) => {
     const directories = data.map((val) => val.id);
     const path = RNFS.DocumentDirectoryPath + STICKER_FOLDER_NAME;
