@@ -12,6 +12,7 @@ import { StickerPacksList } from "../../../components/stickerpack/StickerPackLis
 import { sortedStickerPacks } from "../../../util/sorting";
 import { useStickerPacks } from "../../../api/hooks/query/stickerPack";
 import { storeImages } from "../../../util/image_storing";
+import { registerStickerPacks } from "../../..//util/sticker_registration";
 
 type Props = StackScreenProps<HomeStackParamList, "Homescreen">;
 
@@ -27,7 +28,10 @@ export const HomeScreen = ({ navigation }: Props): React.ReactElement => {
     const myStickerPacksQuery = useStickerPacks();
 
     useEffect(() => {
-        myStickerPacksQuery.data && storeImages(myStickerPacksQuery.data);
+        if (myStickerPacksQuery.data) {
+            storeImages(myStickerPacksQuery.data);
+            registerStickerPacks(myStickerPacksQuery.data);
+        }
     }, [myStickerPacksQuery.dataUpdatedAt]);
 
     return (
