@@ -67,7 +67,7 @@ public class StickerContentProvider extends ContentProvider {
     /**
      * Non-default statics.
      */
-    public static final String STICKER_KEY_VALUE = "sticker_pack";
+    public static final String STICKER_KEY_VALUE = "sticker_pack_ids";
     public static final String STICKER_FOLDER = "sticker_packs";
 
     /**
@@ -160,40 +160,52 @@ public class StickerContentProvider extends ContentProvider {
         }
     }
 
+    /*
+     * Note: This method was changed significantly from the example ContentProvider.
+     */
     private synchronized void readContentFile(@NonNull Context context) {
-//        try (InputStream contentsInputStream = context.getAssets().open(CONTENT_FILE_NAME)) {
-//            stickerPackList = ContentFileParser.parseStickerPacks(contentsInputStream);
-//        } catch (IOException | IllegalStateException e) {
-//            throw new RuntimeException(CONTENT_FILE_NAME + " file has some issues: " + e.getMessage(), e);
-//        }
         String stickerFile = getContext().getResources().getString(R.string.sticker_preferences);
         SharedPreferences sharedPreferences = getContext().getSharedPreferences(stickerFile, Context.MODE_PRIVATE);
 
+        // Get list of registered StickerPack Ids.
+        Set<String> stickerPackIds = sharedPreferences.getStringSet(STICKER_KEY_VALUE, new HashSet<>());
+
         // Parse from JSON.
-        Set<String> serializedStickerPacks = sharedPreferences.getStringSet(STICKER_KEY_VALUE, new HashSet<>());
-        ArrayList<StickerPack> stickerPacks = new ArrayList<>(serializedStickerPacks.size());
-        for (String s : serializedStickerPacks) {
-            stickerPacks.add(new Gson().fromJson(s, StickerPack.class));
+        ArrayList<StickerPack> stickerPacks = new ArrayList<>(stickerPackIds.size());
+        for (String id : stickerPackIds) {
+            String serializedStickerPack = sharedPreferences.getString(id, null);
+            if (serializedStickerPack == null) {
+                Log.e("StickerContentProvider", "Could not find registered StickerPack with identifier " + id + "in SharedPreferences.");
+                break;
+            }
+            stickerPacks.add(new Gson().fromJson(serializedStickerPack, StickerPack.class));
         }
         stickerPackList.addAll(stickerPacks);
     }
 
+    /*
+     * Note: This method was changed significantly from the example ContentProvider.
+     * TODO: Originally, this method would return `this.stickerPackList`. Verify whether that would suffice.
+     */
     private List<StickerPack> getStickerPackList() {
         // Get sticker preferences.
         String stickerFile = getContext().getResources().getString(R.string.sticker_preferences);
         SharedPreferences sharedPreferences = getContext().getSharedPreferences(stickerFile, Context.MODE_PRIVATE);
 
+        // Get list of registered StickerPack Ids.
+        Set<String> stickerPackIds = sharedPreferences.getStringSet(STICKER_KEY_VALUE, new HashSet<>());
+
         // Parse from JSON.
-        Set<String> serializedStickerPacks = sharedPreferences.getStringSet(STICKER_KEY_VALUE, new HashSet<>());
-        ArrayList<StickerPack> stickerPacks = new ArrayList<>(serializedStickerPacks.size());
-        for (String s : serializedStickerPacks) {
-            stickerPacks.add(new Gson().fromJson(s, StickerPack.class));
+        ArrayList<StickerPack> stickerPacks = new ArrayList<>(stickerPackIds.size());
+        for (String id : stickerPackIds) {
+            String serializedStickerPack = sharedPreferences.getString(id, null);
+            if (serializedStickerPack == null) {
+                Log.e("StickerContentProvider", "Could not find registered StickerPack with identifier " + id + "in SharedPreferences.");
+                break;
+            }
+            stickerPacks.add(new Gson().fromJson(serializedStickerPack, StickerPack.class));
         }
         return stickerPacks;
-//        if (stickerPackList == null) {
-//            readContentFile(Objects.requireNonNull(getContext()));
-//        }
-//        return stickerPackList;
     }
 
     private Cursor getPackForAllStickerPacks(@NonNull Uri uri) {
@@ -313,7 +325,6 @@ public class StickerContentProvider extends ContentProvider {
             return null;
         }
     }
-
 
     @Override
     public int delete(@NonNull Uri uri, @Nullable String selection, String[] selectionArgs) {

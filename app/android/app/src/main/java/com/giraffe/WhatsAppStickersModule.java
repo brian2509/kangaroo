@@ -51,8 +51,11 @@ public class WhatsAppStickersModule extends ReactContextBaseJavaModule {
         return "WhatsAppStickersModule";
     }
 
+    /*
+     * Method for adding a registered StickerPack to WhatsApp.
+     */
     @ReactMethod
-    public void addToWhatsApp(String identifier, String stickerPackName) {
+    public void addStickerPackToWhatsApp(String identifier, String stickerPackName) {
         Log.d(this.getName(), "addToWhatsApp function called.");
         Intent intent = createIntentToAddStickerPack(identifier, stickerPackName);
         intent.setPackage(CONSUMER_WHATSAPP_PACKAGE_NAME);
@@ -63,8 +66,11 @@ public class WhatsAppStickersModule extends ReactContextBaseJavaModule {
         }
     }
 
+    /*
+     * Method for registering a StickerPack to the SharedPreferences store.
+     */
     @ReactMethod
-    public void registerStickerPack(String identifier, String name, String publisher, String trayImageFile, String publisherEmail, String publisherWebsite, String privacyPolicyWebsite, String licenseAgreementWebsite, String imageDataVersion, boolean avoidCache, boolean animatedStickerPack, ReadableMap stickersMap) {
+    public void registerStickerPack(String identifier, String name, String publisher, String trayImageFile, String publisherEmail, String publisherWebsite, String privacyPolicyWebsite, String licenseAgreementWebsite, String playStoreUrl, String imageDataVersion, boolean avoidCache, boolean animatedStickerPack, ReadableMap stickersMap) {
         StickerPack stickerPack = new StickerPack(identifier, name, publisher, trayImageFile, publisherEmail, publisherWebsite, privacyPolicyWebsite, licenseAgreementWebsite, imageDataVersion, avoidCache, animatedStickerPack);
 
         ReadableMapKeySetIterator itr = stickersMap.keySetIterator();
@@ -76,31 +82,63 @@ public class WhatsAppStickersModule extends ReactContextBaseJavaModule {
             stickers.add(sticker);
         }
         stickerPack.setStickers(stickers);
-        stickerPack.setAndroidPlayStoreLink("");
-
-        // Put in set in case we eventually want the functionality to register multiple sticker packs.
-        Set<String> serializedStickerPacks = new HashSet();
-        String serializedStickerPack = new Gson().toJson(stickerPack);
-        serializedStickerPacks.add(serializedStickerPack);
+        stickerPack.setAndroidPlayStoreLink(playStoreUrl);
 
         // Get SharedPreferences
         Context context = getReactApplicationContext();
         SharedPreferences sharedPref = context.getSharedPreferences(context.getResources().getString(R.string.sticker_preferences), Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
 
-        // Write Set of serialized StickerPack(s).
-        editor.putStringSet(STICKER_KEY_VALUE, serializedStickerPacks);
+        // Get List of registered StickerPackIds.
+        Set<String> stickerPackIds = sharedPref.getStringSet(STICKER_KEY_VALUE, new HashSet<>());
+
+        // Add id of StickerPack we are attempting to add. (Note the usage of Set).
+        stickerPackIds.add(identifier);
+        editor.putStringSet(STICKER_KEY_VALUE, stickerPackIds);
+
+        // Write serialized StickerPack to SharedPreferences with Identifier as key.
+        String serializedStickerPack = new Gson().toJson(stickerPack);
+        editor.putString(identifier, serializedStickerPack);
+
+        // Write serialized StickerPack(s) and Identifiers.
         editor.apply();
     }
 
+    /*
+     * Method for firstly registering a StickerPack to the SharedPreferences store and then
+     * adding the StickerPack to WhatsApp.
+     */
     @ReactMethod
-    public void addStickerPackToWhatsApp(String identifier, String name, String publisher, String trayImageFile, String publisherEmail, String publisherWebsite, String privacyPolicyWebsite, String licenseAgreementWebsite, String imageDataVersion, boolean avoidCache, boolean animatedStickerPack, ReadableMap stickersMap) {
+    public void registerStickerPackAndAddToWhatsApp(String identifier, String name, String publisher, String trayImageFile, String publisherEmail, String publisherWebsite, String privacyPolicyWebsite, String licenseAgreementWebsite, String playStoreUrl, String imageDataVersion, boolean avoidCache, boolean animatedStickerPack, ReadableMap stickersMap) {
         Log.d(this.getName(), "addStickerPackToWhatsApp called");
-        Log.d(this.getName(), stickersMap.toString());
-        this.registerStickerPack(identifier, name, publisher, trayImageFile, publisherEmail, publisherWebsite, privacyPolicyWebsite, licenseAgreementWebsite, imageDataVersion, avoidCache, animatedStickerPack, stickersMap);
-        this.addToWhatsApp(identifier, name);
+        this.registerStickerPack(identifier, name, publisher, trayImageFile, publisherEmail, publisherWebsite, privacyPolicyWebsite, licenseAgreementWebsite, playStoreUrl, imageDataVersion, avoidCache, animatedStickerPack, stickersMap);
+        this.addStickerPackToWhatsApp(identifier, name);
     }
 
+    /*
+     * Method for removing a StickerPack from the SharedPreferences store.
+     */
+    @ReactMethod
+    public void removeStickerPack(String identifier) {
+        Log.d(this.getName(), "removing StickerPack with Identifier: " + identifier);
+
+        // Get SharedPreferences
+        Context context = getReactApplicationContext();
+        SharedPreferences sharedPref = context.getSharedPreferences(context.getResources().getString(R.string.sticker_preferences), Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+
+        // Get List of registered StickerPackIds.
+        Set<String> stickerPackIds = sharedPref.getStringSet(STICKER_KEY_VALUE, new HashSet<>());
+        stickerPackIds.remove(identifier);
+
+        // Passing null is equivalent to remove.
+        editor.putString(identifier, null);
+        editor.apply();
+    }
+
+    /*
+     * Method for launching an Intent to add a StickerPack to WhatsApp.
+     */
     @NonNull
     private Intent createIntentToAddStickerPack(String identifier, String stickerPackName) {
         Intent intent = new Intent();
