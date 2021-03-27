@@ -259,6 +259,9 @@ export const StickerPackScreen = ({ navigation, route }: Props): React.ReactElem
             data.animated,
             stickerMap,
         );
+
+        // TODO: Verify that stickerpack has been added successfully.
+        // See: https://github.com/WhatsApp/stickers/tree/master/Android#check-if-pack-is-added-optional
     };
 
     return (
