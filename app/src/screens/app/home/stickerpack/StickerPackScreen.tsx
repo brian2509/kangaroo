@@ -15,6 +15,16 @@ import { useStickerPack } from "../../../../api/hooks/query/stickerPack";
 import { PlaceholderImage } from "../../../../components/common/PlaceholderImage";
 import { useUploadStickerMutation } from "../../../../api/hooks/mutations/stickerPack";
 import { NativeModules } from "react-native";
+import {
+    DEFAULT_TRAY_ICON,
+    PLAYSTORE_URL,
+    PUBLISHER_EMAIL,
+    PUBLISHER_LICENSE,
+    PUBLISHER_NAME,
+    PUBLISHER_PRIVACY_POLICY,
+    PUBLISHER_WEBSITE,
+    STICKER_FILE_EXTENSION,
+} from "../../../../constants/StickerInfo";
 
 const { WhatsAppStickersModule } = NativeModules;
 
@@ -225,21 +235,28 @@ export const StickerPackScreen = ({ navigation, route }: Props): React.ReactElem
     const onAddToWhatsapp = async () => {
         const stickerMap: { [id: string]: String } = {};
         for (let sticker of data?.stickers || []) {
-            stickerMap[sticker.id + ".webp"] = "♥";
+            stickerMap[sticker.id + STICKER_FILE_EXTENSION] = "🦘";
+        }
+        if (!data) {
+            // TODO: Error feedback to user.
+            return;
         }
 
-        WhatsAppStickersModule.addStickerPackToWhatsApp(
-            data?.id,
-            "hello123",
-            "Brian Planje",
-            "tray_icon.png",
-            "",
-            "",
-            "",
-            "",
-            "3",
-            false,
-            false,
+        // TODO: Can most likely directly call `addStickerPackToWhatsApp`.
+        // As the ContentProvider should have propagated any updates through the effect in `HomeScreen`.
+        WhatsAppStickersModule.registerStickerPackAndAddToWhatsApp(
+            data.id,
+            data.name,
+            PUBLISHER_NAME,
+            DEFAULT_TRAY_ICON,
+            PUBLISHER_EMAIL,
+            PUBLISHER_WEBSITE,
+            PUBLISHER_PRIVACY_POLICY,
+            PUBLISHER_LICENSE,
+            PLAYSTORE_URL,
+            data.updatedAt,
+            true,
+            data.animated,
             stickerMap,
         );
     };
