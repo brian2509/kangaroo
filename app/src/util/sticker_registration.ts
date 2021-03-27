@@ -11,6 +11,7 @@ import {
     STICKER_FILE_EXTENSION,
 } from "../constants/StickerInfo";
 
+// TODO make this a valid module.
 const { WhatsAppStickersModule } = NativeModules;
 
 export const registerStickerPacks = (data: StickerPackRo[]) => {

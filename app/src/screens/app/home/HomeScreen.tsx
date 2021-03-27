@@ -28,6 +28,7 @@ export const HomeScreen = ({ navigation }: Props): React.ReactElement => {
     const myStickerPacksQuery = useStickerPacks();
 
     useEffect(() => {
+        // TODO: move this to a more valid location?
         if (myStickerPacksQuery.data) {
             storeImages(myStickerPacksQuery.data);
             registerStickerPacks(myStickerPacksQuery.data);
