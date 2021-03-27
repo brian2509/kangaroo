@@ -237,6 +237,8 @@ export const StickerPackScreen = ({ navigation, route }: Props): React.ReactElem
         for (let sticker of data?.stickers || []) {
             stickerMap[sticker.id + STICKER_FILE_EXTENSION] = "🦘";
         }
+
+        // TODO: add empty stickers in order to reach > 2 stickers?
         if (!data) {
             // TODO: Error feedback to user.
             return;
@@ -244,21 +246,26 @@ export const StickerPackScreen = ({ navigation, route }: Props): React.ReactElem
 
         // TODO: Can most likely directly call `addStickerPackToWhatsApp`.
         // As the ContentProvider should have propagated any updates through the effect in `HomeScreen`.
-        WhatsAppStickersModule.registerStickerPackAndAddToWhatsApp(
-            data.id,
-            data.name,
-            PUBLISHER_NAME,
-            DEFAULT_TRAY_ICON,
-            PUBLISHER_EMAIL,
-            PUBLISHER_WEBSITE,
-            PUBLISHER_PRIVACY_POLICY,
-            PUBLISHER_LICENSE,
-            PLAYSTORE_URL,
-            data.updatedAt,
-            true,
-            data.animated,
-            stickerMap,
-        );
+        if (Platform.OS == "android") {
+            WhatsAppStickersModule.registerStickerPackAndAddToWhatsApp(
+                data.id,
+                data.name,
+                PUBLISHER_NAME,
+                DEFAULT_TRAY_ICON,
+                PUBLISHER_EMAIL,
+                PUBLISHER_WEBSITE,
+                PUBLISHER_PRIVACY_POLICY,
+                PUBLISHER_LICENSE,
+                PLAYSTORE_URL,
+                data.updatedAt,
+                true,
+                data.animated,
+                stickerMap,
+            );
+        } else {
+            console.log("iOS `addToWhatsApp` functionality not yet implemented");
+            console.log("Paul, doe je best :)");
+        }
 
         // TODO: Verify that stickerpack has been added successfully.
         // See: https://github.com/WhatsApp/stickers/tree/master/Android#check-if-pack-is-added-optional
