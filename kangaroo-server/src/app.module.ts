@@ -4,6 +4,7 @@ import { AuthModule } from "./auth/auth.module";
 import { HTTPLoggerMiddleware } from "./common/middleware/http-logger.middleware";
 import { PrivateFile } from "./files/entities/file.entity";
 import { FilesModule } from "./files/files.module";
+import { StickerPackInvite } from "./sticker-packs/entities/sticker-pack-invite.entity";
 import { StickerPack } from "./sticker-packs/entities/sticker-pack.entity";
 import { StickerPacksModule } from "./sticker-packs/sticker-packs.module";
 import { Sticker } from "./stickers/entities/sticker.entity";
@@ -16,7 +17,7 @@ import { UserModule } from "./users/user.module";
     TypeOrmModule.forRoot({
       type: "postgres",
       url: `postgres://${process.env.POSTGRES_USER}:${process.env.POSTGRES_PASSWORD}@${process.env.POSTGRES_HOST}:5432/${process.env.POSTGRES_DB}`,
-      entities: [User, Sticker, PrivateFile, StickerPack],
+      entities: [User, Sticker, PrivateFile, StickerPack, StickerPackInvite],
       synchronize: true,
     }),
     UserModule,
