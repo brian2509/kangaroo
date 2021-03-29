@@ -17,11 +17,6 @@ export class StickerPackInvite {
     return {
       id: this.id,
       expireTime: this.expireTime,
-      link: this.url(),
     };
-  }
-
-  url(): string {
-    return `${process.env.DOMAIN_NAME}/api/invites/${this.id}`;
   }
 }
