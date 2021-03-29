@@ -29,7 +29,7 @@ import { StickerRo } from "../stickers/dto/response-sticker.dto";
 import { UserRo } from "../users/dto/response-user.dto";
 import { CreateInviteDto } from "./dto/create-invite.dto";
 import { CreateStickerPackDto } from "./dto/create-sticker-pack.dto";
-import { InviteRo } from "./dto/invite-ro";
+import { InviteRoDto } from "./dto/invite-ro.dto";
 import { StickerPackRo } from "./dto/sticker-pack-ro.dto";
 import { UpdateStickerPackDto } from "./dto/update-sticker-pack.dto";
 import { StickerPacksService } from "./sticker-packs.service";
@@ -185,7 +185,7 @@ export class StickerPacksController {
   async getInvites(
     @Param("id") id: string,
     @User() user: UserRo
-  ): Promise<InviteRo[]> {
+  ): Promise<InviteRoDto[]> {
     return await this.stickerPacksService.getInvites(id, user.id);
   }
 
@@ -198,7 +198,7 @@ export class StickerPacksController {
     @Param("id") id: string,
     @User() user: UserRo,
     @Body() createInviteDto: CreateInviteDto
-  ): Promise<InviteRo> {
+  ): Promise<InviteRoDto> {
     return await this.stickerPacksService.createInvite(
       id,
       user.id,
@@ -214,7 +214,7 @@ export class StickerPacksController {
     @Param("id") id: string,
     @Param("inviteId") inviteId: string,
     @User() user: UserRo
-  ): Promise<InviteRo> {
+  ): Promise<InviteRoDto> {
     return await this.stickerPacksService.removeInvite(id, inviteId, user.id);
   }
 }

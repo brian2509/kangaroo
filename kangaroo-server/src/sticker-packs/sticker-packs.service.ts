@@ -11,7 +11,7 @@ import { CreateStickerDto } from "../stickers/dto/create-sticker.dto";
 import { StickersService } from "../stickers/stickers.service";
 import { CreateInviteDto } from "./dto/create-invite.dto";
 import { CreateStickerPackDto } from "./dto/create-sticker-pack.dto";
-import { InviteRo } from "./dto/invite-ro";
+import { InviteRoDto } from "./dto/invite-ro.dto";
 import { StickerPackRo } from "./dto/sticker-pack-ro.dto";
 import { UpdateStickerPackDto } from "./dto/update-sticker-pack.dto";
 import { StickerPackInvite } from "./entities/sticker-pack-invite.entity";
@@ -309,7 +309,7 @@ export class StickerPacksService {
     return;
   }
 
-  async getInvites(id: string, userId: string): Promise<InviteRo[]> {
+  async getInvites(id: string, userId: string): Promise<InviteRoDto[]> {
     const stickerPack = await this.stickerPackRepository.findOne({
       where: { id },
       relations: ["author"],
@@ -350,7 +350,7 @@ export class StickerPacksService {
     id: string,
     userId: string,
     createInviteDto: CreateInviteDto
-  ): Promise<InviteRo> {
+  ): Promise<InviteRoDto> {
     const stickerPack = await this.stickerPackRepository.findOne({
       where: { id },
       relations: ["author"],
@@ -388,7 +388,7 @@ export class StickerPacksService {
     id: string,
     inviteId: string,
     userId: string
-  ): Promise<InviteRo> {
+  ): Promise<InviteRoDto> {
     const stickerPack = await this.stickerPackRepository.findOne({
       where: { id },
       relations: ["author"],
