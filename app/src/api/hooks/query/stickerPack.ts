@@ -14,9 +14,12 @@ export const useStickerPack = (id: string) =>
     );
 
 const getStickerPacks = async () => {
-    const { data } = await api.users.getOwnStickerPacks();
+    const { data } = await api.users.getOwnAndJoinedStickerPacks();
     return data;
 };
 
-export const useStickerPacks = () =>
-    useQuery<StickerPackRo[], any, StickerPackRo[]>(QUERY_KEYS.myStickerPacks, getStickerPacks);
+export const useOwnAndJoinedStickerPacks = () =>
+    useQuery<StickerPackRo[], any, StickerPackRo[]>(
+        QUERY_KEYS.ownAndJoinedStickerPacks,
+        getStickerPacks,
+    );

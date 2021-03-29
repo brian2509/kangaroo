@@ -15,7 +15,7 @@ const createStickerPack = async (createStickerPackDto: CreateStickerPackDto) => 
 
 export const useCreateStickerPackMutation = (queryClient: QueryClient) =>
     useMutation<StickerPackRo, any, CreateStickerPackDto, unknown>(createStickerPack, {
-        onSuccess: () => queryClient.invalidateQueries(QUERY_KEYS.myStickerPacks),
+        onSuccess: () => queryClient.invalidateQueries(QUERY_KEYS.ownAndJoinedStickerPacks),
     });
 
 const removeStickerPack = async (stickerPackId: string) => {
@@ -25,13 +25,23 @@ const removeStickerPack = async (stickerPackId: string) => {
 
 export const useRemoveStickerPackMutation = (queryClient: QueryClient) =>
     useMutation<StickerPackRo, any, string, unknown>(removeStickerPack, {
-        onSuccess: () => queryClient.invalidateQueries(QUERY_KEYS.myStickerPacks),
+        onSuccess: () => queryClient.invalidateQueries(QUERY_KEYS.ownAndJoinedStickerPacks),
     });
 
 export const useUploadStickerMutation = (queryClient: QueryClient) =>
     useMutation<StickerRo, any, UploadStickerRo, unknown>(uploadSticker, {
         onSuccess: (data, variables) => {
             queryClient.invalidateQueries([QUERY_KEYS.stickerPack, variables.stickerPackId]);
-            queryClient.invalidateQueries(QUERY_KEYS.myStickerPacks);
+            queryClient.invalidateQueries(QUERY_KEYS.ownAndJoinedStickerPacks);
         },
+    });
+
+const joinStickerPack = async (stickerPackId: string) => {
+    const { data } = await api.stickerPacks.joinStickerPack(stickerPackId);
+    return data;
+};
+
+export const useJoinStickerPackMutation = (queryClient: QueryClient) =>
+    useMutation<StickerPackRo, any, string, unknown>(joinStickerPack, {
+        onSuccess: () => queryClient.invalidateQueries(QUERY_KEYS.ownAndJoinedStickerPacks),
     });

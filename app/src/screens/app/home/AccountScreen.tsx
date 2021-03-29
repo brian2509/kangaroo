@@ -8,7 +8,7 @@ import { TextStatElement } from "../../../components/common/TextStatElement";
 import { AccountProfileImage } from "../../../components/common/AccountProfileImage";
 import { useQueryClient } from "react-query";
 import { useMe } from "../../../api/hooks/query/user";
-import { useStickerPacks } from "../../../api/hooks/query/stickerPack";
+import { useOwnAndJoinedStickerPacks } from "../../../api/hooks/query/stickerPack";
 import { QUERY_KEYS } from "../../../constants/ReactQueryKeys";
 import { CoverStickerImage } from "../../../components/common/CoverStickerImage";
 import { StickerPackRo, StickerRo } from "../../../api/generated-typescript-api-client/src";
@@ -23,11 +23,11 @@ type Props = StackScreenProps<FeedStackParamList, "AccountScreen">;
 export const AccountScreen = ({ navigation }: Props): React.ReactElement => {
     const queryClient = useQueryClient();
     const myUserQuery = useMe();
-    const myStickerPacksQuery = useStickerPacks();
+    const myStickerPacksQuery = useOwnAndJoinedStickerPacks();
 
     useEffect(() => {
         () => queryClient.invalidateQueries(QUERY_KEYS.me);
-        () => queryClient.invalidateQueries(QUERY_KEYS.myStickerPacks);
+        () => queryClient.invalidateQueries(QUERY_KEYS.ownAndJoinedStickerPacks);
 
         navigation.setOptions({
             headerRight: function navigationRightIcon() {

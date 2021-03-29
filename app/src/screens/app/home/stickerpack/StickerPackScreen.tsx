@@ -14,6 +14,8 @@ import { useQueryClient } from "react-query";
 import { useStickerPack } from "../../../../api/hooks/query/stickerPack";
 import { PlaceholderImage } from "../../../../components/common/PlaceholderImage";
 import { useUploadStickerMutation } from "../../../../api/hooks/mutations/stickerPack";
+import Clipboard from "@react-native-clipboard/clipboard";
+import { showToast } from "../../../../util/ui";
 
 type StickerPackProps = {
     stickerPack: StickerPackRo;
@@ -87,6 +89,15 @@ class Body extends React.Component<StickerPackProps> {
                     stickerPack={this.props.stickerPack}
                     onStickerPress={this.props.onStickerPress}
                 />
+                <Button
+                    style={tailwind("my-8")}
+                    onPress={() => {
+                        const shareUrl = `https://www.stickr.cf/pack/${this.props.stickerPack.id}`;
+                        Clipboard.setString(shareUrl);
+                        showToast("Share link copied to clipboard!");
+                    }}>
+                    Share!
+                </Button>
             </ScrollView>
         );
     }
@@ -158,7 +169,7 @@ export const StickerPackScreen = ({ navigation, route }: Props): React.ReactElem
                     <TouchableOpacity onPress={onHeaderPress}>
                         <Layout style={tw`flex-col`}>
                             <Text>{data.name}</Text>
-                            <Text style={tw`text-gray-500 text-xs`}>
+                            <Text style={tw`text-gray-500 text-xs`} numberOfLines={1}>
                                 Willem, Brian, Mika, Rowdy
                             </Text>
                         </Layout>

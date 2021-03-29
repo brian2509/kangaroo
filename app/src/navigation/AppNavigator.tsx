@@ -18,6 +18,7 @@ import { DiscoverScreen } from "../screens/app/home/DiscoverScreen";
 import { SettingsScreen } from "../screens/app/home/SettingsScreen";
 import { SettingsUpdateScreen } from "../screens/app/home/SettingsUpdateScreen";
 import { CreateAddMembersScreen } from "../screens/app/home/stickerpack/CreateAddMembersScreen";
+import { JoinStickerPackScreen } from "../screens/app/home/stickerpack/JoinStickerPackScreen";
 
 export type AuthStackParamList = {
     Login: undefined;
@@ -50,6 +51,9 @@ export type HomeStackParamList = {
     CreateAddMembersScreen: {
         name: string;
         personal: boolean;
+    };
+    JoinStickerPackScreen: {
+        stickerPackId: string;
     };
 };
 
@@ -183,6 +187,11 @@ const HomeStackScreen = () => (
             component={CreateAddMembersScreen}
             options={{ title: "Create Sticker Pack", headerBackTitle: " " }}
         />
+        <HomeStack.Screen
+            name="JoinStickerPackScreen"
+            component={JoinStickerPackScreen}
+            options={{ title: "Join Sticker Pack", headerBackTitle: " " }}
+        />
     </HomeStack.Navigator>
 );
 
@@ -264,7 +273,7 @@ export const AppNavigator = (): React.ReactElement => {
                         SharedPacks: {
                             screens: {
                                 initialRouteName: "SharedPacks",
-                                StickerPackDetailScreen: "pack/:stickerPackId",
+                                JoinStickerPackScreen: "pack/:stickerPackId",
                             },
                         },
                     },
