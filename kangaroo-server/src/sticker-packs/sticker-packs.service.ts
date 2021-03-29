@@ -9,9 +9,12 @@ import { MulterFile } from "../files/file.validation";
 import { WHATSAPP_MAX_PACK_SIZE } from "../stickers/constants/whatsapp.constants";
 import { CreateStickerDto } from "../stickers/dto/create-sticker.dto";
 import { StickersService } from "../stickers/stickers.service";
+import { CreateInviteDto } from "./dto/create-invite.dto";
 import { CreateStickerPackDto } from "./dto/create-sticker-pack.dto";
+import { InviteRo } from "./dto/invite-ro";
 import { StickerPackRo } from "./dto/sticker-pack-ro.dto";
 import { UpdateStickerPackDto } from "./dto/update-sticker-pack.dto";
+import { StickerPackInvite } from "./entities/sticker-pack-invite.entity";
 import { StickerPack } from "./entities/sticker-pack.entity";
 
 @Injectable()
@@ -19,6 +22,8 @@ export class StickerPacksService {
   constructor(
     @InjectRepository(StickerPack)
     private stickerPackRepository: Repository<StickerPack>,
+    @InjectRepository(StickerPackInvite)
+    private inviteRepository: Repository<StickerPackInvite>,
     private stickersService: StickersService
   ) {}
 
@@ -186,11 +191,6 @@ export class StickerPacksService {
     if (stickerPack.isOwner(userId)) {
       throw new ForbiddenException("You can't join your own sticker pack.");
     }
-    if (!stickerPack.isOwner(userId) && stickerPack.personal) {
-      throw new ForbiddenException(
-        "Not allowed to join this private sticker pack."
-      );
-    }
     if (stickerPack.isMember(userId)) {
       throw new ForbiddenException("You already joined this sticker pack.");
     }
@@ -307,5 +307,129 @@ export class StickerPacksService {
     await this.stickerPackRepository.save(stickerPack);
 
     return;
+  }
+
+  async getInvites(id: string, userId: string): Promise<InviteRo[]> {
+    const stickerPack = await this.stickerPackRepository.findOne({
+      where: { id },
+      relations: ["author"],
+    });
+    if (!stickerPack) {
+      throw new NotFoundException();
+    }
+
+    if (!stickerPack.isOwner(userId)) {
+      throw new ForbiddenException("Only the owner can see invites.");
+    }
+
+    const invites = await this.inviteRepository.find({
+      where: { stickerPack: { id } },
+    });
+
+    // Delete expired invites.
+    const currentTime = new Date();
+    if (invites && invites.length > 0) {
+      const expiredInvites = invites.filter(
+        (invite) => invite.expireTime && currentTime > invite.expireTime
+      );
+      if (expiredInvites.length > 0) {
+        await this.inviteRepository.delete(
+          expiredInvites.map((invite) => invite.id)
+        );
+      }
+    }
+
+    const freshInvites = await this.inviteRepository.find({
+      where: { stickerPack: { id } },
+    });
+
+    return freshInvites.map((invite) => invite.toRO());
+  }
+
+  async createInvite(
+    id: string,
+    userId: string,
+    createInviteDto: CreateInviteDto
+  ): Promise<InviteRo> {
+    const stickerPack = await this.stickerPackRepository.findOne({
+      where: { id },
+      relations: ["author"],
+    });
+    if (!stickerPack) {
+      throw new NotFoundException();
+    }
+
+    if (!stickerPack.isOwner(userId)) {
+      throw new ForbiddenException("Only the owner can make invite links.");
+    }
+
+    const currentTime = new Date();
+    if (
+      createInviteDto.expireTime &&
+      currentTime > new Date(createInviteDto.expireTime)
+    ) {
+      throw new ForbiddenException("Expire time should be set in the future.");
+    }
+
+    const expireTime = createInviteDto.expireTime
+      ? createInviteDto.expireTime
+      : null;
+
+    const invite = this.inviteRepository.create({
+      expireTime: expireTime,
+      stickerPack: { id },
+    });
+
+    await this.inviteRepository.save(invite);
+    return invite.toRO();
+  }
+
+  async removeInvite(
+    id: string,
+    inviteId: string,
+    userId: string
+  ): Promise<InviteRo> {
+    const stickerPack = await this.stickerPackRepository.findOne({
+      where: { id },
+      relations: ["author"],
+    });
+    if (!stickerPack) {
+      throw new NotFoundException();
+    }
+
+    if (!stickerPack.isOwner(userId)) {
+      throw new ForbiddenException("Only the owner can delete invites.");
+    }
+
+    const invite = await this.inviteRepository.findOne({
+      where: { id: inviteId },
+    });
+
+    if (!invite) {
+      throw new NotFoundException("This invite does not exist.");
+    }
+
+    await this.inviteRepository.delete(inviteId);
+
+    return invite.toRO();
+  }
+
+  async useInvite(inviteId: string, userId: string): Promise<StickerPackRo> {
+    const invite = await this.inviteRepository.findOne({
+      where: { id: inviteId },
+      relations: ["stickerPack"],
+    });
+
+    if (!invite) {
+      throw new NotFoundException("This invite does not exist.");
+    }
+
+    const currentTime = new Date();
+    if (invite.expireTime && currentTime > invite.expireTime) {
+      await this.inviteRepository.delete(inviteId);
+      throw new ForbiddenException("This invite has expired.");
+    }
+
+    return await this.joinStickerPack(invite.stickerPack.id, userId);
   }
 }
