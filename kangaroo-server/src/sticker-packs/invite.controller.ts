@@ -23,4 +23,15 @@ export class InviteController {
   ): Promise<StickerPackRo> {
     return await this.stickerPacksService.useInvite(inviteId, user.id);
   }
+
+  @ApiOperation({
+    summary: "View preview of sticker pack from invite.",
+  })
+  @Get(":inviteId/preview")
+  async previewInvite(
+    @Param("inviteId") inviteId: string,
+    @User() user: UserRo
+  ): Promise<StickerPackRo> {
+    return await this.stickerPacksService.previewInvite(inviteId);
+  }
 }

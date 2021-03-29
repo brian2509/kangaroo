@@ -432,4 +432,26 @@ export class StickerPacksService {
 
     return await this.joinStickerPack(invite.stickerPack.id, userId);
   }
+
+  async previewInvite(inviteId: string): Promise<StickerPackRo> {
+    const invite = await this.inviteRepository.findOne({
+      where: { id: inviteId },
+      relations: ["stickerPack"],
+    });
+
+    if (!invite) {
+      throw new NotFoundException("This invite does not exist.");
+    }
+
+    const currentTime = new Date();
+    if (invite.expireTime && currentTime > invite.expireTime) {
+      await this.inviteRepository.delete(inviteId);
+      throw new ForbiddenException("This invite has expired.");
+    }
+
+    const stickerPack = await this.stickerPackRepository.findOne(
+      invite.stickerPack.id
+    );
+    return stickerPack.toRO();
+  }
 }
