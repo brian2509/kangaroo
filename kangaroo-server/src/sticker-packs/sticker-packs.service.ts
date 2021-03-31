@@ -194,14 +194,17 @@ export class StickerPacksService {
     if (stickerPack.isMember(userId)) {
       throw new ForbiddenException("You already joined this sticker pack.");
     }
+
     const newStickerPack = {
       ...stickerPack,
       members: [...stickerPack.members, { id: userId }],
     };
+
     const result = await this.stickerPackRepository.save(newStickerPack);
     const reFetch = await this.stickerPackRepository.findOne({
       where: { id: result.id },
     });
+
     return reFetch.toRO();
   }
 
@@ -363,6 +366,7 @@ export class StickerPacksService {
       throw new ForbiddenException("Only the owner can make invite links.");
     }
 
+    // Check if the expire date is set in the future.
     const currentTime = new Date();
     if (
       createInviteDto.expireTime &&
@@ -371,6 +375,7 @@ export class StickerPacksService {
       throw new ForbiddenException("Expire time should be set in the future.");
     }
 
+    // If expire time is not given, set it to null (interpreted as infinite later).
     const expireTime = createInviteDto.expireTime
       ? createInviteDto.expireTime
       : null;
@@ -424,6 +429,7 @@ export class StickerPacksService {
       throw new NotFoundException("This invite does not exist.");
     }
 
+    // Check if invite has expired.
     const currentTime = new Date();
     if (invite.expireTime && currentTime > invite.expireTime) {
       await this.inviteRepository.delete(inviteId);
@@ -443,6 +449,7 @@ export class StickerPacksService {
       throw new NotFoundException("This invite does not exist.");
     }
 
+    // Check if invite has expired.
     const currentTime = new Date();
     if (invite.expireTime && currentTime > invite.expireTime) {
       await this.inviteRepository.delete(inviteId);
