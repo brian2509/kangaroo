@@ -426,14 +426,14 @@ export class StickerPacksService {
     });
 
     if (!invite) {
-      throw new NotFoundException("This invite does not exist.");
+      throw new NotFoundException("This invite does not exist/has expired.");
     }
 
     // Check if invite has expired.
     const currentTime = new Date();
     if (invite.expireTime && currentTime > invite.expireTime) {
       await this.inviteRepository.delete(inviteId);
-      throw new ForbiddenException("This invite has expired.");
+      throw new NotFoundException("This invite does not exist/has expired.");
     }
 
     return await this.joinStickerPack(invite.stickerPack.id, userId);
@@ -453,7 +453,7 @@ export class StickerPacksService {
     const currentTime = new Date();
     if (invite.expireTime && currentTime > invite.expireTime) {
       await this.inviteRepository.delete(inviteId);
-      throw new ForbiddenException("This invite has expired.");
+      throw new NotFoundException("This invite does not exist/has expired.");
     }
 
     const stickerPack = await this.stickerPackRepository.findOne(
