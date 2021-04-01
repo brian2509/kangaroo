@@ -1,7 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 /**
- * Giraffe Server
+ * Kangaroo Server
  * In order to interact with the API from this documentation alone follow the following steps: 1. Register at the register route. 2. Login using the credentials at the login route. 3. Get the `access_token` from the response and enter it in the Authorization formk. 
  *
  * The version of the OpenAPI document: 1.0
@@ -21,9 +21,13 @@ import { DUMMY_BASE_URL, assertParamExists, setApiKeyToObject, setBasicAuthToObj
 // @ts-ignore
 import { BASE_PATH, COLLECTION_FORMATS, RequestArgs, BaseAPI, RequiredError } from '../base';
 // @ts-ignore
+import { CreateInviteDto } from '../models';
+// @ts-ignore
 import { CreateStickerDto } from '../models';
 // @ts-ignore
 import { CreateStickerPackDto } from '../models';
+// @ts-ignore
+import { InviteRoDto } from '../models';
 // @ts-ignore
 import { StickerPackRo } from '../models';
 // @ts-ignore
@@ -114,6 +118,50 @@ export const StickerPacksApiAxiosParamCreator = function (configuration?: Config
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
             localVarRequestOptions.data = serializeDataIfNeeded(createStickerPackDto, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Create invite for a sticker pack. If no expire time is set, the time is infinite.
+         * @param {string} id 
+         * @param {CreateInviteDto} createInviteDto 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createInvite: async (id: string, createInviteDto: CreateInviteDto, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            assertParamExists('createInvite', 'id', id)
+            // verify required parameter 'createInviteDto' is not null or undefined
+            assertParamExists('createInvite', 'createInviteDto', createInviteDto)
+            const localVarPath = `/api/sticker-packs/{id}/invites`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication bearer required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(createInviteDto, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -236,15 +284,15 @@ export const StickerPacksApiAxiosParamCreator = function (configuration?: Config
         },
         /**
          * 
-         * @summary Join a sticker pack which is public.
+         * @summary Get invites for a sticker pack.
          * @param {string} id 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        joinStickerPack: async (id: string, options: any = {}): Promise<RequestArgs> => {
+        getInvites: async (id: string, options: any = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
-            assertParamExists('joinStickerPack', 'id', id)
-            const localVarPath = `/api/sticker-packs/{id}/actions/join`
+            assertParamExists('getInvites', 'id', id)
+            const localVarPath = `/api/sticker-packs/{id}/invites`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -253,7 +301,7 @@ export const StickerPacksApiAxiosParamCreator = function (configuration?: Config
                 baseOptions = configuration.baseOptions;
             }
 
-            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
@@ -464,6 +512,48 @@ export const StickerPacksApiAxiosParamCreator = function (configuration?: Config
         },
         /**
          * 
+         * @summary Remove invite for a sticker pack.
+         * @param {string} id 
+         * @param {string} inviteId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        removeInvite: async (id: string, inviteId: string, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            assertParamExists('removeInvite', 'id', id)
+            // verify required parameter 'inviteId' is not null or undefined
+            assertParamExists('removeInvite', 'inviteId', inviteId)
+            const localVarPath = `/api/sticker-packs/{id}/invites/{inviteId}`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)))
+                .replace(`{${"inviteId"}}`, encodeURIComponent(String(inviteId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication bearer required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
          * @summary Register a unlike for a sticker pack.
          * @param {string} id 
          * @param {*} [options] Override http request option.
@@ -579,6 +669,18 @@ export const StickerPacksApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @summary Create invite for a sticker pack. If no expire time is set, the time is infinite.
+         * @param {string} id 
+         * @param {CreateInviteDto} createInviteDto 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async createInvite(id: string, createInviteDto: CreateInviteDto, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InviteRoDto>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.createInvite(id, createInviteDto, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
          * @summary Remove a sticker to a sticker pack you own or a member of.
          * @param {string} id 
          * @param {string} stickerId 
@@ -612,13 +714,13 @@ export const StickerPacksApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
-         * @summary Join a sticker pack which is public.
+         * @summary Get invites for a sticker pack.
          * @param {string} id 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async joinStickerPack(id: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<StickerPackRo>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.joinStickerPack(id, options);
+        async getInvites(id: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<InviteRoDto>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getInvites(id, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -678,6 +780,18 @@ export const StickerPacksApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @summary Remove invite for a sticker pack.
+         * @param {string} id 
+         * @param {string} inviteId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async removeInvite(id: string, inviteId: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InviteRoDto>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.removeInvite(id, inviteId, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
          * @summary Register a unlike for a sticker pack.
          * @param {string} id 
          * @param {*} [options] Override http request option.
@@ -732,6 +846,17 @@ export const StickerPacksApiFactory = function (configuration?: Configuration, b
         },
         /**
          * 
+         * @summary Create invite for a sticker pack. If no expire time is set, the time is infinite.
+         * @param {string} id 
+         * @param {CreateInviteDto} createInviteDto 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createInvite(id: string, createInviteDto: CreateInviteDto, options?: any): AxiosPromise<InviteRoDto> {
+            return localVarFp.createInvite(id, createInviteDto, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
          * @summary Remove a sticker to a sticker pack you own or a member of.
          * @param {string} id 
          * @param {string} stickerId 
@@ -762,13 +887,13 @@ export const StickerPacksApiFactory = function (configuration?: Configuration, b
         },
         /**
          * 
-         * @summary Join a sticker pack which is public.
+         * @summary Get invites for a sticker pack.
          * @param {string} id 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        joinStickerPack(id: string, options?: any): AxiosPromise<StickerPackRo> {
-            return localVarFp.joinStickerPack(id, options).then((request) => request(axios, basePath));
+        getInvites(id: string, options?: any): AxiosPromise<Array<InviteRoDto>> {
+            return localVarFp.getInvites(id, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -819,6 +944,17 @@ export const StickerPacksApiFactory = function (configuration?: Configuration, b
          */
         remove(id: string, options?: any): AxiosPromise<StickerPackRo> {
             return localVarFp.remove(id, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Remove invite for a sticker pack.
+         * @param {string} id 
+         * @param {string} inviteId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        removeInvite(id: string, inviteId: string, options?: any): AxiosPromise<InviteRoDto> {
+            return localVarFp.removeInvite(id, inviteId, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -878,6 +1014,19 @@ export class StickerPacksApi extends BaseAPI {
 
     /**
      * 
+     * @summary Create invite for a sticker pack. If no expire time is set, the time is infinite.
+     * @param {string} id 
+     * @param {CreateInviteDto} createInviteDto 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof StickerPacksApi
+     */
+    public createInvite(id: string, createInviteDto: CreateInviteDto, options?: any) {
+        return StickerPacksApiFp(this.configuration).createInvite(id, createInviteDto, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
      * @summary Remove a sticker to a sticker pack you own or a member of.
      * @param {string} id 
      * @param {string} stickerId 
@@ -914,14 +1063,14 @@ export class StickerPacksApi extends BaseAPI {
 
     /**
      * 
-     * @summary Join a sticker pack which is public.
+     * @summary Get invites for a sticker pack.
      * @param {string} id 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof StickerPacksApi
      */
-    public joinStickerPack(id: string, options?: any) {
-        return StickerPacksApiFp(this.configuration).joinStickerPack(id, options).then((request) => request(this.axios, this.basePath));
+    public getInvites(id: string, options?: any) {
+        return StickerPacksApiFp(this.configuration).getInvites(id, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -982,6 +1131,19 @@ export class StickerPacksApi extends BaseAPI {
      */
     public remove(id: string, options?: any) {
         return StickerPacksApiFp(this.configuration).remove(id, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Remove invite for a sticker pack.
+     * @param {string} id 
+     * @param {string} inviteId 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof StickerPacksApi
+     */
+    public removeInvite(id: string, inviteId: string, options?: any) {
+        return StickerPacksApiFp(this.configuration).removeInvite(id, inviteId, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

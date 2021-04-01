@@ -1,7 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 /**
- * Giraffe Server
+ * Kangaroo Server
  * In order to interact with the API from this documentation alone follow the following steps: 1. Register at the register route. 2. Login using the credentials at the login route. 3. Get the `access_token` from the response and enter it in the Authorization formk. 
  *
  * The version of the OpenAPI document: 1.0
@@ -91,7 +91,14 @@ export const setSearchParams = function (url: URL, ...objects: any[]) {
     const searchParams = new URLSearchParams(url.search);
     for (const object of objects) {
         for (const key in object) {
-            searchParams.set(key, object[key]);
+            if (Array.isArray(object[key])) {
+                searchParams.delete(key);
+                for (const item of object[key]) {
+                    searchParams.append(key, item);
+                }
+            } else {
+                searchParams.set(key, object[key]);
+            }
         }
     }
     url.search = searchParams.toString();

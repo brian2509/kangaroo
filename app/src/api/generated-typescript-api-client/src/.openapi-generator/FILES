@@ -5,6 +5,7 @@ api.ts
 base.ts
 clients/auth-api.ts
 clients/files-api.ts
+clients/invites-api.ts
 clients/sticker-packs-api.ts
 clients/user-api.ts
 common.ts
@@ -12,9 +13,11 @@ configuration.ts
 git_push.sh
 index.ts
 models/authenticated-check-dto.ts
+models/create-invite-dto.ts
 models/create-sticker-dto.ts
 models/create-sticker-pack-dto.ts
 models/index.ts
+models/invite-ro-dto.ts
 models/jwt-token.ts
 models/login-user-dto.ts
 models/register-user-dto.ts
