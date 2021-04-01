@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Giraffe</string>
+    <string name="sticker_preferences">stickers</string>
 </resources>
