@@ -446,7 +446,7 @@ export class StickerPacksService {
     });
 
     if (!invite) {
-      throw new NotFoundException("This invite does not exist.");
+      throw new NotFoundException("This invite does not exist/has expired.");
     }
 
     // Check if invite has expired.
