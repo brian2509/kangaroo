@@ -16,7 +16,7 @@ export class InviteController {
   @ApiOperation({
     summary: "Use invite for a sticker pack.",
   })
-  @Get(":inviteId")
+  @Get(":inviteId/use")
   async useInvite(
     @Param("inviteId") inviteId: string,
     @User() user: UserRo
