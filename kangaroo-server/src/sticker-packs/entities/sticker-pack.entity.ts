@@ -12,6 +12,7 @@ import {
 import { Sticker } from "../../stickers/entities/sticker.entity";
 import { User } from "../../users/entities/user.entity";
 import { StickerPackRo } from "../dto/sticker-pack-ro.dto";
+import { StickerPackInvite } from "./sticker-pack-invite.entity";
 
 @Entity("stickerpack")
 export class StickerPack {
@@ -55,6 +56,12 @@ export class StickerPack {
 
   @UpdateDateColumn()
   updatedAt: Date;
+
+  @OneToMany(
+    () => StickerPackInvite,
+    (stickerPackInvite) => stickerPackInvite.stickerPack
+  )
+  invites: StickerPackInvite[];
 
   toRO(): StickerPackRo {
     return {

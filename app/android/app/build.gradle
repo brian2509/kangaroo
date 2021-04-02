@@ -134,6 +134,16 @@ android {
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "1.0"
+
+        // Stickers
+        def contentProviderAuthority = applicationId + ".stickers.stickercontentprovider"
+        // Creates a placeholder property to use in the manifest.
+        manifestPlaceholders =
+                [contentProviderAuthority: contentProviderAuthority]
+        // Adds a new field for the authority to the BuildConfig class.
+        buildConfigField("String",
+                "CONTENT_PROVIDER_AUTHORITY",
+                "\"${contentProviderAuthority}\"")
     }
     splits {
         abi {
@@ -178,6 +188,10 @@ android {
 
         }
     }
+
+    aaptOptions {
+        noCompress "webp"
+    }
 }
 
 dependencies {
@@ -207,6 +221,14 @@ dependencies {
     } else {
         implementation jscFlavor
     }
+
+    // Sticker
+    def fresco_version = '2.2.0'
+    implementation "com.facebook.fresco:fresco:$fresco_version"
+    implementation "com.facebook.fresco:webpsupport:$fresco_version"
+    implementation "com.facebook.fresco:animated-webp:$fresco_version"
+    implementation "com.facebook.fresco:animated-base:$fresco_version"
+    implementation 'com.google.code.gson:gson:2.8.6'
 }
 
 // Run this once to be able to run the application with BUCK

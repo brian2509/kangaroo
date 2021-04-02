@@ -6,6 +6,7 @@ export const showToast = (
 ): void => {
     Platform.select({
         android: () => ToastAndroid.show(message, androidToastSize),
+        // TODO: find Toast method for iOS
         default: () => Alert.alert(message),
     })();
 };

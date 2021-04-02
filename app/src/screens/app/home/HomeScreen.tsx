@@ -11,6 +11,8 @@ import { HomeScreenHeader } from "../../../components/home/HomeScreenHeader";
 import { StickerPacksList } from "../../../components/stickerpack/StickerPackList";
 import { sortedStickerPacks } from "../../../util/sorting";
 import { useOwnAndJoinedStickerPacks } from "../../../api/hooks/query/stickerPack";
+import { storeImages } from "../../../util/image_storing";
+import { registerStickerPacks } from "../../..//util/sticker_registration";
 
 type Props = StackScreenProps<HomeStackParamList, "Homescreen">;
 
@@ -23,7 +25,15 @@ export const HomeScreen = ({ navigation }: Props): React.ReactElement => {
         () => queryClient.invalidateQueries(QUERY_KEYS.ownAndJoinedStickerPacks);
     }, [accessToken]);
 
-    const myStickerPacksQuery = useOwnAndJoinedStickerPacks();
+    const ownAndJoinedStickerPacksQuery = useOwnAndJoinedStickerPacks();
+
+    useEffect(() => {
+        // TODO: move this to a more valid location?
+        if (ownAndJoinedStickerPacksQuery.data) {
+            storeImages(ownAndJoinedStickerPacksQuery.data);
+            registerStickerPacks(ownAndJoinedStickerPacksQuery.data);
+        }
+    }, [ownAndJoinedStickerPacksQuery.dataUpdatedAt]);
 
     return (
         <SafeAreaView style={tailwind("flex-1")}>
@@ -32,8 +42,8 @@ export const HomeScreen = ({ navigation }: Props): React.ReactElement => {
                 onLogout={logout}
             />
             <StickerPacksList
-                stickerPacks={sortedStickerPacks(myStickerPacksQuery.data || [])}
-                refreshing={myStickerPacksQuery.isLoading}
+                stickerPacks={sortedStickerPacks(ownAndJoinedStickerPacksQuery.data || [])}
+                refreshing={ownAndJoinedStickerPacksQuery.isLoading}
                 onRefresh={() => queryClient.invalidateQueries(QUERY_KEYS.ownAndJoinedStickerPacks)}
                 onPressStickerPack={(stickerPack: StickerPackRo) => {
                     navigation.navigate("StickerPackDetailScreen", {

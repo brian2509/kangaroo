@@ -16,20 +16,20 @@ import { User } from "../auth/decorators/user.decorator";
 import { JwtAuthGuard } from "../auth/guards/jwt.guard";
 import {
   MulterFile,
-  STICKER_ALL_FILETYPES_ALLOWED,
-  STICKER_MAX_FILE_SIZE_BYTES,
   STICKER_VALIDATION_MULTER_ALL,
 } from "../files/file.validation";
 import {
-  WHATSAPP_ICON_WIDTH_PX,
   WHATSAPP_STICKER_HEIGHT_PX,
   WHATSAPP_STICKER_SIZE_ANIMATED_KB,
-  WHATSAPP_STICKER_SIZE_NON_ANIMATED_KB, WHATSAPP_STICKER_WIDTH_PX,
+  WHATSAPP_STICKER_SIZE_NON_ANIMATED_KB,
+  WHATSAPP_STICKER_WIDTH_PX,
 } from "../stickers/constants/whatsapp.constants";
 import { CreateStickerDto } from "../stickers/dto/create-sticker.dto";
 import { StickerRo } from "../stickers/dto/response-sticker.dto";
 import { UserRo } from "../users/dto/response-user.dto";
+import { CreateInviteDto } from "./dto/create-invite.dto";
 import { CreateStickerPackDto } from "./dto/create-sticker-pack.dto";
+import { InviteRoDto } from "./dto/invite-ro.dto";
 import { StickerPackRo } from "./dto/sticker-pack-ro.dto";
 import { UpdateStickerPackDto } from "./dto/update-sticker-pack.dto";
 import { StickerPacksService } from "./sticker-packs.service";
@@ -132,17 +132,6 @@ export class StickerPacksController {
   }
 
   @ApiOperation({
-    summary: "Join a sticker pack which is public.",
-  })
-  @Post(":id/actions/join")
-  async joinStickerPack(
-    @Param("id") id: string,
-    @User() user: UserRo
-  ): Promise<StickerPackRo> {
-    return this.stickerPacksService.joinStickerPack(id, user.id);
-  }
-
-  @ApiOperation({
     summary: "Leave a sticker pack which you are a member of.",
   })
   @Post(":id/actions/leave")
@@ -187,5 +176,45 @@ export class StickerPacksController {
   async unlikeStickerPack(@Param("id") id: string, @User() user: UserRo) {
     await this.stickerPacksService.unlikeStickerPack(id, user.id);
     return;
+  }
+
+  @ApiOperation({
+    summary: "Get invites for a sticker pack.",
+  })
+  @Get(":id/invites")
+  async getInvites(
+    @Param("id") id: string,
+    @User() user: UserRo
+  ): Promise<InviteRoDto[]> {
+    return await this.stickerPacksService.getInvites(id, user.id);
+  }
+
+  @ApiOperation({
+    summary:
+      "Create invite for a sticker pack. If no expire time is set, the time is infinite.",
+  })
+  @Post(":id/invites")
+  async createInvite(
+    @Param("id") id: string,
+    @User() user: UserRo,
+    @Body() createInviteDto: CreateInviteDto
+  ): Promise<InviteRoDto> {
+    return await this.stickerPacksService.createInvite(
+      id,
+      user.id,
+      createInviteDto
+    );
+  }
+
+  @ApiOperation({
+    summary: "Remove invite for a sticker pack.",
+  })
+  @Delete(":id/invites/:inviteId")
+  async removeInvite(
+    @Param("id") id: string,
+    @Param("inviteId") inviteId: string,
+    @User() user: UserRo
+  ): Promise<InviteRoDto> {
+    return await this.stickerPacksService.removeInvite(id, inviteId, user.id);
   }
 }

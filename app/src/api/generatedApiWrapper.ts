@@ -4,6 +4,7 @@ import {
     AuthApi,
     Configuration,
     StickerPacksApi,
+    InvitesApi,
     UserApi,
 } from "./generated-typescript-api-client/src";
 
@@ -20,4 +21,5 @@ export const api = {
     users: new UserApi(configuration, baseURL, instance),
     auth: new AuthApi(configuration, baseURL, instance),
     stickerPacks: new StickerPacksApi(configuration, baseURL, instance),
+    invites: new InvitesApi(configuration, baseURL, instance),
 };

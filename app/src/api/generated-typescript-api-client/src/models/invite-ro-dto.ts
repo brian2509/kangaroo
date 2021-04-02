@@ -17,15 +17,27 @@
 /**
  * 
  * @export
- * @interface AuthenticatedCheckDto
+ * @interface InviteRoDto
  */
-export interface AuthenticatedCheckDto {
+export interface InviteRoDto {
     /**
      * 
-     * @type {boolean}
-     * @memberof AuthenticatedCheckDto
+     * @type {string}
+     * @memberof InviteRoDto
      */
-    authenticated: boolean;
+    id: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof InviteRoDto
+     */
+    expireTime: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof InviteRoDto
+     */
+    inviteUrl: string;
 }
 
 
