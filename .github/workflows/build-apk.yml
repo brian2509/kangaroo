@@ -1,7 +1,6 @@
 # Based on: https://github.com/realabbas/Github-Actions-React-Native/blob/master/action.yml
 
 name: Build Release APK
-description: "This github action automatically builds the android apk under the artifact section"
 
 on:
   push:
