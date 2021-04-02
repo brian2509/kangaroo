@@ -186,11 +186,11 @@ export const StickerPackScreen = ({ navigation, route }: Props): React.ReactElem
         <Icon style={tw.style("w-6 h-6", { tintColor: props.style.tintColor })} name="plus" />
     );
 
-    const pickAndUploadSticker = async (stickerPackId: string) => {
+    const pickAndUploadSticker = async (stickerPackId: string, isAnimated: boolean) => {
         ImagePicker.openPicker({
-            width: STICKER_FULL_SIZE_PX,
-            height: STICKER_FULL_SIZE_PX,
-            cropping: true,
+            width: !isAnimated ? STICKER_FULL_SIZE_PX : undefined,
+            height: !isAnimated ? STICKER_FULL_SIZE_PX : undefined,
+            cropping: !isAnimated,
             mediaType: "photo",
         })
             .then((image: ImageData) => {
@@ -218,7 +218,7 @@ export const StickerPackScreen = ({ navigation, route }: Props): React.ReactElem
             return;
         }
 
-        pickAndUploadSticker(data.id);
+        pickAndUploadSticker(data.id, data.animated);
     };
 
     const HeaderRight = () => (
