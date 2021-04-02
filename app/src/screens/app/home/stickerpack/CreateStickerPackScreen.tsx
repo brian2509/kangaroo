@@ -27,6 +27,7 @@ type Props = StackScreenProps<HomeStackParamList, "CreateStickerPackScreen">;
 export const CreateStickerPackScreen = ({ navigation }: Props): React.ReactElement => {
     const [stickerPackName, setStickerPackName] = useState("");
     const [stickerPackPrivate, setStickerPackPrivate] = useState(false);
+    const [stickerPackAnimated, setStickerPackAnimated] = useState(false);
 
     const inputValidation = validate.validate({ name: stickerPackName }, constraints);
     const isNameValid = inputValidation !== undefined ? !inputValidation["name"] : true;
@@ -62,6 +63,7 @@ export const CreateStickerPackScreen = ({ navigation }: Props): React.ReactEleme
                                 navigation.navigate("CreateAddMembersScreen", {
                                     name: stickerPackName,
                                     personal: stickerPackPrivate,
+                                    animated: stickerPackAnimated,
                                 });
                             }
                         }}>
