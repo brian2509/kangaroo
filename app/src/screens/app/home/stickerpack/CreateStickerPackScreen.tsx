@@ -34,7 +34,7 @@ export const CreateStickerPackScreen = ({ navigation }: Props): React.ReactEleme
 
     return (
         <SafeAreaView style={tailwind("h-full bg-white p-0")}>
-            <Layout style={tailwind("flex-col p-6 mt-0")}>
+            <Layout style={tailwind("flex-1 flex-col p-6 mt-0")}>
                 <Input
                     size="medium"
                     label="Sticker Pack Name"
@@ -49,13 +49,21 @@ export const CreateStickerPackScreen = ({ navigation }: Props): React.ReactEleme
                     onEndEditing={() => Keyboard.dismiss()}
                     onChangeText={setStickerPackName}
                 />
-                <Layout style={tailwind("flex-row justify-between my-3")}>
+                <Layout style={tailwind("flex-col")}>
                     <CheckBox
-                        style={tailwind("ml-3")}
+                        style={tailwind("my-3")}
+                        checked={stickerPackAnimated}
+                        onChange={setStickerPackAnimated}>
+                        {() => <Text style={tailwind("mx-3 text-xs text-gray-400")}>Animated</Text>}
+                    </CheckBox>
+                    <CheckBox
+                        style={tailwind("mb-3")}
                         checked={stickerPackPrivate}
                         onChange={setStickerPackPrivate}>
                         {() => <Text style={tailwind("mx-3 text-xs text-gray-400")}>Private</Text>}
                     </CheckBox>
+                </Layout>
+                <Layout style={tailwind("flex-1 justify-end")}>
                     <Button
                         style={tailwind("p-0 pl-2 pr-2")}
                         onPress={() => {
