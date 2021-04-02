@@ -1,4 +1,4 @@
-import { DOMAIN_NAME, PORT } from "@env";
+import { API_DOMAIN_NAME } from "@env";
 import axios from "axios";
 import {
     AuthApi,
@@ -7,7 +7,7 @@ import {
     UserApi,
 } from "./generated-typescript-api-client/src";
 
-const baseURL = `${DOMAIN_NAME}:${PORT}`;
+const baseURL = API_DOMAIN_NAME;
 
 export const instance = axios.create({
     baseURL: `${baseURL}/api`,
