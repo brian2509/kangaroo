@@ -1,16 +1,17 @@
 import { StackScreenProps } from "@react-navigation/stack";
 import { Button, Layout, Spinner } from "@ui-kitten/components";
-import React from "react";
+import React, { useEffect } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import tailwind from "tailwind-rn";
-import { useStickerPack } from "../../../../api/hooks/query/stickerPack";
 import { HomeStackParamList } from "../../../../navigation/AppNavigator";
 import tw from "tailwind-react-native-classnames";
 import { StickerPackRo, StickerRo } from "../../../../api/generated-typescript-api-client/src";
 import { ScrollView } from "react-native-gesture-handler";
 import { Text, Image } from "react-native";
-import { useJoinStickerPackMutation } from "../../../../api/hooks/mutations/stickerPack";
 import { useQueryClient } from "react-query";
+import { useInviteMutation } from "../../../../api/hooks/mutations/invites";
+import { useInvitePreview } from "../../../../api/hooks/query/invites";
+import { QUERY_KEYS } from "../../../../constants/ReactQueryKeys";
 
 type StickerPackProps = {
     stickerPack: StickerPackRo;
@@ -70,7 +71,7 @@ interface BodyProps extends StickerPackProps {
 const Body = ({ stickerPack, onJoinStickerPack }: BodyProps) => {
     return (
         <ScrollView style={tailwind("p-4 pt-5")}>
-            <Text style={tailwind("w-full text-center text-4xl font-semibold")}>
+            <Text style={tailwind("w-full text-center text-2xl font-bold py-4 pb-6")}>
                 {stickerPack.name}
             </Text>
             <Layout style={tailwind("flex-row items-end items-baseline")}>
@@ -87,23 +88,26 @@ const Body = ({ stickerPack, onJoinStickerPack }: BodyProps) => {
 
 type Props = StackScreenProps<HomeStackParamList, "JoinStickerPackScreen">;
 export const JoinStickerPackScreen = ({ navigation, route }: Props): React.ReactElement => {
+    const inviteId = route.params.inviteId;
+
     const queryClient = useQueryClient();
 
-    const { data } = useStickerPack(route.params.stickerPackId);
+    useEffect(() => {
+        queryClient.invalidateQueries([QUERY_KEYS.invitePreview, inviteId]);
+    }, [inviteId]);
 
-    const { mutate: joinStickerPack, error } = useJoinStickerPackMutation(queryClient);
+    const { mutate: useInvite, error } = useInviteMutation(queryClient);
+
+    const { data } = useInvitePreview(queryClient, inviteId);
 
     const onJoinStickerPack = async () => {
         if (data == undefined) {
             return;
         }
 
-        joinStickerPack(data.id, {
+        useInvite(inviteId, {
             onSuccess: () => {
                 navigation.pop();
-            },
-            onError: (error) => {
-                console.log({ error });
             },
         });
     };

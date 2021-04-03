@@ -58,7 +58,7 @@ export type HomeStackParamList = {
         personal: boolean;
     };
     JoinStickerPackScreen: {
-        stickerPackId: string;
+        inviteId: string;
     };
 };
 
@@ -283,7 +283,7 @@ export const AppNavigator = (): React.ReactElement => {
                         SharedPacks: {
                             screens: {
                                 initialRouteName: "SharedPacks",
-                                JoinStickerPackScreen: "pack/:stickerPackId",
+                                JoinStickerPackScreen: "invite/:inviteId",
                             },
                         },
                     },

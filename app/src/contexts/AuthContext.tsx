@@ -38,6 +38,11 @@ export const AuthContextProvider = ({ children }: any): React.ReactElement => {
     }, []);
 
     useEffect(() => {
+        if (accessToken == undefined) {
+            setIsAuthenticated(false);
+            return;
+        }
+
         api.auth
             .testAuth()
             .then(() => setIsAuthenticated(true))

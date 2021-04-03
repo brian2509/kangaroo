@@ -35,13 +35,3 @@ export const useUploadStickerMutation = (queryClient: QueryClient) =>
             queryClient.invalidateQueries(QUERY_KEYS.ownAndJoinedStickerPacks);
         },
     });
-
-const joinStickerPack = async (stickerPackId: string) => {
-    const { data } = await api.stickerPacks.joinStickerPack(stickerPackId);
-    return data;
-};
-
-export const useJoinStickerPackMutation = (queryClient: QueryClient) =>
-    useMutation<StickerPackRo, any, string, unknown>(joinStickerPack, {
-        onSuccess: () => queryClient.invalidateQueries(QUERY_KEYS.ownAndJoinedStickerPacks),
-    });

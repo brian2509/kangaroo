@@ -4,7 +4,7 @@ import { StackScreenProps } from "@react-navigation/stack";
 import { HomeStackParamList } from "../../../../navigation/AppNavigator";
 import tailwind from "tailwind-rn";
 import tw from "tailwind-react-native-classnames";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { StickerPackRo, StickerRo } from "../../../../api/generated-typescript-api-client/src";
 import { CoverStickerImage } from "../../../../components/common/CoverStickerImage";
 import ImagePicker, { Image as ImageData } from "react-native-image-crop-picker";
@@ -27,6 +27,7 @@ import {
     PUBLISHER_WEBSITE,
     STICKER_FILE_EXTENSION,
 } from "../../../../constants/StickerInfo";
+import { useCreateInviteMutation } from "../../../../api/hooks/mutations/invites";
 
 // TODO make this a valid module.
 const { WhatsAppStickersModule } = NativeModules;
@@ -89,7 +90,11 @@ class AuthorStickersView extends React.Component<StickerPackProps> {
     }
 }
 
-class Body extends React.Component<StickerPackProps> {
+interface BodyProps extends StickerPackProps {
+    onCreateAndShareInvite: () => Promise<void>;
+}
+
+class Body extends React.Component<BodyProps> {
     render() {
         return (
             <ScrollView style={tailwind("p-4 pt-3")}>
@@ -103,14 +108,8 @@ class Body extends React.Component<StickerPackProps> {
                     stickerPack={this.props.stickerPack}
                     onStickerPress={this.props.onStickerPress}
                 />
-                <Button
-                    style={tailwind("my-8")}
-                    onPress={() => {
-                        const shareUrl = `https://www.stickr.cf/pack/${this.props.stickerPack.id}`;
-                        Clipboard.setString(shareUrl);
-                        showToast("Share link copied to clipboard!");
-                    }}>
-                    Share!
+                <Button style={tailwind("my-8")} onPress={this.props.onCreateAndShareInvite}>
+                    Share invite!
                 </Button>
             </ScrollView>
         );
@@ -146,6 +145,10 @@ export const StickerPackScreen = ({ navigation, route }: Props): React.ReactElem
     const { data } = useStickerPack(route.params.stickerPackId);
 
     const uploadStickerMutation = useUploadStickerMutation(queryClient);
+
+    const createInviteMutation = useCreateInviteMutation(route.params.stickerPackId);
+
+    const [inviteUrl, setInviteUrl] = useState<string>("");
 
     useEffect(() => {
         navigation.setOptions({
@@ -283,6 +286,24 @@ export const StickerPackScreen = ({ navigation, route }: Props): React.ReactElem
         // See: https://github.com/WhatsApp/stickers/tree/master/Android#check-if-pack-is-added-optional
     };
 
+    const onCreateAndShareInvite = async () => {
+        createInviteMutation.mutate(
+            {}, // TODO: Add expiry date
+            {
+                onSuccess: (data) => {
+                    setInviteUrl(data.inviteUrl);
+                    Clipboard.setString(data.inviteUrl);
+                    showToast("Share link copied to clipboard!");
+                },
+                onError: (err) => {
+                    if (err?.response?.data?.statusCode == 403) {
+                        showToast("Unauthorized! Only the owner can create an invite");
+                    }
+                },
+            },
+        );
+    };
+
     return (
         <SafeAreaView style={tailwind("flex-1 bg-white")}>
             {data == undefined ? (
@@ -294,7 +315,12 @@ export const StickerPackScreen = ({ navigation, route }: Props): React.ReactElem
                     <Button status={"success"} onPress={onAddToWhatsapp}>
                         Add to WhatsApp!
                     </Button>
-                    <Body stickerPack={data} onStickerPress={onStickerPress} />
+                    <Text>{inviteUrl}</Text>
+                    <Body
+                        stickerPack={data}
+                        onStickerPress={onStickerPress}
+                        onCreateAndShareInvite={onCreateAndShareInvite}
+                    />
                     <ToolBar stickerPack={data} />
                 </>
             )}
