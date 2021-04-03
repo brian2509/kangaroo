@@ -53,7 +53,7 @@ export const StickerPackManageScreen = ({ navigation, route }: Props): React.Rea
                     return <></>;
                 }
 
-                return <Text style={tw`text-gray-500 text-xs pr-3`}>Owner</Text>;
+                return <Text style={tw`text-gray-500 text-xs pr-3`}>Author</Text>;
             }}
         />
     );
