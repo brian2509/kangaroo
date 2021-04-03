@@ -14,11 +14,15 @@ import React, { useEffect, useState } from "react";
 import { SafeAreaView, TouchableOpacity } from "react-native";
 import { HomeStackParamList } from "src/navigation/AppNavigator";
 import tw from "tailwind-react-native-classnames";
+import { UserRo } from "../../../../api/generated-typescript-api-client/src";
+import { fullMemberList, isAuthor } from "../../../../util/stickerpack_utils";
 
 type Props = StackScreenProps<HomeStackParamList, "StickerPackManageScreen">;
-export const StickerPackManageScreen = ({ navigation }: Props): React.ReactElement => {
-    const [visible, setVisible] = useState<boolean>(false);
-    const [clickedMember, setClickedMember] = useState<string>("loading");
+export const StickerPackManageScreen = ({ navigation, route }: Props): React.ReactElement => {
+    const [modalVisible, setModalVisible] = useState<boolean>(false);
+    const [clickedMember, setClickedMember] = useState<UserRo | undefined>();
+
+    const { stickerPack } = route.params;
 
     const HeaderRight = () => (
         <Layout style={tw`flex-row mr-4`}>
@@ -34,53 +38,52 @@ export const StickerPackManageScreen = ({ navigation }: Props): React.ReactEleme
         });
     }, []);
 
-    const renderItem = ({ item }: { item: any }) => (
+    const renderItem = ({ item }: { item: UserRo }) => (
         <ListItem
             onPress={() => {
-                setVisible(true);
-                setClickedMember(item.title);
+                setClickedMember(item);
+                setModalVisible(true);
             }}
-            title={`${item.title}`}
-            description={`${item.description}`}
+            title={`${item.username}`}
+            description={`# stickers`}
+            // description={item.id}
             accessoryLeft={(props) => <Icon {...props} name="person" />}
-            accessoryRight={() => <Text style={tw`text-gray-500 text-xs pr-3`}>Admin</Text>}
+            accessoryRight={() => {
+                if (!isAuthor(stickerPack, item)) {
+                    return <></>;
+                }
+
+                return <Text style={tw`text-gray-500 text-xs pr-3`}>Owner</Text>;
+            }}
         />
     );
 
-    const data = [
-        {
-            title: "Willem Alexander",
-            description: "3 Stickers",
-        },
-        {
-            title: "Rowdy Planje",
-            description: "5 Stickers",
-        },
-        {
-            title: "Mika Brie",
-            description: "2 Stickers",
-        },
-    ];
-
     return (
         <SafeAreaView style={tw`flex justify-center h-full bg-white`}>
-            <List data={data} ItemSeparatorComponent={Divider} renderItem={renderItem} />
+            <List
+                data={fullMemberList(stickerPack)}
+                ItemSeparatorComponent={Divider}
+                renderItem={renderItem}
+            />
             <Modal
-                visible={visible}
+                visible={modalVisible}
                 style={tw`w-60`}
                 backdropStyle={{
                     backgroundColor: "rgba(0, 0, 0, 0.5)",
                 }}
-                onBackdropPress={() => setVisible(false)}>
+                onBackdropPress={() => setModalVisible(false)}>
                 <Card
                     disabled={true}
                     header={() => (
                         <Text style={tw`p-3 text-xs text-gray-500 text-center`}>
-                            {clickedMember}
+                            {clickedMember?.username}
                         </Text>
                     )}
                     footer={() => (
-                        <Button size="medium" appearance="ghost" onPress={() => setVisible(false)}>
+                        <Button
+                            size="medium"
+                            appearance="ghost"
+                            onPress={() => setModalVisible(false)}>
                             Close
                         </Button>
                     )}>

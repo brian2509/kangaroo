@@ -25,6 +25,7 @@ import {
     PUBLISHER_WEBSITE,
     STICKER_FILE_EXTENSION,
 } from "../../../../constants/StickerInfo";
+import { fullMemberList } from "../../../../util/stickerpack_utils";
 
 // TODO make this a valid module.
 const { WhatsAppStickersModule } = NativeModules;
@@ -169,11 +170,13 @@ export const StickerPackScreen = ({ navigation, route }: Props): React.ReactElem
                         style={tw.style("w-9 h-9 mr-3 rounded-full")}
                         onStickerPress={onStickerPress}
                     />
-                    <TouchableOpacity onPress={onHeaderPress}>
+                    <TouchableOpacity style={tw`w-full`} onPress={onHeaderPress}>
                         <Layout style={tw`flex-col`}>
                             <Text>{data.name}</Text>
-                            <Text style={tw`text-gray-500 text-xs`}>
-                                Willem, Brian, Mika, Rowdy
+                            <Text style={tw`text-gray-500 text-xs`} numberOfLines={1}>
+                                {fullMemberList(data)
+                                    .map((member) => member.username)
+                                    .join(", ")}
                             </Text>
                         </Layout>
                     </TouchableOpacity>
@@ -181,7 +184,6 @@ export const StickerPackScreen = ({ navigation, route }: Props): React.ReactElem
             )}
         </Layout>
     );
-
     const AddIcon = (props: any) => (
         <Icon style={tw.style("w-6 h-6", { tintColor: props.style.tintColor })} name="plus" />
     );
