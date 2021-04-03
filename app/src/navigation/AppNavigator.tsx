@@ -24,6 +24,7 @@ import { SettingsUpdateScreen } from "../screens/app/home/SettingsUpdateScreen";
 import { CreateAddMembersScreen } from "../screens/app/home/stickerpack/CreateAddMembersScreen";
 import { JoinStickerPackScreen } from "../screens/app/home/stickerpack/JoinStickerPackScreen";
 import tw from "tailwind-react-native-classnames";
+import { DEEPLINK_SITE_DOMAIN } from "../constants/Deeplinking";
 
 export type AuthStackParamList = {
     Login: undefined;
@@ -275,7 +276,7 @@ export const AppNavigator = (): React.ReactElement => {
     }
 
     const linkingOptions: LinkingOptions = {
-        prefixes: ["kangaroo://", "https://www.stickr.cf"],
+        prefixes: ["kangaroo://", DEEPLINK_SITE_DOMAIN],
         config: {
             screens: {
                 App: {

@@ -29,6 +29,7 @@ import {
 } from "../../../../constants/StickerInfo";
 import { useCreateInviteMutation } from "../../../../api/hooks/mutations/invites";
 import { MAX_STICKERS_PER_PACK } from "../../../../constants/StickerPack";
+import { createInviteUrl } from "../../../../util/invites";
 
 // TODO make this a valid module.
 const { WhatsAppStickersModule } = NativeModules;
@@ -281,7 +282,8 @@ export const StickerPackScreen = ({ navigation, route }: Props): React.ReactElem
             {}, // TODO: Add expiry date
             {
                 onSuccess: (data) => {
-                    Clipboard.setString(data.inviteUrl);
+                    const inviteUrl = createInviteUrl(data);
+                    Clipboard.setString(inviteUrl);
                     showToast("Share link copied to clipboard!");
                 },
                 onError: (err) => {
