@@ -171,10 +171,8 @@ export const StickerPackScreen = ({ navigation, route }: Props): React.ReactElem
                     <TouchableOpacity onPress={onHeaderPress}>
                         <Layout style={tw`flex-col`}>
                             <Text>{stickerPack.name}</Text>
-                            <Text style={tw`text-gray-500 text-xs`} numberOfLines={1}>
-                                {`${stickerPack.members.length + 1} Member${
-                                    stickerPack.members.length + 1 == 1 ? "" : "s"
-                                }`}
+                            <Text style={tw`text-gray-500 text-xs`}>
+                                Willem, Brian, Mika, Rowdy
                             </Text>
                         </Layout>
                     </TouchableOpacity>
