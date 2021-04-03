@@ -14,9 +14,8 @@ const useInvite = async (inviteId: string) => {
 
 export const useInviteMutation = (queryClient: QueryClient) =>
     useMutation<StickerPackRo, any, string, unknown>(useInvite, {
-        onSuccess: (data) => {
+        onSuccess: () => {
             queryClient.invalidateQueries(QUERY_KEYS.ownAndJoinedStickerPacks);
-            queryClient.invalidateQueries([QUERY_KEYS.stickerPack, data.id]);
         },
     });
 
