@@ -8,6 +8,7 @@ export class StickerPackRo {
   animated: boolean;
   stickers: StickerRo[];
   members: UserRo[];
+  author: UserRo;
   views: number;
   likes: number;
   createdAt: Date;
