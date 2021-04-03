@@ -13,6 +13,7 @@ import { QueryClient, QueryClientProvider } from "react-query";
 // React query sets long timers for cache invalidation, we don't want to see these warnings
 import { LogBox } from "react-native";
 import { logErrorResponse } from "./src/util/logging";
+import { UserContextProvider } from "./src/contexts/UserContext";
 LogBox.ignoreLogs(["Setting a timer"]);
 
 const queryClient = new QueryClient({
@@ -33,7 +34,9 @@ export default function App(): React.ReactFragment {
             <ApplicationProvider {...eva} theme={eva.light}>
                 <QueryClientProvider client={queryClient}>
                     <AuthContextProvider>
-                        <AppNavigator />
+                        <UserContextProvider>
+                            <AppNavigator />
+                        </UserContextProvider>
                     </AuthContextProvider>
                 </QueryClientProvider>
             </ApplicationProvider>
