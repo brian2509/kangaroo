@@ -107,27 +107,23 @@ const Body = ({ stickerPack, onStickerPress, onCreateAndShareInvite }: BodyProps
     );
 };
 
-class ToolBar extends React.Component<StickerPackProps> {
-    render() {
-        return (
-            <Layout style={tailwind("flex-col p-4 pt-2 pb-2 border-b-2 border-t border-gray-300")}>
-                <Layout style={tailwind("flex-row justify-between w-1/3 pb-1")}>
-                    <Icon name="heart-outline" fill="gray" width={25} height={25} />
-                    <Icon name="paper-plane-outline" fill="gray" width={25} height={25} />
-                    <Icon name="upload" fill="gray" width={25} height={25} />
-                </Layout>
-                <Layout style={tailwind("flex-row pt-1")}>
-                    <Text
-                        style={tw`text-xs font-semibold`}>{`${this.props.stickerPack.views} Views`}</Text>
-                    <Text
-                        style={tw`text-xs pl-3 font-semibold`}>{`${this.props.stickerPack.likes} Likes`}</Text>
-                    <Text
-                        style={tw`text-xs pl-3 font-semibold`}>{`${this.props.stickerPack.likes} Followers`}</Text>
-                </Layout>
+const ToolBar = ({ stickerPack }: StickerPackProps) => {
+    return (
+        <Layout style={tailwind("flex-col p-4 pt-2 pb-2 border-b-2 border-t border-gray-300")}>
+            <Layout style={tailwind("flex-row justify-between w-1/3 pb-1")}>
+                <Icon name="heart-outline" fill="gray" width={25} height={25} />
+                <Icon name="paper-plane-outline" fill="gray" width={25} height={25} />
+                <Icon name="upload" fill="gray" width={25} height={25} />
             </Layout>
-        );
-    }
-}
+            <Layout style={tailwind("flex-row pt-1")}>
+                <Text style={tw`text-xs font-semibold`}>{`${stickerPack.views} Views`}</Text>
+                <Text style={tw`text-xs pl-3 font-semibold`}>{`${stickerPack.likes} Likes`}</Text>
+                <Text
+                    style={tw`text-xs pl-3 font-semibold`}>{`${stickerPack.likes} Followers`}</Text>
+            </Layout>
+        </Layout>
+    );
+};
 
 type Props = StackScreenProps<HomeStackParamList, "StickerPackDetailScreen">;
 export const StickerPackScreen = ({ navigation, route }: Props): React.ReactElement => {
