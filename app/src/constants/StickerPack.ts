@@ -1,1 +1,2 @@
 export const ACCOUNT_MAX_PREVIEW_STICKERS = 8;
+export const MAX_STICKERS_PER_PACK = 30;

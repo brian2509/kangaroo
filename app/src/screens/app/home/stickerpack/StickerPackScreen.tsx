@@ -28,6 +28,7 @@ import {
     STICKER_FILE_EXTENSION,
 } from "../../../../constants/StickerInfo";
 import { useCreateInviteMutation } from "../../../../api/hooks/mutations/invites";
+import { MAX_STICKERS_PER_PACK } from "../../../../constants/StickerPack";
 
 // TODO make this a valid module.
 const { WhatsAppStickersModule } = NativeModules;
@@ -37,8 +38,8 @@ type StickerPackProps = {
     onStickerPress?: (sticker: StickerRo) => void;
 };
 
-class AuthorStickersView extends React.Component<StickerPackProps> {
-    renderSticker = (sticker: StickerRo): JSX.Element => {
+const AuthorStickersView = ({ stickerPack, onStickerPress }: StickerPackProps) => {
+    const renderSticker = (sticker: StickerRo): JSX.Element => {
         return (
             <TouchableOpacity
                 key={sticker.id}
@@ -49,9 +50,7 @@ class AuthorStickersView extends React.Component<StickerPackProps> {
                     marginBottom: "3.5%",
                 }}
                 onPress={() => {
-                    if (this.props.onStickerPress) {
-                        this.props.onStickerPress(sticker);
-                    }
+                    onStickerPress?.(sticker);
                 }}>
                 <Image
                     style={tw.style("rounded-lg", {
@@ -67,54 +66,45 @@ class AuthorStickersView extends React.Component<StickerPackProps> {
         );
     };
 
-    render() {
-        return (
-            <Layout style={tailwind("flex-col p-2 pt-1")}>
-                <Layout style={tailwind("flex-row flex-grow justify-between items-baseline")}>
-                    <Text style={tailwind("font-semibold mr-4")}>
-                        Willem Alexander
-                        <Text style={tailwind("text-xs text-gray-500")}>
-                            {" "}
-                            ({this.props.stickerPack.stickers.length})
-                        </Text>
+    return (
+        <Layout style={tailwind("flex-col p-2 pt-1")}>
+            <Layout style={tailwind("flex-row flex-grow justify-between items-baseline")}>
+                <Text style={tailwind("font-semibold mr-4")}>
+                    Willem Alexander
+                    <Text style={tailwind("text-xs text-gray-500")}>
+                        {" "}
+                        ({stickerPack.stickers.length})
                     </Text>
-                    <Text style={tailwind("text-gray-500 pt-3 text-xs")}>Wed 4:20</Text>
-                </Layout>
-                <Layout style={tw`flex-row flex-wrap pt-3`}>
-                    {this.props.stickerPack.stickers.map((sticker) => {
-                        return this.renderSticker(sticker);
-                    })}
-                </Layout>
+                </Text>
+                <Text style={tailwind("text-gray-500 pt-3 text-xs")}>Wed 4:20</Text>
             </Layout>
-        );
-    }
-}
+            <Layout style={tw`flex-row flex-wrap pt-3`}>
+                {stickerPack.stickers.map(renderSticker)}
+            </Layout>
+        </Layout>
+    );
+};
 
 interface BodyProps extends StickerPackProps {
     onCreateAndShareInvite: () => Promise<void>;
 }
 
-class Body extends React.Component<BodyProps> {
-    render() {
-        return (
-            <ScrollView style={tailwind("p-4 pt-3")}>
-                <Layout style={tailwind("flex-row items-end items-baseline")}>
-                    <Text style={tailwind("text-xl font-semibold mr-4")}>Stickers</Text>
-                    <Text style={tailwind("text-gray-500 h-full pt-3 text-sm")}>
-                        {this.props.stickerPack.stickers.length}/30
-                    </Text>
-                </Layout>
-                <AuthorStickersView
-                    stickerPack={this.props.stickerPack}
-                    onStickerPress={this.props.onStickerPress}
-                />
-                <Button style={tailwind("my-8")} onPress={this.props.onCreateAndShareInvite}>
-                    Share invite!
-                </Button>
-            </ScrollView>
-        );
-    }
-}
+const Body = ({ stickerPack, onStickerPress, onCreateAndShareInvite }: BodyProps) => {
+    return (
+        <ScrollView style={tailwind("p-4 pt-3")}>
+            <Layout style={tailwind("flex-row items-end items-baseline")}>
+                <Text style={tailwind("text-xl font-semibold mr-4")}>Stickers</Text>
+                <Text style={tailwind("text-gray-500 h-full pt-3 text-sm")}>
+                    {stickerPack.stickers.length}/{MAX_STICKERS_PER_PACK}
+                </Text>
+            </Layout>
+            <AuthorStickersView stickerPack={stickerPack} onStickerPress={onStickerPress} />
+            <Button style={tailwind("my-8")} onPress={onCreateAndShareInvite}>
+                Share invite!
+            </Button>
+        </ScrollView>
+    );
+};
 
 class ToolBar extends React.Component<StickerPackProps> {
     render() {
@@ -142,13 +132,11 @@ type Props = StackScreenProps<HomeStackParamList, "StickerPackDetailScreen">;
 export const StickerPackScreen = ({ navigation, route }: Props): React.ReactElement => {
     const queryClient = useQueryClient();
 
-    const { data } = useStickerPack(route.params.stickerPackId);
+    const { data: stickerPack } = useStickerPack(route.params.stickerPackId);
 
     const uploadStickerMutation = useUploadStickerMutation(queryClient);
 
     const createInviteMutation = useCreateInviteMutation(route.params.stickerPackId);
-
-    const [inviteUrl, setInviteUrl] = useState<string>("");
 
     useEffect(() => {
         navigation.setOptions({
@@ -156,39 +144,39 @@ export const StickerPackScreen = ({ navigation, route }: Props): React.ReactElem
             headerTitleAlign: "left",
             headerRight: HeaderRight,
         });
-    }, [data]);
+    }, [stickerPack]);
 
-    const onStickerPress = (data: StickerRo): void => {
-        navigation.navigate("StickerScreen", { sticker: data });
+    const onStickerPress = (sticker: StickerRo): void => {
+        navigation.navigate("StickerScreen", { sticker });
     };
 
     const onHeaderPress = () => {
-        if (data == undefined) {
+        if (stickerPack == undefined) {
             return;
         }
 
         navigation.navigate("StickerPackManageScreen", {
-            stickerPack: data,
+            stickerPack,
         });
     };
 
     const HeaderTitle = () => (
         <Layout style={tw`flex-row left-0`}>
-            {data == undefined ? (
+            {stickerPack == undefined ? (
                 <PlaceholderImage style={tw.style("w-9 h-9 mr-3 rounded-full")} />
             ) : (
                 <>
                     <CoverStickerImage
-                        stickerPack={data}
+                        stickerPack={stickerPack}
                         style={tw.style("w-9 h-9 mr-3 rounded-full")}
                         onStickerPress={onStickerPress}
                     />
                     <TouchableOpacity onPress={onHeaderPress}>
                         <Layout style={tw`flex-col`}>
-                            <Text>{data.name}</Text>
+                            <Text>{stickerPack.name}</Text>
                             <Text style={tw`text-gray-500 text-xs`} numberOfLines={1}>
-                                {`${data.members.length + 1} Member${
-                                    data.members.length + 1 == 1 ? "" : "s"
+                                {`${stickerPack.members.length + 1} Member${
+                                    stickerPack.members.length + 1 == 1 ? "" : "s"
                                 }`}
                             </Text>
                         </Layout>
@@ -230,17 +218,17 @@ export const StickerPackScreen = ({ navigation, route }: Props): React.ReactElem
     };
 
     const onPressUpload = async () => {
-        if (data == undefined) {
+        if (stickerPack == undefined) {
             return;
         }
 
-        pickAndUploadSticker(data.id);
+        pickAndUploadSticker(stickerPack.id);
     };
 
     const HeaderRight = () => (
         <Layout style={tw`flex-row mr-4`}>
             <Button
-                disabled={data == undefined}
+                disabled={stickerPack == undefined}
                 appearance="ghost"
                 style={tailwind("px-1")}
                 onPress={onPressUpload}
@@ -251,12 +239,12 @@ export const StickerPackScreen = ({ navigation, route }: Props): React.ReactElem
 
     const onAddToWhatsapp = async () => {
         const stickerMap: { [id: string]: string } = {};
-        for (const sticker of data?.stickers || []) {
+        for (const sticker of stickerPack?.stickers || []) {
             stickerMap[sticker.id + STICKER_FILE_EXTENSION] = "🦘";
         }
 
         // TODO: add empty stickers in order to reach > 2 stickers?
-        if (!data) {
+        if (!stickerPack) {
             // TODO: Error feedback to user.
             return;
         }
@@ -265,8 +253,8 @@ export const StickerPackScreen = ({ navigation, route }: Props): React.ReactElem
         // As the ContentProvider should have propagated any updates through the effect in `HomeScreen`.
         if (Platform.OS == "android") {
             WhatsAppStickersModule.registerStickerPackAndAddToWhatsApp(
-                data.id,
-                data.name,
+                stickerPack.id,
+                stickerPack.name,
                 PUBLISHER_NAME,
                 DEFAULT_TRAY_ICON,
                 PUBLISHER_EMAIL,
@@ -274,9 +262,9 @@ export const StickerPackScreen = ({ navigation, route }: Props): React.ReactElem
                 PUBLISHER_PRIVACY_POLICY,
                 PUBLISHER_LICENSE,
                 PLAYSTORE_URL,
-                data.updatedAt,
+                stickerPack.updatedAt,
                 true,
-                data.animated,
+                stickerPack.animated,
                 stickerMap,
             );
         } else {
@@ -293,7 +281,6 @@ export const StickerPackScreen = ({ navigation, route }: Props): React.ReactElem
             {}, // TODO: Add expiry date
             {
                 onSuccess: (data) => {
-                    setInviteUrl(data.inviteUrl);
                     Clipboard.setString(data.inviteUrl);
                     showToast("Share link copied to clipboard!");
                 },
@@ -308,7 +295,7 @@ export const StickerPackScreen = ({ navigation, route }: Props): React.ReactElem
 
     return (
         <SafeAreaView style={tailwind("flex-1 bg-white")}>
-            {data == undefined ? (
+            {stickerPack == undefined ? (
                 <Layout style={tw`flex-1 items-center mt-20`}>
                     <Spinner size="giant" />
                 </Layout>
@@ -317,13 +304,12 @@ export const StickerPackScreen = ({ navigation, route }: Props): React.ReactElem
                     <Button status={"success"} onPress={onAddToWhatsapp}>
                         Add to WhatsApp!
                     </Button>
-                    <Text>{inviteUrl}</Text>
                     <Body
-                        stickerPack={data}
+                        stickerPack={stickerPack}
                         onStickerPress={onStickerPress}
                         onCreateAndShareInvite={onCreateAndShareInvite}
                     />
-                    <ToolBar stickerPack={data} />
+                    <ToolBar stickerPack={stickerPack} />
                 </>
             )}
         </SafeAreaView>
