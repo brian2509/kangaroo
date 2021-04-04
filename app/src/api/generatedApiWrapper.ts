@@ -1,4 +1,3 @@
-import { DOMAIN_NAME, PORT } from "@env";
 import Config from "react-native-config";
 import axios from "axios";
 import {
