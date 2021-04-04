@@ -4,10 +4,12 @@
 	"private": true,
 	"scripts": {
 		"android": "react-native run-android",
+		"android:prod": "SET ENVFILE='.env.prod' && react-native run-android",
 		"ios": "react-native run-ios",
 		"start": "react-native start",
 		"test": "jest",
-		"lint": "eslint --fix --ext .js,.jsx,.ts,.tsx ."
+		"lint": "eslint --fix --ext .js,.jsx,.ts,.tsx .",
+		"buildRelease": "SET ENVFILE='.env.prod' && cd android && ./gradlew assembleRelease"
 	},
 	"dependencies": {
 		"@eva-design/eva": "^2.0.0",
@@ -25,6 +27,7 @@
 		"prop-types": "^15.7.2",
 		"react": "16.13.1",
 		"react-native": "^0.63.4",
+		"react-native-config": "^1.4.2",
 		"react-native-document-picker": "^5.0.0",
 		"react-native-dotenv": "^2.5.3",
 		"react-native-fs": "^2.16.6",

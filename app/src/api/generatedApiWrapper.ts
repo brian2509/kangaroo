@@ -1,4 +1,5 @@
 import { DOMAIN_NAME, PORT } from "@env";
+import Config from "react-native-config";
 import axios from "axios";
 import {
     AuthApi,
@@ -7,7 +8,7 @@ import {
     UserApi,
 } from "./generated-typescript-api-client/src";
 
-const baseURL = `${DOMAIN_NAME}:${PORT}`;
+const baseURL = `${Config.API_DOMAIN_NAME}`;
 
 export const instance = axios.create({
     baseURL: `${baseURL}/api`,
