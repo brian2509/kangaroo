@@ -9,7 +9,7 @@
 		"start": "react-native start",
 		"test": "jest",
 		"lint": "eslint --fix --ext .js,.jsx,.ts,.tsx .",
-		"buildRelease": "set ENVFILE='.env.prod' && cd android && gradlew assembleRelease"
+		"buildRelease": "set ENVFILE='.env.prod' && cd android && ./gradlew assembleRelease"
 	},
 	"dependencies": {
 		"@eva-design/eva": "^2.0.0",
