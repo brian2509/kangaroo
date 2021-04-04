@@ -1,7 +1,7 @@
 import { StackScreenProps } from "@react-navigation/stack";
-import { Button, Icon, Layout } from "@ui-kitten/components";
-import React from "react";
-import { Image, SafeAreaView } from "react-native";
+import { Button, Icon, Layout, Modal, Spinner } from "@ui-kitten/components";
+import React, { useState } from "react";
+import { Image, SafeAreaView, Text } from "react-native";
 import { useQueryClient } from "react-query";
 import { HomeStackParamList } from "src/navigation/AppNavigator";
 import tw from "tailwind-react-native-classnames";
@@ -11,9 +11,11 @@ type Props = StackScreenProps<HomeStackParamList, "StickerScreen">;
 export const StickerScreen = ({ navigation, route }: Props) => {
     const { sticker, stickerPack } = route.params;
 
+    const [modalVisible, setModalVisible] = useState<boolean>(false);
+
     const queryClient = useQueryClient();
 
-    const { mutate: deleteSticker } = useDeleteStickerMutation(queryClient);
+    const { mutate: deleteSticker, isLoading } = useDeleteStickerMutation(queryClient);
 
     const onDeleteSticker = () => {
         if (stickerPack == undefined) {
@@ -27,6 +29,7 @@ export const StickerScreen = ({ navigation, route }: Props) => {
 
         deleteSticker(deleteInfo, {
             onSuccess: () => {
+                setModalVisible(false);
                 navigation.pop();
             },
         });
@@ -39,10 +42,16 @@ export const StickerScreen = ({ navigation, route }: Props) => {
                 <Layout style={tw`flex-row mr-4`}>
                     {stickerPack && (
                         <Button
+                            status="danger"
                             appearance="ghost"
-                            onPress={onDeleteSticker}
-                            accessoryLeft={() => (
-                                <Icon name="trash-2-outline" fill="black" width={25} height={25} />
+                            onPress={() => setModalVisible(true)}
+                            accessoryLeft={(props: any) => (
+                                <Icon
+                                    name="trash-2-outline"
+                                    style={tw.style("w-6 h-6", {
+                                        tintColor: props.style.tintColor,
+                                    })}
+                                />
                             )}
                         />
                     )}
@@ -59,6 +68,35 @@ export const StickerScreen = ({ navigation, route }: Props) => {
                 })}
                 source={{ uri: sticker.fileUrl }}
             />
+            <Modal
+                visible={modalVisible}
+                style={tw`w-60`}
+                backdropStyle={{
+                    backgroundColor: "rgba(0, 0, 0, 0.5)",
+                }}
+                onBackdropPress={() => {
+                    setModalVisible(false);
+                }}>
+                <Layout style={tw`rounded-2xl`}>
+                    <Text style={tw`pt-4 pb-1 text-xs text-gray-500 text-center`}>
+                        {isLoading ? "Deleting sticker..." : "Are you sure?"}
+                    </Text>
+                    <Layout style={tw`flex h-16 w-full rounded-2xl justify-center items-center`}>
+                        {isLoading ? (
+                            <Spinner size="giant" />
+                        ) : (
+                            <Button
+                                status="danger"
+                                size="large"
+                                appearance="ghost"
+                                style={tw`w-full h-full`}
+                                onPress={onDeleteSticker}>
+                                Delete
+                            </Button>
+                        )}
+                    </Layout>
+                </Layout>
+            </Modal>
         </SafeAreaView>
     );
 };
