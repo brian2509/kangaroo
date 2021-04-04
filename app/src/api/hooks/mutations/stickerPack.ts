@@ -35,3 +35,20 @@ export const useUploadStickerMutation = (queryClient: QueryClient) =>
             queryClient.invalidateQueries(QUERY_KEYS.myStickerPacks);
         },
     });
+
+interface DeleteStickerInput {
+    stickerPackId: string;
+    stickerId: string;
+}
+const deleteSticker = async ({ stickerPackId, stickerId }: DeleteStickerInput) => {
+    const { data } = await api.stickerPacks.deleteSticker(stickerPackId, stickerId);
+    return data;
+};
+
+export const useDeleteStickerMutation = (queryClient: QueryClient) =>
+    useMutation<StickerRo, any, DeleteStickerInput, unknown>(deleteSticker, {
+        onSuccess: (data, variables) => {
+            queryClient.invalidateQueries(QUERY_KEYS.myStickerPacks);
+            queryClient.invalidateQueries([QUERY_KEYS.stickerPack, variables.stickerPackId]);
+        },
+    });

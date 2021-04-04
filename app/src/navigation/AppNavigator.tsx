@@ -50,6 +50,7 @@ export type HomeStackParamList = {
     };
     StickerScreen: {
         sticker: StickerRo;
+        stickerPack?: StickerPackRo;
     };
     CreateStickerPackScreen: undefined;
     CreateAddMembersScreen: {
@@ -64,6 +65,7 @@ export type FeedStackParamList = {
     };
     StickerScreen: {
         sticker: StickerRo;
+        stickerPack?: StickerPackRo;
     };
     FeedScreen: {
         account: UserRo;
@@ -82,6 +84,7 @@ export type DiscoverStackParamList = {
     };
     StickerScreen: {
         sticker: StickerRo;
+        stickerPack?: StickerPackRo;
     };
     SettingsScreen: undefined;
     SettingsUpdateScreen: {

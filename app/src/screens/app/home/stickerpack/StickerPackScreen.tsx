@@ -144,8 +144,8 @@ export const StickerPackScreen = ({ navigation, route }: Props): React.ReactElem
         });
     }, [data]);
 
-    const onStickerPress = (data: StickerRo): void => {
-        navigation.navigate("StickerScreen", { sticker: data });
+    const onStickerPress = (sticker: StickerRo): void => {
+        navigation.navigate("StickerScreen", { stickerPack: data, sticker });
     };
 
     const onHeaderPress = () => {
