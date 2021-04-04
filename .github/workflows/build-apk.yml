@@ -15,6 +15,9 @@ jobs:
     defaults:
       run:
         working-directory: ./app
+        
+    env:
+      ENVFILE: .env.prod
 
     steps: 
       - uses: actions/checkout@v2
@@ -25,7 +28,7 @@ jobs:
 
       - name: Build Android Release
         run: |
-          npm run buildRelease
+          cd android && ./gradlew assembleRelease
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v1

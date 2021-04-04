@@ -8,8 +8,7 @@
 		"ios": "react-native run-ios",
 		"start": "react-native start",
 		"test": "jest",
-		"lint": "eslint --fix --ext .js,.jsx,.ts,.tsx .",
-		"buildRelease": "set ENVFILE='.env.prod' && cd android && ./gradlew assembleRelease"
+		"lint": "eslint --fix --ext .js,.jsx,.ts,.tsx ."
 	},
 	"dependencies": {
 		"@eva-design/eva": "^2.0.0",
