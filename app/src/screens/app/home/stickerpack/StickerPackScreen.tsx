@@ -1,5 +1,5 @@
 import { Button, Icon, Layout, Spinner, Text } from "@ui-kitten/components";
-import { Alert, Image, Platform, SafeAreaView, ScrollView, TouchableOpacity } from "react-native";
+import { Image, Platform, SafeAreaView, ScrollView, TouchableOpacity } from "react-native";
 import { StackScreenProps } from "@react-navigation/stack";
 import { HomeStackParamList } from "../../../../navigation/AppNavigator";
 import tailwind from "tailwind-rn";
@@ -25,6 +25,7 @@ import {
     PUBLISHER_WEBSITE,
     STICKER_FILE_EXTENSION,
 } from "../../../../constants/StickerInfo";
+import { AlertModal } from "../../../../components/common/AlertModal";
 
 // TODO make this a valid module.
 const { WhatsAppStickersModule } = NativeModules;
@@ -130,6 +131,8 @@ class ToolBar extends React.Component<StickerPackProps> {
 
 type Props = StackScreenProps<HomeStackParamList, "StickerPackDetailScreen">;
 export const StickerPackScreen = ({ navigation, route }: Props): React.ReactElement => {
+    const [errorMessage, setErrorMessage] = React.useState<string | undefined>(undefined);
+
     const queryClient = useQueryClient();
 
     const { data } = useStickerPack(route.params.stickerPack.id);
@@ -202,6 +205,14 @@ export const StickerPackScreen = ({ navigation, route }: Props): React.ReactElem
                     type: image.mime,
                 };
 
+                if (isAnimated && !(image.mime == "image/gif" || image.mime == "image/webp")) {
+                    console.log(
+                        "User attempted to use non animated image in animated stickerpack.",
+                    );
+                    setErrorMessage(
+                        "WhatsApp only allows animated images for Animated Stickerpacks.",
+                    );
+                }
                 const dto = { stickerPackId, stickerName, file };
 
                 uploadStickerMutation.mutate(dto);
@@ -215,6 +226,7 @@ export const StickerPackScreen = ({ navigation, route }: Props): React.ReactElem
 
     const onPressUpload = async () => {
         if (data == undefined) {
+            console.warn("Image data was null");
             return;
         }
 
@@ -234,15 +246,15 @@ export const StickerPackScreen = ({ navigation, route }: Props): React.ReactElem
     );
 
     const onAddToWhatsapp = async () => {
-        const stickerMap: { [id: string]: String } = {};
-        for (let sticker of data?.stickers || []) {
-            stickerMap[sticker.id + STICKER_FILE_EXTENSION] = "🦘";
+        // TODO: add empty stickers in order to reach > 2 stickers?
+        if (!data || data.stickers.length < 3) {
+            setErrorMessage("The stickerpack must contain at least three stickers.");
+            return;
         }
 
-        // TODO: add empty stickers in order to reach > 2 stickers?
-        if (!data) {
-            // TODO: Error feedback to user.
-            return;
+        const stickerMap: { [id: string]: string } = {};
+        for (const sticker of data?.stickers || []) {
+            stickerMap[sticker.id + STICKER_FILE_EXTENSION] = "🦘";
         }
 
         // TODO: Can most likely directly call `addStickerPackToWhatsApp`.
@@ -284,6 +296,13 @@ export const StickerPackScreen = ({ navigation, route }: Props): React.ReactElem
                         Add to WhatsApp!
                     </Button>
                     <Body stickerPack={data} onStickerPress={onStickerPress} />
+                    <AlertModal
+                        message={errorMessage}
+                        visible={!!errorMessage}
+                        onDismiss={() => {
+                            setErrorMessage(undefined);
+                        }}
+                    />
                     <ToolBar stickerPack={data} />
                 </>
             )}
