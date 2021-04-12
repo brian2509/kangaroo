@@ -3,7 +3,7 @@
 name: Build Release APK
 
 on:
-  [push, pull_request]:
+  push:
     # paths:
       # - app/**
     branches:
