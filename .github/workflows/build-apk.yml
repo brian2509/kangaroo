@@ -4,6 +4,8 @@ name: Build Release APK
 
 on:
   push:
+    paths:
+      - app/**
     branches:
       - master
       - ci-build-apk
