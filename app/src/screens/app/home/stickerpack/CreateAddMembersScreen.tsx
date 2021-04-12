@@ -25,7 +25,7 @@ export const CreateAddMembersScreen = ({ route, navigation }: Props): React.Reac
         const dto = {
             name: route.params.name,
             personal: route.params.personal,
-            animated: false,
+            animated: route.params.animated,
         };
 
         createStickerPackMutation.mutate(dto, {

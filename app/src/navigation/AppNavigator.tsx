@@ -55,6 +55,7 @@ export type HomeStackParamList = {
     CreateAddMembersScreen: {
         name: string;
         personal: boolean;
+        animated: boolean;
     };
 };
 
