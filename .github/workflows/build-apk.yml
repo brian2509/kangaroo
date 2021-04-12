@@ -4,8 +4,8 @@ name: Build Release APK
 
 on:
   [push, pull_request]:
-    paths:
-      - app/**
+    # paths:
+      # - app/**
     branches:
       - master
       - ci-build-apk
