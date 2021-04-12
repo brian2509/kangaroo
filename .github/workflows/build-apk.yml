@@ -9,9 +9,6 @@ on:
     branches:
       - master
       - ci-build-apk
-    tags:
-      - apk
-      - build-apk
 
 jobs:
   build-apk:
