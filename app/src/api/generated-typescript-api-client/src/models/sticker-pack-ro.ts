@@ -60,6 +60,12 @@ export interface StickerPackRo {
     members: Array<UserRo>;
     /**
      * 
+     * @type {UserRo}
+     * @memberof StickerPackRo
+     */
+    author: UserRo;
+    /**
+     * 
      * @type {number}
      * @memberof StickerPackRo
      */

@@ -25,7 +25,7 @@ export class StickerPack {
   @Column()
   personal: boolean;
 
-  @ManyToOne(() => User, (user) => user.stickers)
+  @ManyToOne(() => User, (user) => user.stickers, { eager: true})
   author: User;
 
   @ManyToMany(() => User, (user) => user.joinedStickerPacks, { eager: true })
@@ -73,6 +73,7 @@ export class StickerPack {
         ? []
         : this.stickers.map((sticker) => sticker.toRO()),
       members: !this.members ? [] : this.members.map((member) => member.toRo()),
+      author: this.author,
       views: this.views,
       likes: this.likes,
       createdAt: this.createdAt,
