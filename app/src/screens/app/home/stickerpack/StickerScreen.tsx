@@ -43,12 +43,7 @@ export const StickerScreen = ({ navigation, route }: Props) => {
                 return <></>;
             }
 
-            return (
-                <DeleteStickerButton
-                    stickerPack={stickerPack}
-                    onPress={() => setModalVisible(true)}
-                />
-            );
+            return <DeleteStickerButton onPress={() => setModalVisible(true)} />;
         },
     });
 
