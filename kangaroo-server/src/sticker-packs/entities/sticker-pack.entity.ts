@@ -2,13 +2,16 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
   JoinTable,
   ManyToMany,
   ManyToOne,
   OneToMany,
+  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
+import { PrivateFile } from "../../files/entities/file.entity";
 import { Sticker } from "../../stickers/entities/sticker.entity";
 import { User } from "../../users/entities/user.entity";
 import { StickerPackRo } from "../dto/sticker-pack-ro.dto";
@@ -25,7 +28,7 @@ export class StickerPack {
   @Column()
   personal: boolean;
 
-  @ManyToOne(() => User, (user) => user.stickers, { eager: true})
+  @ManyToOne(() => User, (user) => user.stickers, { eager: true })
   author: User;
 
   @ManyToMany(() => User, (user) => user.joinedStickerPacks, { eager: true })
@@ -38,6 +41,10 @@ export class StickerPack {
 
   @OneToMany(() => Sticker, (sticker) => sticker.stickerPack, { eager: true })
   stickers: Sticker[];
+
+  @OneToOne(() => PrivateFile, { eager: true, nullable: true })
+  @JoinColumn()
+  whatsAppIconImageFile: PrivateFile;
 
   @Column()
   animated: boolean;
@@ -72,6 +79,7 @@ export class StickerPack {
       stickers: !this.stickers
         ? []
         : this.stickers.map((sticker) => sticker.toRO()),
+      whatsAppIconImageFileUrl: this.whatsAppIconImageFile.fileUrl(),
       members: !this.members ? [] : this.members.map((member) => member.toRo()),
       author: this.author,
       views: this.views,

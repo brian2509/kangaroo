@@ -7,6 +7,7 @@ export class StickerPackRo {
   personal: boolean;
   animated: boolean;
   stickers: StickerRo[];
+  whatsAppIconImageFileUrl: string;
   members: UserRo[];
   author: UserRo;
   views: number;
