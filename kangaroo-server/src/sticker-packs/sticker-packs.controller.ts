@@ -131,6 +131,18 @@ export class StickerPacksController {
   }
 
   @ApiOperation({
+    summary: `Remove the tray-icon from the pack if it exists.`,
+  })
+  @Delete(":id/tray-icon")
+  async deleteTrayIcon(
+    @Param("id") id: string,
+    @Param("stickerId") stickerId: string,
+    @User() user: UserRo
+  ): Promise<StickerPackRo> {
+    return this.stickerPacksService.deleteTrayIcon(id, user.id);
+  }
+
+  @ApiOperation({
     summary: "Remove a sticker to a sticker pack you own or a member of.",
   })
   @Delete(":id/stickers/:stickerId")

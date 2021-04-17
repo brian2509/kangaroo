@@ -217,6 +217,32 @@ export class StickerPacksService {
     return this.setTrayIcon(id, buffer, userId);
   }
 
+  async deleteTrayIcon(id: string, userId: string) {
+    const stickerPack = await this.stickerPackRepository.findOne({
+      where: { id },
+      relations: ["author"],
+    });
+
+    if (!stickerPack) {
+      throw new NotFoundException("Did not find sticker pack with this ID.");
+    }
+
+    if (!stickerPack.isOwner(userId) && !stickerPack.isMember(userId)) {
+      throw new ForbiddenException(
+        "You are not the author or a member of this sticker pack."
+      );
+    }
+
+    const file = stickerPack.whatsAppIconImageFile;
+    if (file) {
+      await this.filesService.deleteFile(file.fileName);
+    }
+    stickerPack.whatsAppIconImageFile = undefined;
+    await this.stickerRepository.save(stickerPack);
+
+    return stickerPack.toRO();
+  }
+
   async removeSticker(id: string, stickerId: string, userId: string) {
     const stickerPack = await this.stickerPackRepository.findOne({
       where: { id },
