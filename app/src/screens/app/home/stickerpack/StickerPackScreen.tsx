@@ -30,6 +30,7 @@ import {
 import { useCreateInviteMutation } from "../../../../api/hooks/mutations/invites";
 import { MAX_STICKERS_PER_PACK } from "../../../../constants/StickerPack";
 import { createInviteUrl } from "../../../../util/invites";
+import { PackStickersView } from "../../../../components/stickerpack/PackStickersView";
 
 // TODO make this a valid module.
 const { WhatsAppStickersModule } = NativeModules;
@@ -38,54 +39,6 @@ type StickerPackProps = {
     stickerPack: StickerPackRo;
     onStickerPress?: (sticker: StickerRo) => void;
 };
-
-const AuthorStickersView = ({ stickerPack, onStickerPress }: StickerPackProps) => {
-    const renderSticker = (sticker: StickerRo): JSX.Element => {
-        return (
-            <TouchableOpacity
-                key={sticker.id}
-                style={{
-                    width: "21%",
-                    height: "auto",
-                    marginHorizontal: "2%",
-                    marginBottom: "3.5%",
-                }}
-                onPress={() => {
-                    onStickerPress?.(sticker);
-                }}>
-                <Image
-                    style={tw.style("rounded-lg", {
-                        width: "100%",
-                        paddingBottom: "100%",
-                        borderRadius: 3,
-                    })}
-                    source={{
-                        uri: sticker.fileUrl,
-                    }}
-                />
-            </TouchableOpacity>
-        );
-    };
-
-    return (
-        <Layout style={tailwind("flex-col p-2 pt-1")}>
-            <Layout style={tailwind("flex-row flex-grow justify-between items-baseline")}>
-                <Text style={tailwind("font-semibold mr-4")}>
-                    Willem Alexander
-                    <Text style={tailwind("text-xs text-gray-500")}>
-                        {" "}
-                        ({stickerPack.stickers.length})
-                    </Text>
-                </Text>
-                <Text style={tailwind("text-gray-500 pt-3 text-xs")}>Wed 4:20</Text>
-            </Layout>
-            <Layout style={tw`flex-row flex-wrap pt-3`}>
-                {stickerPack.stickers.map(renderSticker)}
-            </Layout>
-        </Layout>
-    );
-};
-
 interface BodyProps extends StickerPackProps {
     onCreateAndShareInvite: () => Promise<void>;
 }
@@ -99,7 +52,7 @@ const Body = ({ stickerPack, onStickerPress, onCreateAndShareInvite }: BodyProps
                     {stickerPack.stickers.length}/{MAX_STICKERS_PER_PACK}
                 </Text>
             </Layout>
-            <AuthorStickersView stickerPack={stickerPack} onStickerPress={onStickerPress} />
+            <PackStickersView stickerPack={stickerPack} onStickerPress={onStickerPress} />
             <Button style={tailwind("my-8")} onPress={onCreateAndShareInvite}>
                 Share invite!
             </Button>

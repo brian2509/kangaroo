@@ -5,69 +5,20 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import tailwind from "tailwind-rn";
 import { HomeStackParamList } from "../../../../navigation/AppNavigator";
 import tw from "tailwind-react-native-classnames";
-import { StickerPackRo, StickerRo } from "../../../../api/generated-typescript-api-client/src";
+import { StickerPackRo } from "../../../../api/generated-typescript-api-client/src";
 import { ScrollView } from "react-native-gesture-handler";
-import { Text, Image } from "react-native";
+import { Text } from "react-native";
 import { useQueryClient } from "react-query";
 import { useInviteMutation } from "../../../../api/hooks/mutations/invites";
 import { useInvitePreview } from "../../../../api/hooks/query/invites";
 import { QUERY_KEYS } from "../../../../constants/ReactQueryKeys";
+import { PackStickersView } from "../../../../components/stickerpack/PackStickersView";
 
-type StickerPackProps = {
+interface BodyProps {
     stickerPack: StickerPackRo;
-};
-
-class AuthorStickersView extends React.Component<StickerPackProps> {
-    renderSticker = (sticker: StickerRo): JSX.Element => {
-        return (
-            <Layout
-                key={sticker.id}
-                style={{
-                    width: "21%",
-                    height: "auto",
-                    marginHorizontal: "2%",
-                    marginBottom: "3.5%",
-                }}>
-                <Image
-                    style={tw.style("rounded-lg", {
-                        width: "100%",
-                        paddingBottom: "100%",
-                        borderRadius: 3,
-                    })}
-                    source={{
-                        uri: sticker.fileUrl,
-                    }}
-                />
-            </Layout>
-        );
-    };
-
-    render() {
-        return (
-            <Layout style={tailwind("flex-col p-2 pt-1 pb-8")}>
-                <Layout style={tailwind("flex-row flex-grow justify-between items-baseline")}>
-                    <Text style={tailwind("font-semibold mr-4")}>
-                        Willem Alexander
-                        <Text style={tailwind("text-xs text-gray-500")}>
-                            {" "}
-                            ({this.props.stickerPack.stickers.length})
-                        </Text>
-                    </Text>
-                    <Text style={tailwind("text-gray-500 pt-3 text-xs")}>Wed 4:20</Text>
-                </Layout>
-                <Layout style={tw`flex-row flex-wrap pt-3`}>
-                    {this.props.stickerPack.stickers.map((sticker) => {
-                        return this.renderSticker(sticker);
-                    })}
-                </Layout>
-            </Layout>
-        );
-    }
-}
-
-interface BodyProps extends StickerPackProps {
     onJoinStickerPack: () => Promise<void>;
 }
+
 const Body = ({ stickerPack, onJoinStickerPack }: BodyProps) => {
     return (
         <ScrollView style={tailwind("p-4 pt-5")}>
@@ -80,7 +31,7 @@ const Body = ({ stickerPack, onJoinStickerPack }: BodyProps) => {
                     {stickerPack.stickers.length}/30
                 </Text>
             </Layout>
-            <AuthorStickersView stickerPack={stickerPack} />
+            <PackStickersView stickerPack={stickerPack} />
             <Button onPress={onJoinStickerPack}>Join!</Button>
         </ScrollView>
     );
@@ -96,7 +47,7 @@ export const JoinStickerPackScreen = ({ navigation, route }: Props): React.React
         queryClient.invalidateQueries([QUERY_KEYS.invitePreview, inviteId]);
     }, [inviteId]);
 
-    const { mutate: useInvite, error } = useInviteMutation(queryClient);
+    const { mutate: useInvite } = useInviteMutation(queryClient);
 
     const { data } = useInvitePreview(queryClient, inviteId);
 
@@ -121,7 +72,6 @@ export const JoinStickerPackScreen = ({ navigation, route }: Props): React.React
             ) : (
                 <>
                     <Body stickerPack={data} onJoinStickerPack={onJoinStickerPack} />
-                    {error && error.message && <Text>{error.message}</Text>}
                 </>
             )}
         </SafeAreaView>
