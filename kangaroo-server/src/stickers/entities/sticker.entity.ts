@@ -37,7 +37,7 @@ export class Sticker {
 
   @OneToOne(() => User, { eager: true })
   @JoinColumn()
-  stickerAuthor: User;
+  uploadedBy: User;
 
   @CreateDateColumn()
   createdAt: Date;
@@ -52,7 +52,7 @@ export class Sticker {
       fileUrl: this.whatsAppStickerImageFile.fileUrl(),
       whatsAppStickerImageFileUrl: this.whatsAppStickerImageFile.fileUrl(),
       whatsAppIconImageFileUrl: this.whatsAppIconImageFile.fileUrl(),
-      stickerAuthor: this.stickerAuthor.toRo(),
+      uploadedBy: this.uploadedBy.toRo(),
       createdAt: this.createdAt,
       updatedAt: this.updatedAt,
     };
