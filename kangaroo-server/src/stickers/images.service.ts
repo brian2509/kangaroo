@@ -15,10 +15,7 @@ import {
 export class ImagesService {
   constructor() {}
 
-  async createWhatsappImage(
-    data: Buffer,
-    animated: boolean
-  ): Promise<Buffer> {
+  async createWhatsappImage(data: Buffer, animated: boolean): Promise<Buffer> {
     // Image validation (file type/size done earlier).
     const metaData = await sharp(data).metadata();
 
@@ -68,6 +65,43 @@ export class ImagesService {
     }
 
     return whatsAppStickerImage;
+  }
+
+  async createWhatsappIcon(data: Buffer): Promise<Buffer> {
+    // Image validation (file type/size done earlier).
+    const metaData = await sharp(data).metadata();
+
+    // TODO: Test behaviour when making a tray icon from a gif.
+    const allowedFileFormat = ["jpeg", "png", "gif"];
+    if (!allowedFileFormat.includes(metaData.format)) {
+      throw new ForbiddenException("This format is not allowed.");
+    }
+
+    if (metaData.width !== metaData.height) {
+      throw new ForbiddenException("File should be square.");
+    }
+
+    // Create icon.
+    let whatsAppIconImage;
+    try {
+      whatsAppIconImage = await sharp(data)
+        .resize(WHATSAPP_ICON_WIDTH_PX, WHATSAPP_ICON_HEIGHT_PX)
+        .webp()
+        .toBuffer();
+    } catch (e) {
+      throw new ForbiddenException(
+        "Could not resize/convert images (sharp error)."
+      );
+    }
+
+    // Check file size post image manipulation.
+    if (whatsAppIconImage.byteLength / 1024 > WHATSAPP_ICON_SIZE_PX) {
+      throw new ForbiddenException(
+        "The (sticker thumbnail) file is too large after conversion."
+      );
+    }
+
+    return whatsAppIconImage;
   }
 
   async gifResizeWrapper(

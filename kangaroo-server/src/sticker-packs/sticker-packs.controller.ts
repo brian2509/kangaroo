@@ -99,6 +99,37 @@ export class StickerPacksController {
     );
   }
 
+  @UseInterceptors(FileInterceptor("file", STICKER_VALIDATION_MULTER_ALL))
+  @ApiOperation({
+    summary: `Set a tray icon of a sticker pack you own or a member of. See description for requirements.`,
+    description: `
+    1. Files uploaded must be square.`,
+  })
+  @Post(":id/tray-icon")
+  async setTrayIcon(
+    @Param("id") id: string,
+    @UploadedFile() file: MulterFile,
+    @User() user: UserRo
+  ): Promise<StickerPackRo> {
+    return this.stickerPacksService.setTrayIcon(id, file, user.id);
+  }
+
+  @ApiOperation({
+    summary: `Set a tray icon of a sticker pack you own or a member of. See description for requirements.`,
+  })
+  @Post(":id/tray-icon/:stickerId")
+  async setTrayIconFromSticker(
+    @Param("id") id: string,
+    @Param("stickerId") stickerId: string,
+    @User() user: UserRo
+  ): Promise<StickerPackRo> {
+    return this.stickerPacksService.setTrayIconFromExistingSticker(
+      id,
+      stickerId,
+      user.id
+    );
+  }
+
   @ApiOperation({
     summary: "Remove a sticker to a sticker pack you own or a member of.",
   })
