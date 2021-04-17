@@ -25,26 +25,17 @@ export class StickersService {
     animated: boolean,
     userId: string
   ): Promise<StickerRo> {
-    const {
-      whatsAppStickerImage,
-      whatsAppIconImage,
-    } = await this.imagesService.createWhatsappImages(file.buffer, animated);
+    const whatsAppStickerImage = await this.imagesService.createWhatsappImage(file.buffer, animated);
 
     const whatsAppStickerImageFile = await this.filesService.uploadFile(
       whatsAppStickerImage,
       "whatsapp-sticker.webp"
     );
 
-    const whatsAppIconImageFile = await this.filesService.uploadFile(
-      whatsAppIconImage,
-      "whatsapp-icon.webp"
-    );
-
     const sticker = this.stickerRepository.create({
       author: { id: userId },
       name: createStickerDto.name,
       whatsAppStickerImageFile,
-      whatsAppIconImageFile,
       stickerPack: { id: stickerPackId },
     });
 
@@ -69,7 +60,6 @@ export class StickersService {
     await this.filesService.deleteFile(
       sticker.whatsAppStickerImageFile.fileName
     );
-    await this.filesService.deleteFile(sticker.whatsAppIconImageFile.fileName);
 
     return sticker.toRO();
   }
