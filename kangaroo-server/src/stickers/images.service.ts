@@ -86,7 +86,7 @@ export class ImagesService {
     try {
       whatsAppIconImage = await sharp(data)
         .resize(WHATSAPP_ICON_WIDTH_PX, WHATSAPP_ICON_HEIGHT_PX)
-        .webp()
+        .png()
         .toBuffer();
     } catch (e) {
       throw new ForbiddenException(

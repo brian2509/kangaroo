@@ -165,7 +165,7 @@ export class StickerPacksService {
 
     stickerPack.whatsAppIconImageFile = await this.filesService.uploadFile(
       whatsAppIconImage,
-      "whatsapp-icon.webp"
+      "whatsapp-icon.png"
     );
     await this.stickerPackRepository.save(stickerPack);
 
