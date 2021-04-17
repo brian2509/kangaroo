@@ -46,6 +46,7 @@ export class StickersService {
       whatsAppStickerImageFile,
       whatsAppIconImageFile,
       stickerPack: { id: stickerPackId },
+      stickerAuthor: { id: userId },
     });
 
     const savedSticker = await this.stickerRepository.save(sticker);
