@@ -13,6 +13,7 @@ import { sortedStickerPacks } from "../../../util/sorting";
 import { useStickerPacks } from "../../../api/hooks/query/stickerPack";
 import { storeImages } from "../../../util/image_storing";
 import { registerStickerPacks } from "../../..//util/sticker_registration";
+import { FloatingAction } from "react-native-floating-action";
 
 type Props = StackScreenProps<HomeStackParamList, "Homescreen">;
 
@@ -38,8 +39,9 @@ export const HomeScreen = ({ navigation }: Props): React.ReactElement => {
     return (
         <SafeAreaView style={tailwind("flex-1")}>
             <HomeScreenHeader
-                onCreateStickerPack={() => navigation.navigate("CreateStickerPackScreen")}
-                onLogout={logout}
+                onPressProfile={() => {
+                    navigation.navigate("SettingsScreen")
+                }}
             />
             <StickerPacksList
                 stickerPacks={sortedStickerPacks(myStickerPacksQuery.data || [])}
@@ -49,6 +51,17 @@ export const HomeScreen = ({ navigation }: Props): React.ReactElement => {
                     navigation.navigate("StickerPackDetailScreen", {
                         stickerPack,
                     });
+                }}
+            />
+            <FloatingAction
+                actions={[{
+                    text: "Create Sticker Pack",
+                    name: "bt_accessibility",
+                    icon: require("../../../assets/icons/plus.jpg"),
+                }]}
+                overrideWithAction
+                onPressItem={() => {
+                    navigation.navigate("CreateStickerPackScreen")
                 }}
             />
         </SafeAreaView>

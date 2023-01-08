@@ -8,6 +8,7 @@ import { StickerPackRo, StickerRo } from "../../api/generated-typescript-api-cli
 import { CreateStickerPackScreen } from "../../screens/app/home/stickerpack/CreateStickerPackScreen";
 import { CreateAddMembersScreen } from "../../screens/app/home/stickerpack/CreateAddMembersScreen";
 import { createStackNavigator } from "@react-navigation/stack";
+import { SettingsScreen } from "../../screens/app/home/SettingsScreen";
 
 export type HomeStackParamList = {
     Homescreen: undefined;
@@ -25,6 +26,7 @@ export type HomeStackParamList = {
         name: string;
         personal: boolean;
     };
+    SettingsScreen: undefined
 };
 const AppStack = createStackNavigator();
 export const AppStackNavigator = (): JSX.Element => (
@@ -58,6 +60,10 @@ export const AppStackNavigator = (): JSX.Element => (
             name="CreateAddMembersScreen"
             component={CreateAddMembersScreen}
             options={{ title: "Create Sticker Pack", headerBackTitle: " " }}
+        />
+        <AppStack.Screen
+            name="SettingsScreen"
+            component={SettingsScreen}
         />
     </AppStack.Navigator>
 );
