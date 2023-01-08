@@ -30,7 +30,7 @@ const StickerPackListComponent = ({ stickerPack, onPressStickerPack }: StickerPa
             activeOpacity={0.5}
             onPress={onPressStickerPack}
         >
-            <Layout style={tailwind("flex flex-col p-4 border-b border-gray-200")}>
+            <Layout style={tailwind("flex flex-col p-4 py-6 border-b border-gray-400")}>
                 <Layout style={tailwind("flex flex-row justify-between")}>
                     <Layout style={tailwind("flex flex-row items-center")}>
                         <CoverStickerImage stickerPack={stickerPack} style={tailwind("w-12 h-12 rounded-full")} />
