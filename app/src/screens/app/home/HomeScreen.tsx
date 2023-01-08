@@ -56,7 +56,7 @@ export const HomeScreen = ({ navigation }: Props): React.ReactElement => {
             <FloatingAction
                 actions={[{
                     text: "Create Sticker Pack",
-                    name: "bt_accessibility",
+                    name: "create_sticker_pack",
                     icon: require("../../../assets/icons/plus.jpg"),
                 }]}
                 overrideWithAction

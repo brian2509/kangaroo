@@ -26,6 +26,8 @@ import {
     STICKER_FILE_EXTENSION,
 } from "../../../../constants/StickerInfo";
 import { fullMemberList } from "../../../../util/stickerpack_utils";
+import { FloatingAction } from "react-native-floating-action";
+import StickerPackHeader from "../../../../components/stickerpack/StickerPackHeader";
 
 // TODO make this a valid module.
 const { WhatsAppStickersModule } = NativeModules;
@@ -88,7 +90,7 @@ class AuthorStickersView extends React.Component<StickerPackProps> {
     }
 }
 
-class Body extends React.Component<StickerPackProps> {
+class StickerPackBody extends React.Component<StickerPackProps> {
     render() {
         return (
             <ScrollView style={tailwind("p-4 pt-3")}>
@@ -150,9 +152,7 @@ export const StickerPackScreen = ({ navigation, route }: Props): React.ReactElem
     };
 
     const onHeaderPress = () => {
-        if (data == undefined) {
-            return;
-        }
+        if (data == undefined) return;
 
         navigation.navigate("StickerPackManageScreen", {
             stickerPack: data,
@@ -282,11 +282,26 @@ export const StickerPackScreen = ({ navigation, route }: Props): React.ReactElem
                 </Layout>
             ) : (
                 <>
-                    <Button status={"success"} onPress={onAddToWhatsapp}>
-                        Add to WhatsApp!
-                    </Button>
-                    <Body stickerPack={data} onStickerPress={onStickerPress} />
-                    <ToolBar stickerPack={data} />
+                    <StickerPackHeader stickerPack={data} onHeaderPress={onHeaderPress} />
+                    <StickerPackBody stickerPack={data} onStickerPress={onStickerPress} />
+                    <FloatingAction
+                        actions={[{
+                            text: "Add Sticker",
+                            name: "add_sticker",
+                            icon: require("../../../../assets/icons/plus.jpg"),
+                        }, {
+                            text: "Share Sticker Pack",
+                            name: "share_sticker_pack",
+                            icon: require("../../../../assets/icons/share.png"),
+                        }]}
+                        onPressItem={(name) => {
+                            if (name === "add_sticker") {
+                                console.log("Add sticker")
+                            } else if (name === "share_sticker_pack") {
+                                console.log("Share sticker pack")
+                            }
+                        }}
+                    />
                 </>
             )}
         </SafeAreaView>
