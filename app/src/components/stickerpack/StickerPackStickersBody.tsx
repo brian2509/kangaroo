@@ -7,16 +7,19 @@ import { StickerPackRo, StickerRo } from "../../api/generated-typescript-api-cli
 import { Image, ScrollView, TouchableOpacity } from "react-native";
 import { lastUpdatedString } from "../../util/time";
 
+const STICKERS_PER_ROW = 4;
+
 interface RenderStickerProps {
     sticker: StickerRo,
     onStickerPress: (sticker: StickerRo) => void;
+    stickersPerRow: number;
 }
-const Sticker = ({ sticker, onStickerPress }: RenderStickerProps): JSX.Element => {
+const StickerGridCell = ({ sticker, onStickerPress, stickersPerRow = 4 }: RenderStickerProps): JSX.Element => {
     return (
         <TouchableOpacity
             key={sticker.id}
             style={{
-                width: "23%",
+                width: `${(Math.floor(100 / stickersPerRow)) - 2.01}%`,
                 height: "auto",
                 marginHorizontal: "1%",
                 marginVertical: "1%",
@@ -35,18 +38,21 @@ const Sticker = ({ sticker, onStickerPress }: RenderStickerProps): JSX.Element =
     );
 };
 
+
 interface StickersProps {
     stickerPack: StickerPackRo;
     onStickerPress: (sticker: StickerRo) => void;
+    stickersPerRow?: number;
 }
-const Stickers = ({ stickerPack, onStickerPress }: StickersProps): JSX.Element => {
+const StickerGrid = ({ stickerPack, onStickerPress, stickersPerRow = 4 }: StickersProps): JSX.Element => {
     return (
-        <Layout style={tailwind("flex-row flex-wrap pt-4")}>
+        <Layout style={tailwind("flex-row flex-wrap")}>
             {stickerPack.stickers.map((sticker) => (
-                <Sticker
+                <StickerGridCell
                     key={sticker.id}
                     sticker={sticker}
                     onStickerPress={onStickerPress}
+                    stickersPerRow={stickersPerRow}
                 />
             ))}
         </Layout>
@@ -61,7 +67,7 @@ interface StickerPackBodyProps {
 const StickerPackBody = ({ stickerPack, onStickerPress }: StickerPackBodyProps): JSX.Element => {
     return (
         <ScrollView style={tailwind("p-4")}>
-            <Layout style={tailwind("flex-row justify-between items-baseline")}>
+            <Layout style={tailwind("flex-row justify-between items-baseline pb-4")}>
                 <Layout style={tailwind("flex-row items-baseline")}>
                     <Text style={tailwind("text-2xl font-bold mr-4")}>Stickers</Text>
                     <Text style={tailwind("text-gray-500 h-full pt-3 text-sm")}>
@@ -70,9 +76,10 @@ const StickerPackBody = ({ stickerPack, onStickerPress }: StickerPackBodyProps):
                 </Layout>
                 <Text style={tailwind("text-gray-500 pt-3 text-xs")}>Last updated: {lastUpdatedString(stickerPack.updatedAt)}</Text>
             </Layout>
-            <Stickers
+            <StickerGrid
                 stickerPack={stickerPack}
                 onStickerPress={onStickerPress}
+                stickersPerRow={STICKERS_PER_ROW}
             />
         </ScrollView>
     );
