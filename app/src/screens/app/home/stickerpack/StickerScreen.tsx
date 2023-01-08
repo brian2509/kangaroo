@@ -1,43 +1,40 @@
+import React, { useEffect } from "react";
+
 import { StackScreenProps } from "@react-navigation/stack";
 import { Icon, Layout } from "@ui-kitten/components";
-import React from "react";
 import { Image, SafeAreaView, TouchableOpacity } from "react-native";
 import { HomeStackParamList } from "../../../../navigation/app/AppStackNavigator";
 import tw from "tailwind-react-native-classnames";
-import { StickerRo } from "../../../../api/generated-typescript-api-client/src";
+
+const DownloadIcon = () => {
+    <Layout style={tw`flex-row mr-4`}>
+        <TouchableOpacity activeOpacity={0.7}>
+            <Icon name="download" fill="black" width={25} height={25} />
+        </TouchableOpacity>
+    </Layout>
+}
 
 type Props = StackScreenProps<HomeStackParamList, "StickerScreen">;
-export class StickerScreen extends React.Component<Props> {
-    private sticker: StickerRo;
+const StickerScreen = ({ route, navigation }: Props): JSX.Element => {
+    const sticker = route.params.sticker;
 
-    constructor(props: Props) {
-        super(props);
-        this.sticker = props.route.params.sticker;
-    }
-
-    componentDidMount(): void {
-        this.props.navigation.setOptions({
+    useEffect(() => {
+        navigation.setOptions({
             headerTitle: "Sticker",
-            headerRight: () => (
-                <Layout style={tw`flex-row mr-4`}>
-                    <TouchableOpacity activeOpacity={0.7}>
-                        <Icon name="download" fill="black" width={25} height={25} />
-                    </TouchableOpacity>
-                </Layout>
-            ),
+            headerRight: DownloadIcon
         });
-    }
+    }, [])
 
-    render(): JSX.Element {
-        return (
-            <SafeAreaView style={tw`flex justify-center h-full bg-white`}>
-                <Image
-                    style={tw.style("rounded-lg w-full", {
-                        paddingBottom: "100%",
-                    })}
-                    source={{ uri: this.sticker.fileUrl }}
-                />
-            </SafeAreaView>
-        );
-    }
+    return (
+        <SafeAreaView style={tw`flex justify-center h-full bg-white`}>
+            <Image
+                style={tw.style("rounded-lg w-full", {
+                    paddingBottom: "100%",
+                })}
+                source={{ uri: sticker.fileUrl }}
+            />
+        </SafeAreaView>
+    );
 }
+
+export default StickerScreen;

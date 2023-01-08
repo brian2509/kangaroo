@@ -1,7 +1,6 @@
 import React from "react";
 
 import { HomeScreen } from "../../screens/app/home/HomeScreen";
-import { StickerScreen } from "../../screens/app/home/stickerpack/StickerScreen";
 import { StickerPackScreen } from "../../screens/app/home/stickerpack/StickerPackScreen";
 import { StickerPackManageScreen } from "../../screens/app/home/stickerpack/StickerPackManageScreen";
 import { StickerPackRo, StickerRo } from "../../api/generated-typescript-api-client/src";
@@ -9,6 +8,7 @@ import { CreateStickerPackScreen } from "../../screens/app/home/stickerpack/Crea
 import { CreateAddMembersScreen } from "../../screens/app/home/stickerpack/CreateAddMembersScreen";
 import { createStackNavigator } from "@react-navigation/stack";
 import { SettingsScreen } from "../../screens/app/home/SettingsScreen";
+import StickerScreen from "../../screens/app/home/stickerpack/StickerScreen";
 
 export type HomeStackParamList = {
     Homescreen: undefined;
