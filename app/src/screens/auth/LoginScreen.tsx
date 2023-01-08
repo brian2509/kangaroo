@@ -62,14 +62,18 @@ export const LoginScreen = ({ navigation }: Props) => {
                         value={password}
                         onChangeText={setPassword}
                     />
-                    <TextFieldActions
-                        cancelTitle="Register"
-                        doneTitle="Sign In"
-                        onCancelPress={() => navigation.push("Register")}
-                        onDonePress={() => {
-                            Keyboard.dismiss();
-                            onLogin();
-                        }}></TextFieldActions>
+                    <Layout style={tailwind("mt-6")}>
+                        <TextFieldActions
+                            cancelTitle="Register"
+                            doneTitle="Sign In"
+                            onCancelPress={() => navigation.push("Register")}
+                            onDonePress={() => {
+                                Keyboard.dismiss();
+                                onLogin();
+                            }}
+                            isLoading={loginMutation.isLoading || loginMutation.isSuccess}
+                        />
+                    </Layout>
 
                     {loginMutation.error && (
                         <Card style={tailwind("m-4 mt-20")} status="danger">
@@ -83,11 +87,6 @@ export const LoginScreen = ({ navigation }: Props) => {
                                     : "Login failed!"}
                             </Text>
                         </Card>
-                    )}
-                    {loginMutation.isLoading && (
-                        <Layout style={tailwind("self-center")}>
-                            <Spinner size="giant" />
-                        </Layout>
                     )}
                 </Layout>
             </Layout>

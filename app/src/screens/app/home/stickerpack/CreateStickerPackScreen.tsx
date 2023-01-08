@@ -80,8 +80,8 @@ export const CreateStickerPackScreen = ({ navigation }: Props): React.ReactEleme
                     </CheckBox>
                     <Button
                         style={tailwind("p-0 pl-2 pr-2")}
-                        disabled={isLoading}
                         onPress={createStickerPack}
+                        disabled={isLoading}
                         accessoryLeft={() => (isLoading ? <Spinner size="small" status="basic" /> : <></>)}
                     >
                         Create Pack

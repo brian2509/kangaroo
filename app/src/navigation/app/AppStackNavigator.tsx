@@ -9,6 +9,8 @@ import { CreateAddMembersScreen } from "../../screens/app/home/stickerpack/Creat
 import { createStackNavigator } from "@react-navigation/stack";
 import { SettingsScreen } from "../../screens/app/home/SettingsScreen";
 import StickerScreen from "../../screens/app/home/stickerpack/StickerScreen";
+import { SettingsUpdateScreen } from "../../screens/app/home/SettingsUpdateScreen";
+import { PrivacyPolicyScreen } from "../../screens/app/home/PrivacyPolicyScreen";
 
 export type HomeStackParamList = {
     Homescreen: undefined;
@@ -26,7 +28,11 @@ export type HomeStackParamList = {
         name: string;
         personal: boolean;
     };
-    SettingsScreen: undefined
+    SettingsScreen: undefined,
+    SettingsUpdateScreen: {
+        updateValueKey: "password" | "email"
+    },
+    PrivacyPolicyScreen: undefined,
 };
 const AppStack = createStackNavigator();
 export const AppStackNavigator = (): JSX.Element => (
@@ -64,6 +70,14 @@ export const AppStackNavigator = (): JSX.Element => (
         <AppStack.Screen
             name="SettingsScreen"
             component={SettingsScreen}
+        />
+        <AppStack.Screen
+            name="SettingsUpdateScreen"
+            component={SettingsUpdateScreen}
+        />
+        <AppStack.Screen
+            name="PrivacyPolicyScreen"
+            component={PrivacyPolicyScreen}
         />
     </AppStack.Navigator>
 );

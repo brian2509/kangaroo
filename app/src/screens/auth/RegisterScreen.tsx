@@ -14,6 +14,7 @@ import tailwind from "tailwind-rn";
 import validate from "validate.js";
 import { AuthContext } from "../../contexts/AuthContext";
 import { useLoginMutation, useRegisterMutation } from "../../api/hooks/mutations/auth";
+import { TextFieldActions } from "../../components/common/TextFieldActions";
 
 type Props = StackScreenProps<AuthStackParamList, "Register">;
 
@@ -143,21 +144,16 @@ export const RegisterScreen = ({ navigation }: Props) => {
                         onChangeText={setPassword}
                     />
 
-                    <Layout style={tailwind("flex-row items-center justify-between pt-3")}>
-                        <Text
-                            style={tailwind("pl-2 font-semibold text-blue-500")}
-                            onPress={() => navigation.pop()}>
-                            Back to Login
-                        </Text>
-                        <Button
-                            style={tailwind("pl-10 pr-10")}
-                            onPress={() => {
+                    <Layout style={tailwind("mt-6")}>
+                        <TextFieldActions
+                            cancelTitle="Back to Login"
+                            doneTitle="Register"
+                            onCancelPress={() => navigation.pop()}
+                            onDonePress={() => {
                                 Keyboard.dismiss();
                                 !inputValidations && onRegister();
                             }}
-                            disabled={formInteracted && !!inputValidations}>
-                            Register
-                        </Button>
+                        />
                     </Layout>
 
                     {registerMutation.error && (

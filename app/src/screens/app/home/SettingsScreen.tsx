@@ -2,52 +2,37 @@ import React, { useEffect } from "react";
 import tailwind from "tailwind-rn";
 import { Linking, SafeAreaView } from "react-native";
 import { StackScreenProps } from "@react-navigation/stack";
-import { FeedStackParamList } from "../../../navigation/app/AppStackNavigator";
 import { ProfileIcon } from "../../../components/common/ProfileIcon";
 import { Button, Divider, Icon, Layout, List, ListItem, Text } from "@ui-kitten/components";
 import tw from "tailwind-react-native-classnames";
-import { TextStatElement } from "../../../components/common/TextStatElement";
 import { AuthContext } from "../../../contexts/AuthContext";
-import { useQueryClient } from "react-query";
 import { useMe } from "../../../api/hooks/query/user";
-import { QUERY_KEYS } from "../../../constants/ReactQueryKeys";
+import { HomeStackParamList } from "../../../navigation/app/AppStackNavigator";
 
-type Props = StackScreenProps<FeedStackParamList, "SettingsScreen">;
+type Props = StackScreenProps<HomeStackParamList, "SettingsScreen">;
 
-interface settingItem {
+interface SettingItem {
     title: string;
     color?: string;
     onPress?: () => void;
 }
-
 export const SettingsHeader = ({ username }: { username: string }): React.ReactElement => {
     return (
-        <Layout style={tw`w-full flex-row justify-between border-b border-gray-300 p-2 shadow-md`}>
-            <Layout style={tw`flex-row bg-white`}>
-                <Layout style={tw`bg-transparent ml-3`}>
-                    <ProfileIcon size={14}></ProfileIcon>
-                </Layout>
-                <Layout style={tw`flex-col ml-4 self-center`}>
-                    <Text style={tw`font-semibold mb-2`}>{username}</Text>
-                    <Layout style={tw`flex-row`}>
-                        <TextStatElement value={100} text="Following"></TextStatElement>
-                        <TextStatElement value={100} text="Followers"></TextStatElement>
-                    </Layout>
-                </Layout>
+        <Layout style={tw`w-full flex-row items-center border-gray-300 p-4 my-4 shadow-md`}>
+            <Layout style={tw`mr-4`}>
+                <ProfileIcon size={14} />
             </Layout>
-            <Button size="small" style={tailwind("mr-3 self-center")}>
-                Share
-            </Button>
+            <Text style={tw`font-bold text-xl`}>{username}</Text>
         </Layout>
     );
 };
 
-const renderItem = ({ item }: { item: settingItem }) => {
+const SettingListItem = ({ item }: { item: SettingItem }) => {
     const color = item.color ?? "";
     return (
         <ListItem
-            style={tw`h-10 p-0 m-0`}
-            title={() => <Text style={tw`text-blue-600 ml-4 text-sm ${color}`}>{item.title}</Text>}
+            style={tw`p-2 m-0`}
+            title={() => <Text style={tw`ml-2 ${color}`}>{item.title}</Text>}
             accessoryRight={(props) => <Icon {...props} name="arrow-ios-forward-outline" />}
             onPress={item.onPress}
         />
@@ -56,58 +41,59 @@ const renderItem = ({ item }: { item: settingItem }) => {
 
 export const SettingsScreen = ({ navigation }: Props): React.ReactElement => {
     const { logout } = React.useContext(AuthContext);
-    const queryClient = useQueryClient();
     const myUserQuery = useMe();
 
-    const data = [
-        {
-            title: "Change email",
-            onPress: () =>
-                navigation.navigate("SettingsUpdateScreen", { updateValueTitle: "New Email" }),
-        },
+    useEffect(() => {
+        navigation.setOptions({
+            headerTitle: "Settings",
+        });
+    }, [])
+
+    const settingsList = [
         {
             title: "Change password",
-            onPress: () =>
-                navigation.navigate("SettingsUpdateScreen", { updateValueTitle: "New Password" }),
+            onPress: () => navigation.navigate("SettingsUpdateScreen", { updateValueKey: "password" }),
         },
         {
-            title: "Log out",
-            color: "text-red-600",
-            onPress: () => logout(),
+            title: "Privacy Policy",
+            onPress: () => navigation.navigate("PrivacyPolicyScreen"),
         },
     ];
 
-    useEffect(() => {
-        () => queryClient.invalidateQueries(QUERY_KEYS.me);
-    }, []);
-
     return (
         <SafeAreaView style={tailwind("flex-1")}>
-            <Layout style={tw`flex-col h-full flex-grow justify-between bg-transparent`}>
-                <Layout style={tw`bg-transparent`}>
+            <Layout style={tw`flex-col pt-2 px-4 h-full justify-between items-center bg-transparent`}>
+                <Layout style={tw`w-full bg-transparent`}>
                     <SettingsHeader username={myUserQuery.data?.username ?? ""}></SettingsHeader>
-                    <Layout style={tw`mt-2 shadow-md`}>
+                    <Layout style={tw`shadow-md`}>
                         <List
                             scrollEnabled={false}
-                            data={data}
+                            data={settingsList}
                             ItemSeparatorComponent={Divider}
-                            renderItem={renderItem}
+                            renderItem={SettingListItem}
                         />
                     </Layout>
                     <Button
+                        style={tailwind("mt-8")}
+                        status="danger"
+                        onPress={logout}>
+                        Logout
+                    </Button>
+                </Layout>
+                <Layout style={tailwind("bg-transparent")}>
+                    <Button
                         appearance="ghost"
-                        style={tailwind("mr-3 mt-2 self-center")}
                         onPress={() => Linking.openURL("mailto:support@example.com")}>
                         Send Feedback
                     </Button>
+                    <Button
+                        appearance="ghost"
+                        status="danger"
+                        style={tailwind("mb-6 mt-2 self-center")}>
+                        Delete Account
+                    </Button>
                 </Layout>
-                <Button
-                    appearance="ghost"
-                    status="danger"
-                    style={tailwind("mr-3 mt-2 self-center")}>
-                    Delete Account
-                </Button>
             </Layout>
-        </SafeAreaView>
+        </SafeAreaView >
     );
 };
