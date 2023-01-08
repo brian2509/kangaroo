@@ -61,34 +61,6 @@ export const StickerPackScreen = ({ navigation, route }: Props): React.ReactElem
         });
     };
 
-    const HeaderTitle = () => (
-        <Layout style={tw`flex-row left-0`}>
-            {data == undefined ? (
-                <PlaceholderImage style={tw.style("w-9 h-9 mr-3 rounded-full")} />
-            ) : (
-                <>
-                    <CoverStickerImage
-                        stickerPack={data}
-                        style={tw.style("w-9 h-9 mr-3 rounded-full")}
-                        onStickerPress={onStickerPress}
-                    />
-                    <TouchableOpacity style={tw`w-full`} onPress={onHeaderPress}>
-                        <Layout style={tw`flex-col`}>
-                            <Text>{data.name}</Text>
-                            <Text style={tw`text-gray-500 text-xs`} numberOfLines={1}>
-                                {fullMemberList(data)
-                                    .map((member) => member.username)
-                                    .join(", ")}
-                            </Text>
-                        </Layout>
-                    </TouchableOpacity>
-                </>
-            )}
-        </Layout>
-    );
-    const AddIcon = (props: any) => (
-        <Icon style={tw.style("w-6 h-6", { tintColor: props.style.tintColor })} name="plus" />
-    );
 
     const pickAndUploadSticker = async (stickerPackId: string) => {
         ImagePicker.openPicker({
@@ -125,6 +97,9 @@ export const StickerPackScreen = ({ navigation, route }: Props): React.ReactElem
         pickAndUploadSticker(data.id);
     };
 
+    const AddIcon = (props: any) => (
+        <Icon style={tw.style("w-6 h-6", { tintColor: props.style.tintColor })} name="plus" />
+    );
     const HeaderRight = () => (
         <Layout style={tw`flex-row mr-4`}>
             <Button
