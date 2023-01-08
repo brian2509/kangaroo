@@ -146,7 +146,7 @@ export const RegisterScreen = ({ navigation }: Props) => {
 
                     <Layout style={tailwind("mt-6")}>
                         <TextFieldActions
-                            cancelTitle="Back to Login"
+                            cancelTitle="Back to Sign In"
                             doneTitle="Register"
                             onCancelPress={() => navigation.pop()}
                             onDonePress={() => {
