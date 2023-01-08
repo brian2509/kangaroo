@@ -3,7 +3,7 @@ import tailwind from "tailwind-rn";
 import { SafeAreaView } from "react-native";
 import { AuthContext } from "../../../contexts/AuthContext";
 import { StackScreenProps } from "@react-navigation/stack";
-import { HomeStackParamList } from "../../../navigation/AppNavigator";
+import { HomeStackParamList } from "../../../navigation/app/AppStackNavigator";
 import { useQueryClient } from "react-query";
 import { QUERY_KEYS } from "../../../constants/ReactQueryKeys";
 import { StickerPackRo } from "../../../api/generated-typescript-api-client/src";

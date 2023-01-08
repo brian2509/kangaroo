@@ -2,7 +2,7 @@ import { StackScreenProps } from "@react-navigation/stack";
 import { Icon, Layout } from "@ui-kitten/components";
 import React from "react";
 import { Image, SafeAreaView, TouchableOpacity } from "react-native";
-import { HomeStackParamList } from "src/navigation/AppNavigator";
+import { HomeStackParamList } from "../../../../navigation/app/AppStackNavigator";
 import tw from "tailwind-react-native-classnames";
 import { StickerRo } from "../../../../api/generated-typescript-api-client/src";
 

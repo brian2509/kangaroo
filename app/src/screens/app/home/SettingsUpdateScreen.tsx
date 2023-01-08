@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import tailwind from "tailwind-rn";
 import { SafeAreaView, TouchableWithoutFeedback } from "react-native";
 import { StackScreenProps } from "@react-navigation/stack";
-import { FeedStackParamList } from "../../../navigation/AppNavigator";
+import { FeedStackParamList } from "../../../navigation/app/AppStackNavigator";
 import { Icon, IconProps, Input, Layout, Text } from "@ui-kitten/components";
 import tw from "tailwind-react-native-classnames";
 import { TextFieldActions } from "../../../components/common/TextFieldActions";

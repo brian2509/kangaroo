@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { Keyboard, SafeAreaView } from "react-native";
 import tailwind from "tailwind-rn";
 import validate from "validate.js";
-import { HomeStackParamList } from "../../../../navigation/AppNavigator";
+import { HomeStackParamList } from "../../../../navigation/app/AppStackNavigator";
 
 const AlertIcon = (props: IconProps) => <Icon {...props} name="alert-circle-outline" />;
 

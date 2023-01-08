@@ -9,7 +9,7 @@ import {
     TouchableWithoutFeedback,
 } from "react-native";
 import { StackScreenProps } from "@react-navigation/stack";
-import { AuthStackParamList } from "../../navigation/AppNavigator";
+import { AuthStackParamList } from "../../navigation/auth/AuthStackNavigator";
 import tailwind from "tailwind-rn";
 import validate from "validate.js";
 import { AuthContext } from "../../contexts/AuthContext";
@@ -169,17 +169,17 @@ export const RegisterScreen = ({ navigation }: Props) => {
                                 category="s1">
                                 {registerMutation.error.response?.status == 400
                                     ? registerMutation.error.response.data.message.map(
-                                          (errorMessage: string) => {
-                                              return (
-                                                  errorMessage.charAt(0).toUpperCase() +
-                                                  errorMessage.slice(1)
-                                              );
-                                          },
-                                      )
+                                        (errorMessage: string) => {
+                                            return (
+                                                errorMessage.charAt(0).toUpperCase() +
+                                                errorMessage.slice(1)
+                                            );
+                                        },
+                                    )
                                     : registerMutation.error.response?.status == 403
-                                    ? // 403 Forbidden. Example: user with that username already exists
-                                      registerMutation.error.response?.data.message
-                                    : "Please try again later ..."}
+                                        ? // 403 Forbidden. Example: user with that username already exists
+                                        registerMutation.error.response?.data.message
+                                        : "Please try again later ..."}
                             </Text>
                         </Card>
                     )}

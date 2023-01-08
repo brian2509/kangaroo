@@ -14,8 +14,10 @@ export interface AuthContextProps {
 export const AuthContext = React.createContext<AuthContextProps>({
     accessToken: undefined,
     isAuthenticated: undefined,
-    login: (token: JwtToken) => {},
-    logout: () => {},
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    login: (token: JwtToken) => { },
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    logout: () => { },
 });
 
 export const AuthContextProvider = ({ children }: any): React.ReactElement => {

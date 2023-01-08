@@ -3,7 +3,7 @@ import { Layout, Text, Input, Spinner, Card, Icon, IconProps } from "@ui-kitten/
 import { Image, Keyboard, SafeAreaView, TouchableWithoutFeedback } from "react-native";
 import { AuthContext } from "../../contexts/AuthContext";
 import { StackScreenProps } from "@react-navigation/stack";
-import { AuthStackParamList } from "../../navigation/AppNavigator";
+import { AuthStackParamList } from "../../navigation/auth/AuthStackNavigator";
 import tailwind from "tailwind-rn";
 import { TextFieldActions } from "../../components/common/TextFieldActions";
 import { useLoginMutation } from "../../api/hooks/mutations/auth";

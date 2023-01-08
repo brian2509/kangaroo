@@ -1,7 +1,7 @@
 import { Button, Icon, Layout, Spinner, Text } from "@ui-kitten/components";
-import { Alert, Image, Platform, SafeAreaView, ScrollView, TouchableOpacity } from "react-native";
+import { Image, Platform, SafeAreaView, ScrollView, TouchableOpacity } from "react-native";
 import { StackScreenProps } from "@react-navigation/stack";
-import { HomeStackParamList } from "../../../../navigation/AppNavigator";
+import { HomeStackParamList } from "../../../../navigation/app/AppStackNavigator";
 import tailwind from "tailwind-rn";
 import tw from "tailwind-react-native-classnames";
 import React, { useEffect } from "react";
@@ -236,8 +236,8 @@ export const StickerPackScreen = ({ navigation, route }: Props): React.ReactElem
     );
 
     const onAddToWhatsapp = async () => {
-        const stickerMap: { [id: string]: String } = {};
-        for (let sticker of data?.stickers || []) {
+        const stickerMap: { [id: string]: string } = {};
+        for (const sticker of data?.stickers || []) {
             stickerMap[sticker.id + STICKER_FILE_EXTENSION] = "🦘";
         }
 

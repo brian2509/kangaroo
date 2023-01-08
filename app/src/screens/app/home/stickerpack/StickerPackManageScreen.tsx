@@ -1,7 +1,7 @@
 import React from "react";
 import { StackScreenProps } from "@react-navigation/stack";
 import { SafeAreaView } from "react-native";
-import { HomeStackParamList } from "src/navigation/AppNavigator";
+import { HomeStackParamList } from "../../../../navigation/app/AppStackNavigator";
 import { MemberList } from "../../../../components/sticker-pack-manage-screen/MemberList";
 import tw from "tailwind-react-native-classnames";
 
