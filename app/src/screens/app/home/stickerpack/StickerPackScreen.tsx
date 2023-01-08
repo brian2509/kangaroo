@@ -28,108 +28,10 @@ import {
 import { fullMemberList } from "../../../../util/stickerpack_utils";
 import { FloatingAction } from "react-native-floating-action";
 import StickerPackHeader from "../../../../components/stickerpack/StickerPackHeader";
+import StickerPackBody from "../../../../components/stickerpack/StickerPackStickersBody";
 
 // TODO make this a valid module.
 const { WhatsAppStickersModule } = NativeModules;
-
-type StickerPackProps = {
-    stickerPack: StickerPackRo;
-    onStickerPress?: (sticker: StickerRo) => void;
-};
-
-class AuthorStickersView extends React.Component<StickerPackProps> {
-    renderSticker = (sticker: StickerRo): JSX.Element => {
-        return (
-            <TouchableOpacity
-                key={sticker.id}
-                style={{
-                    width: "21%",
-                    height: "auto",
-                    marginHorizontal: "2%",
-                    marginBottom: "3.5%",
-                }}
-                onPress={() => {
-                    if (this.props.onStickerPress) {
-                        this.props.onStickerPress(sticker);
-                    }
-                }}>
-                <Image
-                    style={tw.style("rounded-lg", {
-                        width: "100%",
-                        paddingBottom: "100%",
-                        borderRadius: 3,
-                    })}
-                    source={{
-                        uri: sticker.fileUrl,
-                    }}
-                />
-            </TouchableOpacity>
-        );
-    };
-
-    render() {
-        return (
-            <Layout style={tailwind("flex-col p-2 pt-1")}>
-                <Layout style={tailwind("flex-row flex-grow justify-between items-baseline")}>
-                    <Text style={tailwind("font-semibold mr-4")}>
-                        Willem Alexander
-                        <Text style={tailwind("text-xs text-gray-500")}>
-                            {" "}
-                            ({this.props.stickerPack.stickers.length})
-                        </Text>
-                    </Text>
-                    <Text style={tailwind("text-gray-500 pt-3 text-xs")}>Wed 4:20</Text>
-                </Layout>
-                <Layout style={tw`flex-row flex-wrap pt-3`}>
-                    {this.props.stickerPack.stickers.map((sticker) => {
-                        return this.renderSticker(sticker);
-                    })}
-                </Layout>
-            </Layout>
-        );
-    }
-}
-
-class StickerPackBody extends React.Component<StickerPackProps> {
-    render() {
-        return (
-            <ScrollView style={tailwind("p-4 pt-3")}>
-                <Layout style={tailwind("flex-row items-end items-baseline")}>
-                    <Text style={tailwind("text-xl font-semibold mr-4")}>Stickers</Text>
-                    <Text style={tailwind("text-gray-500 h-full pt-3 text-sm")}>
-                        {this.props.stickerPack.stickers.length}/30
-                    </Text>
-                </Layout>
-                <AuthorStickersView
-                    stickerPack={this.props.stickerPack}
-                    onStickerPress={this.props.onStickerPress}
-                />
-            </ScrollView>
-        );
-    }
-}
-
-class ToolBar extends React.Component<StickerPackProps> {
-    render() {
-        return (
-            <Layout style={tailwind("flex-col p-4 pt-2 pb-2 border-b-2 border-t border-gray-300")}>
-                <Layout style={tailwind("flex-row justify-between w-1/3 pb-1")}>
-                    <Icon name="heart-outline" fill="gray" width={25} height={25} />
-                    <Icon name="paper-plane-outline" fill="gray" width={25} height={25} />
-                    <Icon name="upload" fill="gray" width={25} height={25} />
-                </Layout>
-                <Layout style={tailwind("flex-row pt-1")}>
-                    <Text
-                        style={tw`text-xs font-semibold`}>{`${this.props.stickerPack.views} Views`}</Text>
-                    <Text
-                        style={tw`text-xs pl-3 font-semibold`}>{`${this.props.stickerPack.likes} Likes`}</Text>
-                    <Text
-                        style={tw`text-xs pl-3 font-semibold`}>{`${this.props.stickerPack.likes} Followers`}</Text>
-                </Layout>
-            </Layout>
-        );
-    }
-}
 
 type Props = StackScreenProps<HomeStackParamList, "StickerPackDetailScreen">;
 export const StickerPackScreen = ({ navigation, route }: Props): React.ReactElement => {
@@ -141,8 +43,8 @@ export const StickerPackScreen = ({ navigation, route }: Props): React.ReactElem
 
     useEffect(() => {
         navigation.setOptions({
-            headerTitle: HeaderTitle,
-            headerTitleAlign: "left",
+            headerTitle: "Stickers",
+            headerTitleAlign: "center",
             headerRight: HeaderRight,
         });
     }, [data]);
@@ -296,7 +198,7 @@ export const StickerPackScreen = ({ navigation, route }: Props): React.ReactElem
                         }]}
                         onPressItem={(name) => {
                             if (name === "add_sticker") {
-                                console.log("Add sticker")
+                                onPressUpload();
                             } else if (name === "share_sticker_pack") {
                                 console.log("Share sticker pack")
                             }
