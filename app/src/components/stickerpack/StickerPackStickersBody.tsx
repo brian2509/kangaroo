@@ -11,7 +11,7 @@ const STICKERS_PER_ROW = 4;
 
 interface RenderStickerProps {
     sticker: StickerRo,
-    onStickerPress: (sticker: StickerRo) => void;
+    onStickerPress?: (sticker: StickerRo) => void;
     stickersPerRow: number;
 }
 const StickerGridCell = ({ sticker, onStickerPress, stickersPerRow = 4 }: RenderStickerProps): JSX.Element => {
@@ -24,7 +24,8 @@ const StickerGridCell = ({ sticker, onStickerPress, stickersPerRow = 4 }: Render
                 marginHorizontal: "1%",
                 marginVertical: "1%",
             }}
-            onPress={() => onStickerPress(sticker)}
+            onPress={() => onStickerPress && onStickerPress(sticker)}
+            disabled={!onStickerPress}
         >
             <Image
                 style={tw.style("rounded-lg", {
@@ -40,14 +41,14 @@ const StickerGridCell = ({ sticker, onStickerPress, stickersPerRow = 4 }: Render
 
 
 interface StickersProps {
-    stickerPack: StickerPackRo;
-    onStickerPress: (sticker: StickerRo) => void;
+    stickers: StickerRo[];
+    onStickerPress?: (sticker: StickerRo) => void;
     stickersPerRow?: number;
 }
-const StickerGrid = ({ stickerPack, onStickerPress, stickersPerRow = 4 }: StickersProps): JSX.Element => {
+export const StickerGrid = ({ stickers, onStickerPress, stickersPerRow = 4 }: StickersProps): JSX.Element => {
     return (
         <Layout style={tailwind("flex-row flex-wrap")}>
-            {stickerPack.stickers.map((sticker) => (
+            {stickers.map((sticker) => (
                 <StickerGridCell
                     key={sticker.id}
                     sticker={sticker}
@@ -77,7 +78,7 @@ const StickerPackBody = ({ stickerPack, onStickerPress }: StickerPackBodyProps):
                 <Text style={tailwind("text-gray-500 pt-3 text-xs")}>Last updated: {lastUpdatedString(stickerPack.updatedAt)}</Text>
             </Layout>
             <StickerGrid
-                stickerPack={stickerPack}
+                stickers={stickerPack.stickers}
                 onStickerPress={onStickerPress}
                 stickersPerRow={STICKERS_PER_ROW}
             />

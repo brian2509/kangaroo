@@ -31,7 +31,7 @@ const StickerPackHeader = ({ stickerPack, onHeaderPress }: Props): JSX.Element =
                         {stickerPack.author.username}
                     </Text>
                     <Text style={tailwind("text-xs")}>
-                        {numMembers} member
+                        {numMembers} member{numMembers > 1 ? "s" : ""}
                     </Text>
                 </Layout>
             </Layout>
