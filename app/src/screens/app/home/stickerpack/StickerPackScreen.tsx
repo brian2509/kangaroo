@@ -1,5 +1,5 @@
 import { Button, Icon, Layout, Spinner, Text } from "@ui-kitten/components";
-import { Image, Platform, SafeAreaView, ScrollView, TouchableOpacity } from "react-native";
+import { Alert, Image, Platform, SafeAreaView, ScrollView, TouchableOpacity } from "react-native";
 import { StackScreenProps } from "@react-navigation/stack";
 import { HomeStackParamList } from "../../../../navigation/app/AppStackNavigator";
 import tailwind from "tailwind-rn";
@@ -144,8 +144,8 @@ export const StickerPackScreen = ({ navigation, route }: Props): React.ReactElem
         }
 
         // TODO: add empty stickers in order to reach > 2 stickers?
-        if (!data) {
-            // TODO: Error feedback to user.
+        if (!data || data.stickers.length < 3) {
+            Alert.alert("Invalid stickerpack", "Sticker packs require 3 stickers to be added to WhatsApp.");
             return;
         }
 
@@ -195,12 +195,18 @@ export const StickerPackScreen = ({ navigation, route }: Props): React.ReactElem
                             text: "Share Sticker Pack",
                             name: "share_sticker_pack",
                             icon: require("../../../../assets/icons/share.png"),
+                        }, {
+                            text: "Add to WhatsApp",
+                            name: "add_to_whatsapp",
+                            icon: require("../../../../assets/icons/whatsapp.png"),
                         }]}
                         onPressItem={(name) => {
                             if (name === "add_sticker") {
                                 onPressUpload();
                             } else if (name === "share_sticker_pack") {
                                 console.log("Share sticker pack")
+                            } else if (name === "add_to_whatsapp") {
+                                onAddToWhatsapp();
                             }
                         }}
                     />
