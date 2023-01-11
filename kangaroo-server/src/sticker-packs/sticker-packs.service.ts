@@ -34,6 +34,7 @@ export class StickerPacksService {
     const stickerPack = this.stickerPackRepository.create({
       ...createStickerPackDto,
       author: { id: userId },
+      members: [{ id: userId }],
     });
     const result = await this.stickerPackRepository.save(stickerPack);
     return result.toRO();
@@ -362,7 +363,7 @@ export class StickerPacksService {
       throw new NotFoundException();
     }
 
-    if (!stickerPack.isOwner(userId)) {
+    if (!stickerPack.isMember(userId)) {
       throw new ForbiddenException("Only the owner can make invite links.");
     }
 
@@ -460,5 +461,38 @@ export class StickerPacksService {
       invite.stickerPack.id
     );
     return stickerPack.toRO();
+  }
+
+  async kickMember(id: string, userId: string, userToBeKicked: string): Promise<StickerPackRo> {
+    const stickerPack = await this.stickerPackRepository.findOne({
+      where: { id },
+      relations: ["author", "members"],
+    });
+
+    if (userToBeKicked === userId) {
+      throw new ForbiddenException("Admin cannot kick itself.");
+    }
+
+    if (!stickerPack) {
+      throw new NotFoundException();
+    }
+
+    if (!stickerPack.isOwner(userId)) {
+      throw new ForbiddenException("Not the owner of the pack.");
+    }
+
+    const toBeKicked = stickerPack.members.find(
+      (member) => member.id === userToBeKicked
+    );
+
+    if (!toBeKicked) {
+      throw new ForbiddenException("Member is not in the pack.");
+    }
+
+    stickerPack.members = stickerPack.members.filter(
+      (member) => member.id !== userToBeKicked
+    );
+
+    return (await this.stickerPackRepository.save(stickerPack)).toRO();
   }
 }
