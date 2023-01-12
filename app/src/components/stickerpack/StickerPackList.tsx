@@ -5,7 +5,6 @@ import { TouchableOpacity, ListRenderItemInfo } from "react-native";
 import { StickerPackRo } from "../../api/generated-typescript-api-client/src";
 import { CoverStickerImage } from "../common/CoverStickerImage";
 import { StickerPreviews } from "./StickerPreviews";
-import { StickerPackStats } from "./StickerPackStats";
 import { StickerPackSideInfo } from "./StickerPackSideInfo";
 import { lastUpdatedString } from "../../util/time";
 import { StickerGrid } from "./StickerPackStickersBody";
@@ -16,7 +15,7 @@ interface StickerPackListComponentProps {
     stickerPack: StickerPackRo;
     onPressStickerPack: () => void;
 }
-const StickerPackListComponent = ({ stickerPack, onPressStickerPack }: StickerPackListComponentProps): React.ReactElement => {
+const StickerPackListComponentExperiment = ({ stickerPack, onPressStickerPack }: StickerPackListComponentProps): React.ReactElement => {
     // const numMembers = stickerPack.members.length + 1;
     const numStickers = stickerPack.stickers.length;
 
@@ -69,7 +68,7 @@ interface StickerPackListComponentOLDProps {
     stickerPack: StickerPackRo;
     onPressStickerPack: () => void;
 }
-const StickerPackListComponent_OLD = ({ stickerPack, onPressStickerPack }: StickerPackListComponentOLDProps): React.ReactElement => {
+const StickerPackListComponent = ({ stickerPack, onPressStickerPack }: StickerPackListComponentOLDProps): React.ReactElement => {
     //TODO: add number of notifications to stickerpacks
     const numberOfNotifications = 0;
 
@@ -89,7 +88,6 @@ const StickerPackListComponent_OLD = ({ stickerPack, onPressStickerPack }: Stick
                     <Layout style={tailwind("flex-col justify-around")}>
                         <Text style={tailwind("text-base font-semibold")}>{stickerPack.name}</Text>
                         <StickerPreviews stickerPack={stickerPack} />
-                        <StickerPackStats stickerPack={stickerPack} />
                     </Layout>
                     <StickerPackSideInfo
                         stickerPack={stickerPack}

@@ -15,7 +15,7 @@ export class StickerPackSideInfo extends React.Component<Props> {
 
         return (
             <Layout style={tailwind("flex-col items-end")}>
-                <Text style={tailwind("pb-2 py-1 text-gray-500")} category="p2">
+                <Text style={tailwind("pb-2 pt-3 text-gray-500")} category="p2">
                     {lastUpdatedString(stickerPack.updatedAt)}
                 </Text>
                 {notifications > 0 && (
