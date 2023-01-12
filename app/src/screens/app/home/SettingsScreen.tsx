@@ -32,8 +32,8 @@ const SettingListItem = ({ item }: { item: SettingItem }) => {
     const color = item.color ?? "";
     return (
         <ListItem
-            style={tw`p-2 m-0`}
-            title={() => <Text style={tw`ml-2 ${color}`}>{item.title}</Text>}
+            style={tw`p-3 m-0`}
+            title={() => <Text style={tw`ml-2 text-base ${color}`}>{item.title}</Text>}
             accessoryRight={(props) => <Icon {...props} name="arrow-ios-forward-outline" />}
             onPress={item.onPress}
         />
@@ -76,9 +76,8 @@ export const SettingsScreen = ({ navigation }: Props): React.ReactElement => {
 
     return (
         <SafeAreaView style={tailwind("flex-1")}>
-            <Layout style={tw`flex-col pt-2 px-4 h-full justify-between items-center bg-transparent`}>
+            <Layout style={tw`flex-col h-full justify-between items-center bg-transparent`}>
                 <Layout style={tw`w-full bg-transparent`}>
-                    <SettingsHeader username={myUserQuery.data?.username ?? ""}></SettingsHeader>
                     <Layout style={tw`shadow-md`}>
                         <List
                             scrollEnabled={false}
@@ -88,9 +87,11 @@ export const SettingsScreen = ({ navigation }: Props): React.ReactElement => {
                         />
                     </Layout>
                     <Button
-                        style={tailwind("mt-8")}
+                        style={tailwind("m-8 mt-12 rounded-xl")}
                         status="danger"
-                        onPress={onPressLogout}>
+                        size="large"
+                        onPress={onPressLogout}
+                    >
                         Logout
                     </Button>
                 </Layout>
