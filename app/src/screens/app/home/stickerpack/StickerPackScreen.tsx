@@ -1,19 +1,16 @@
-import { Button, Icon, Layout, Spinner, Text } from "@ui-kitten/components";
-import { Alert, Image, Platform, SafeAreaView, ScrollView, TouchableOpacity } from "react-native";
+import { Button, Icon, Layout, ModalService, Spinner, Text } from "@ui-kitten/components";
+import { Alert, Platform, SafeAreaView, TouchableOpacity } from "react-native";
 import { StackScreenProps } from "@react-navigation/stack";
 import { HomeStackParamList } from "../../../../navigation/app/AppStackNavigator";
 import tailwind from "tailwind-rn";
 import tw from "tailwind-react-native-classnames";
 import React, { useEffect } from "react";
-import { StickerPackRo, StickerRo } from "../../../../api/generated-typescript-api-client/src";
-import { CoverStickerImage } from "../../../../components/common/CoverStickerImage";
 import ImagePicker, { Image as ImageData } from "react-native-image-crop-picker";
 import { STICKER_FULL_SIZE_PX } from "../../../../constants/StickerSizes";
 import { generateName } from "../../../../util/placeholder_generation";
 import { useQueryClient } from "react-query";
 import { useStickerPack } from "../../../../api/hooks/query/stickerPack";
-import { PlaceholderImage } from "../../../../components/common/PlaceholderImage";
-import { useUploadStickerMutation } from "../../../../api/hooks/mutations/stickerPack";
+import { useRemoveStickerPackMutation, useUploadStickerMutation } from "../../../../api/hooks/mutations/stickerPack";
 import { NativeModules } from "react-native";
 import {
     DEFAULT_TRAY_ICON,
@@ -25,11 +22,10 @@ import {
     PUBLISHER_WEBSITE,
     STICKER_FILE_EXTENSION,
 } from "../../../../constants/StickerInfo";
-import { fullMemberList } from "../../../../util/stickerpack_utils";
-import { FloatingAction } from "react-native-floating-action";
 import StickerPackHeader from "../../../../components/stickerpack/StickerPackHeader";
 import StickerPackBody from "../../../../components/stickerpack/StickerPackStickersBody";
 import StickerPackActions from "./StickerPackActions";
+import { StickerRo } from "../../../../api/generated-typescript-api-client/src";
 
 // TODO make this a valid module.
 const { WhatsAppStickersModule } = NativeModules;
@@ -40,7 +36,8 @@ export const StickerPackScreen = ({ navigation, route }: Props): React.ReactElem
 
     const { data } = useStickerPack(route.params.stickerPack.id);
 
-    const uploadStickerMutation = useUploadStickerMutation(queryClient);
+    const { mutate: uploadSticker } = useUploadStickerMutation(queryClient);
+    const { mutate: deleteStickerPack } = useRemoveStickerPackMutation(queryClient);
 
     useEffect(() => {
         navigation.setOptions({
@@ -81,7 +78,7 @@ export const StickerPackScreen = ({ navigation, route }: Props): React.ReactElem
 
                 const dto = { stickerPackId, stickerName, file };
 
-                uploadStickerMutation.mutate(dto);
+                uploadSticker(dto);
             })
             .catch((error) => {
                 if (error.code !== "E_PICKER_CANCELLED") {
@@ -152,6 +149,39 @@ export const StickerPackScreen = ({ navigation, route }: Props): React.ReactElem
         // See: https://github.com/WhatsApp/stickers/tree/master/Android#check-if-pack-is-added-optional
     };
 
+    const onPressDeleteStickerPack = async () => {
+        if (!data) return;
+
+        let modalId = ''
+
+        const hideModal = () => ModalService.hide(modalId);
+
+        const confirmDelete = async () => {
+            console.log("Delete stickerpack")
+            await deleteStickerPack(data.id);
+            hideModal();
+            navigation.pop();
+        }
+
+        modalId = ModalService.show(
+            <TouchableOpacity
+                style={tailwind("w-full h-full flex flex-col items-center justify-center bg-black bg-opacity-50")}
+                onPress={hideModal}
+            >
+                <Layout style={tailwind("flex bg-white p-6 rounded-2xl w-3/4")}>
+                    <Text style={tailwind("font-bold")}>Are you sure?</Text>
+                    <Layout style={tailwind("flex flex-col justify-around mt-6")}>
+                        <Button onPress={confirmDelete} status="danger">Delete Stickerpack</Button>
+                        <Button onPress={hideModal} status="basic" appearance="ghost" size="small">Cancel</Button>
+                    </Layout>
+                </Layout>
+            </TouchableOpacity>,
+            {
+                onBackdropPress: hideModal,
+            }
+        );
+    }
+
     return (
         <SafeAreaView style={tailwind("flex-1 bg-white")}>
             {data == undefined ? (
@@ -166,6 +196,7 @@ export const StickerPackScreen = ({ navigation, route }: Props): React.ReactElem
                         onPressAddToWhatsapp={onAddToWhatsapp}
                         onPressInviteFriends={() => console.log("invite friends")}
                         onPressUploadSticker={onPressUpload}
+                        onPressDeleteStickerPack={onPressDeleteStickerPack}
                     />
                 </>
             )}
