@@ -8,6 +8,7 @@ import tw from "tailwind-react-native-classnames";
 import { AuthContext } from "../../../contexts/AuthContext";
 import { useMe } from "../../../api/hooks/query/user";
 import { HomeStackParamList } from "../../../navigation/app/AppStackNavigator";
+import { showConfirmModal } from "../../../components/common/ConfirmModal";
 
 type Props = StackScreenProps<HomeStackParamList, "SettingsScreen">;
 
@@ -49,6 +50,19 @@ export const SettingsScreen = ({ navigation }: Props): React.ReactElement => {
         });
     }, [])
 
+    const onPressLogout = () => {
+        const onPressConfirm = async () => {
+            logout();
+        }
+
+        showConfirmModal({
+            message: "Are you sure?",
+            buttonText: "Logout",
+            onPressConfirm,
+            status: "danger"
+        });
+    }
+
     const settingsList = [
         {
             title: "Change password",
@@ -76,7 +90,7 @@ export const SettingsScreen = ({ navigation }: Props): React.ReactElement => {
                     <Button
                         style={tailwind("mt-8")}
                         status="danger"
-                        onPress={logout}>
+                        onPress={onPressLogout}>
                         Logout
                     </Button>
                 </Layout>
