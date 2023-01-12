@@ -29,6 +29,7 @@ import { fullMemberList } from "../../../../util/stickerpack_utils";
 import { FloatingAction } from "react-native-floating-action";
 import StickerPackHeader from "../../../../components/stickerpack/StickerPackHeader";
 import StickerPackBody from "../../../../components/stickerpack/StickerPackStickersBody";
+import StickerPackActions from "./StickerPackActions";
 
 // TODO make this a valid module.
 const { WhatsAppStickersModule } = NativeModules;
@@ -161,29 +162,10 @@ export const StickerPackScreen = ({ navigation, route }: Props): React.ReactElem
                 <>
                     <StickerPackHeader stickerPack={data} onHeaderPress={onHeaderPress} />
                     <StickerPackBody stickerPack={data} onStickerPress={onStickerPress} />
-                    <FloatingAction
-                        actions={[{
-                            text: "Add Sticker",
-                            name: "add_sticker",
-                            icon: require("../../../../assets/icons/plus.jpg"),
-                        }, {
-                            text: "Share Sticker Pack",
-                            name: "share_sticker_pack",
-                            icon: require("../../../../assets/icons/share.png"),
-                        }, {
-                            text: "Add to WhatsApp",
-                            name: "add_to_whatsapp",
-                            icon: require("../../../../assets/icons/whatsapp.png"),
-                        }]}
-                        onPressItem={(name) => {
-                            if (name === "add_sticker") {
-                                onPressUpload();
-                            } else if (name === "share_sticker_pack") {
-                                console.log("Share sticker pack")
-                            } else if (name === "add_to_whatsapp") {
-                                onAddToWhatsapp();
-                            }
-                        }}
+                    <StickerPackActions
+                        onPressAddToWhatsapp={onAddToWhatsapp}
+                        onPressInviteFriends={() => console.log("invite friends")}
+                        onPressUploadSticker={onPressUpload}
                     />
                 </>
             )}
