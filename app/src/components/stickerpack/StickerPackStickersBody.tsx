@@ -19,7 +19,7 @@ const StickerGridCell = ({ sticker, onStickerPress, stickersPerRow = 4 }: Render
         <TouchableOpacity
             key={sticker.id}
             style={{
-                width: `${(Math.floor(100 / stickersPerRow)) - 2.01}%`,
+                width: `${(Math.floor(100 / stickersPerRow)) - 2}%`,
                 height: "auto",
                 marginHorizontal: "1%",
                 marginVertical: "1%",
@@ -47,7 +47,7 @@ interface StickersProps {
 }
 export const StickerGrid = ({ stickers, onStickerPress, stickersPerRow = 4 }: StickersProps): JSX.Element => {
     return (
-        <Layout style={tailwind("flex-row flex-wrap")}>
+        <Layout style={tailwind("w-full flex-row flex-wrap")}>
             {stickers.map((sticker) => (
                 <StickerGridCell
                     key={sticker.id}
@@ -67,15 +67,22 @@ interface StickerPackBodyProps {
 }
 const StickerPackBody = ({ stickerPack, onStickerPress }: StickerPackBodyProps): JSX.Element => {
     return (
-        <ScrollView style={tailwind("p-4")}>
-            <Layout style={tailwind("flex-row justify-between items-baseline pb-4")}>
+        <ScrollView style={tailwind("p-6")}>
+            <Layout style={tailwind("flex-row justify-between items-baseline pb-4 pt-2")}>
                 <Layout style={tailwind("flex-row items-baseline")}>
-                    <Text style={tailwind("text-2xl font-bold mr-4")}>Stickers</Text>
-                    <Text style={tailwind("text-gray-500 h-full pt-3 text-sm")}>
-                        {stickerPack.stickers.length}/30
+                    <Text>
+                        <Text style={tailwind("text-2xl font-bold")}>
+                            Stickers
+                        </Text>
+                        {"    "}
+                        <Text style={tailwind("text-sm text-gray-500")}>
+                            {stickerPack.stickers.length}/30
+                        </Text>
                     </Text>
                 </Layout>
-                <Text style={tailwind("text-gray-500 pt-3 text-xs")}>Last updated: {lastUpdatedString(stickerPack.updatedAt)}</Text>
+                <Text style={tailwind("text-gray-500 pb-2 text-xs")}>
+                    Last updated: {lastUpdatedString(stickerPack.updatedAt)}
+                </Text>
             </Layout>
             <StickerGrid
                 stickers={stickerPack.stickers}
