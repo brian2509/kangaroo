@@ -18,7 +18,7 @@ import { FloatingAction } from "react-native-floating-action";
 type Props = StackScreenProps<HomeStackParamList, "Homescreen">;
 
 export const HomeScreen = ({ navigation }: Props): React.ReactElement => {
-    const { accessToken, logout } = React.useContext(AuthContext);
+    const { accessToken } = React.useContext(AuthContext);
 
     const queryClient = useQueryClient();
 

@@ -1,10 +1,11 @@
-import { Button, Icon, Layout, ModalService, Spinner, Text } from "@ui-kitten/components";
+import React, { useEffect } from "react";
 import { Alert, Platform, SafeAreaView, TouchableOpacity } from "react-native";
+
+import { Button, Icon, Layout, ModalService, Spinner, Text } from "@ui-kitten/components";
 import { StackScreenProps } from "@react-navigation/stack";
 import { HomeStackParamList } from "../../../../navigation/app/AppStackNavigator";
 import tailwind from "tailwind-rn";
 import tw from "tailwind-react-native-classnames";
-import React, { useEffect } from "react";
 import ImagePicker, { Image as ImageData } from "react-native-image-crop-picker";
 import { STICKER_FULL_SIZE_PX } from "../../../../constants/StickerSizes";
 import { generateName } from "../../../../util/placeholder_generation";
@@ -26,6 +27,7 @@ import StickerPackHeader from "../../../../components/stickerpack/StickerPackHea
 import StickerPackBody from "../../../../components/stickerpack/StickerPackStickersBody";
 import StickerPackActions from "./StickerPackActions";
 import { StickerRo } from "../../../../api/generated-typescript-api-client/src";
+import { showConfirmModal } from "../../../../components/common/ConfirmModal";
 
 // TODO make this a valid module.
 const { WhatsAppStickersModule } = NativeModules;
@@ -158,33 +160,16 @@ export const StickerPackScreen = ({ navigation, route }: Props): React.ReactElem
     const onPressDeleteStickerPack = async () => {
         if (!stickerPack) return;
 
-        let modalId = ''
-
-        const hideModal = () => ModalService.hide(modalId);
-
         const confirmDelete = async () => {
             console.log("Delete stickerpack")
             await deleteStickerPack(stickerPack.id);
-            hideModal();
             navigation.pop();
         }
 
-        modalId = ModalService.show(
-            <TouchableOpacity
-                style={tailwind("w-full h-full flex flex-col items-center justify-center bg-black bg-opacity-50")}
-                onPress={hideModal}
-            >
-                <Layout style={tailwind("flex bg-white p-6 rounded-2xl w-3/4")}>
-                    <Text style={tailwind("font-bold")}>Are you sure?</Text>
-                    <Layout style={tailwind("flex flex-col justify-around mt-6")}>
-                        <Button onPress={confirmDelete} status="danger">Delete Stickerpack</Button>
-                        <Button onPress={hideModal} status="basic" appearance="ghost" size="small">Cancel</Button>
-                    </Layout>
-                </Layout>
-            </TouchableOpacity>,
-            {
-                onBackdropPress: hideModal,
-            }
+        showConfirmModal(
+            "Are you sure?",
+            "Delete Sticker Pack",
+            confirmDelete,
         );
     }
 

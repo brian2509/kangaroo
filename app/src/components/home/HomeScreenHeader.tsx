@@ -1,6 +1,6 @@
 import React from "react";
 import tailwind from "tailwind-rn";
-import { Icon, Layout, Text } from "@ui-kitten/components";
+import { Layout, Text } from "@ui-kitten/components";
 import { TouchableOpacity } from "react-native";
 import { ProfileIcon } from "../common/ProfileIcon";
 
