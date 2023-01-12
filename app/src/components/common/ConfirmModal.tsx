@@ -4,12 +4,14 @@ import { TouchableOpacity } from "react-native";
 import { Button, Layout, ModalService, Text } from "@ui-kitten/components";
 import tailwind from "tailwind-rn";
 
-export const showConfirmModal = (
-    message: string,
-    buttonText: string,
-    onPressConfirm: () => void,
-    onPressCancel?: () => void
-): void => {
+interface ConfirmModalProps {
+    message: string;
+    buttonText: string;
+    onPressConfirm: () => void;
+    onPressCancel?: () => void;
+    status?: "basic" | "primary" | "success" | "info" | "warning" | "danger" | "control";
+}
+export const showConfirmModal = ({ message, buttonText, onPressConfirm, onPressCancel, status }: ConfirmModalProps): void => {
     let modalId = ''
 
     const hideModal = () => ModalService.hide(modalId)
@@ -27,24 +29,21 @@ export const showConfirmModal = (
     modalId = ModalService.show(
         <TouchableOpacity
             style={tailwind("w-full h-full flex flex-col items-center justify-center bg-black bg-opacity-50")}
-            onPress={hideModal}
+            onPress={pressCancel}
         >
-            <Layout style={tailwind("flex bg-white p-6 rounded-2xl w-3/4")}>
-                <Text style={tailwind("font-bold")}>
+            <Layout style={tailwind("flex flex-col items-center bg-white py-4 rounded-2xl w-3/4")}>
+                <Text style={tailwind("my-1")}>
                     {message}
                 </Text>
-                <Layout style={tailwind("flex flex-col justify-around mt-6")}>
-                    <Button onPress={pressConfirm} status="danger">
+                <Layout style={tailwind("flex flex-col justify-around mt-1")}>
+                    <Button onPress={pressConfirm} status={status} appearance="ghost" size="large">
                         {buttonText}
-                    </Button>
-                    <Button onPress={pressCancel} status="basic" appearance="ghost" size="small">
-                        Cancel
                     </Button>
                 </Layout>
             </Layout>
         </TouchableOpacity>,
         {
-            onBackdropPress: hideModal,
+            onBackdropPress: pressCancel,
         }
     );
 }

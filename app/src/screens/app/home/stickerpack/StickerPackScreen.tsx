@@ -160,17 +160,17 @@ export const StickerPackScreen = ({ navigation, route }: Props): React.ReactElem
     const onPressDeleteStickerPack = async () => {
         if (!stickerPack) return;
 
-        const confirmDelete = async () => {
-            console.log("Delete stickerpack")
+        const onPressConfirm = async () => {
             await deleteStickerPack(stickerPack.id);
             navigation.pop();
         }
 
-        showConfirmModal(
-            "Are you sure?",
-            "Delete Sticker Pack",
-            confirmDelete,
-        );
+        showConfirmModal({
+            message: "Are you sure?",
+            buttonText: "Delete Sticker Pack",
+            onPressConfirm,
+            status: "danger"
+        });
     }
 
     return (

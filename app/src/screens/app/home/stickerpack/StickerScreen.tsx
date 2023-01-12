@@ -8,6 +8,7 @@ import tw from "tailwind-react-native-classnames";
 import tailwind from "tailwind-rn";
 import { useDeleteStickerMutation } from "../../../../api/hooks/mutations/stickerPack";
 import { useQueryClient } from "react-query";
+import { showConfirmModal } from "../../../../components/common/ConfirmModal";
 
 
 type Props = StackScreenProps<HomeStackParamList, "StickerScreen">;
@@ -18,12 +19,20 @@ const StickerScreen = ({ route, navigation }: Props): JSX.Element => {
     const { mutate: deleteSticker } = useDeleteStickerMutation(queryClient);
 
     const onPressDeleteSticker = async () => {
-        await deleteSticker({
-            stickerPackId: stickerPack.id,
-            stickerId: sticker.id,
-        })
+        const onPressConfirm = async () => {
+            await deleteSticker({
+                stickerPackId: stickerPack.id,
+                stickerId: sticker.id,
+            })
+            navigation.pop();
+        }
 
-        navigation.pop();
+        showConfirmModal({
+            message: "Are you sure?",
+            buttonText: "Delete Sticker",
+            onPressConfirm,
+            status: "danger"
+        });
     }
 
     const DeleteIcon = () => (
