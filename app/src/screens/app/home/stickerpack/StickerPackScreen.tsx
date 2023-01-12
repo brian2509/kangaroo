@@ -34,7 +34,7 @@ type Props = StackScreenProps<HomeStackParamList, "StickerPackDetailScreen">;
 export const StickerPackScreen = ({ navigation, route }: Props): React.ReactElement => {
     const queryClient = useQueryClient();
 
-    const { data } = useStickerPack(route.params.stickerPack.id);
+    const { data: stickerPack } = useStickerPack(route.params.stickerPack.id);
 
     const { mutate: uploadSticker } = useUploadStickerMutation(queryClient);
     const { mutate: deleteStickerPack } = useRemoveStickerPackMutation(queryClient);
@@ -45,17 +45,23 @@ export const StickerPackScreen = ({ navigation, route }: Props): React.ReactElem
             headerTitleAlign: "center",
             headerRight: HeaderRight,
         });
-    }, [data]);
+    }, [stickerPack]);
 
-    const onStickerPress = (data: StickerRo): void => {
-        navigation.navigate("StickerScreen", { sticker: data });
+    const onStickerPress = (sticker: StickerRo): void => {
+        if (!stickerPack) return;
+
+        navigation.navigate("StickerScreen", {
+            sticker,
+            stickerPack,
+            allowDeleteSticker: true
+        });
     };
 
     const onHeaderPress = () => {
-        if (data == undefined) return;
+        if (stickerPack == undefined) return;
 
         navigation.navigate("StickerPackManageScreen", {
-            stickerPack: data,
+            stickerPack,
         });
     };
 
@@ -88,11 +94,11 @@ export const StickerPackScreen = ({ navigation, route }: Props): React.ReactElem
     };
 
     const onPressUpload = async () => {
-        if (data == undefined) {
+        if (stickerPack == undefined) {
             return;
         }
 
-        pickAndUploadSticker(data.id);
+        pickAndUploadSticker(stickerPack.id);
     };
 
     const AddIcon = (props: any) => (
@@ -101,7 +107,7 @@ export const StickerPackScreen = ({ navigation, route }: Props): React.ReactElem
     const HeaderRight = () => (
         <Layout style={tw`flex-row mr-4`}>
             <Button
-                disabled={data == undefined}
+                disabled={stickerPack == undefined}
                 appearance="ghost"
                 style={tailwind("px-1")}
                 onPress={onPressUpload}
@@ -112,12 +118,12 @@ export const StickerPackScreen = ({ navigation, route }: Props): React.ReactElem
 
     const onAddToWhatsapp = async () => {
         const stickerMap: { [id: string]: string } = {};
-        for (const sticker of data?.stickers || []) {
+        for (const sticker of stickerPack?.stickers || []) {
             stickerMap[sticker.id + STICKER_FILE_EXTENSION] = "🦘";
         }
 
         // TODO: add empty stickers in order to reach > 2 stickers?
-        if (!data || data.stickers.length < 3) {
+        if (!stickerPack || stickerPack.stickers.length < 3) {
             Alert.alert("Invalid stickerpack", "Sticker packs require 3 stickers to be added to WhatsApp.");
             return;
         }
@@ -126,8 +132,8 @@ export const StickerPackScreen = ({ navigation, route }: Props): React.ReactElem
         // As the ContentProvider should have propagated any updates through the effect in `HomeScreen`.
         if (Platform.OS == "android") {
             WhatsAppStickersModule.registerStickerPackAndAddToWhatsApp(
-                data.id,
-                data.name,
+                stickerPack.id,
+                stickerPack.name,
                 PUBLISHER_NAME,
                 DEFAULT_TRAY_ICON,
                 PUBLISHER_EMAIL,
@@ -135,9 +141,9 @@ export const StickerPackScreen = ({ navigation, route }: Props): React.ReactElem
                 PUBLISHER_PRIVACY_POLICY,
                 PUBLISHER_LICENSE,
                 PLAYSTORE_URL,
-                data.updatedAt,
+                stickerPack.updatedAt,
                 true,
-                data.animated,
+                stickerPack.animated,
                 stickerMap,
             );
         } else {
@@ -150,7 +156,7 @@ export const StickerPackScreen = ({ navigation, route }: Props): React.ReactElem
     };
 
     const onPressDeleteStickerPack = async () => {
-        if (!data) return;
+        if (!stickerPack) return;
 
         let modalId = ''
 
@@ -158,7 +164,7 @@ export const StickerPackScreen = ({ navigation, route }: Props): React.ReactElem
 
         const confirmDelete = async () => {
             console.log("Delete stickerpack")
-            await deleteStickerPack(data.id);
+            await deleteStickerPack(stickerPack.id);
             hideModal();
             navigation.pop();
         }
@@ -184,14 +190,14 @@ export const StickerPackScreen = ({ navigation, route }: Props): React.ReactElem
 
     return (
         <SafeAreaView style={tailwind("flex-1 bg-white")}>
-            {data == undefined ? (
+            {stickerPack == undefined ? (
                 <Layout style={tw`flex-1 items-center mt-20`}>
                     <Spinner size="giant" />
                 </Layout>
             ) : (
                 <>
-                    <StickerPackHeader stickerPack={data} onHeaderPress={onHeaderPress} />
-                    <StickerPackBody stickerPack={data} onStickerPress={onStickerPress} />
+                    <StickerPackHeader stickerPack={stickerPack} onHeaderPress={onHeaderPress} />
+                    <StickerPackBody stickerPack={stickerPack} onStickerPress={onStickerPress} />
                     <StickerPackActions
                         onPressAddToWhatsapp={onAddToWhatsapp}
                         onPressInviteFriends={() => console.log("invite friends")}

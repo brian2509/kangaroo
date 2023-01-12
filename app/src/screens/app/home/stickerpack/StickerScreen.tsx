@@ -1,27 +1,45 @@
 import React, { useEffect } from "react";
 
 import { StackScreenProps } from "@react-navigation/stack";
-import { Icon, Layout } from "@ui-kitten/components";
-import { Image, SafeAreaView, TouchableOpacity } from "react-native";
+import { Button, Icon } from "@ui-kitten/components";
+import { Image, SafeAreaView } from "react-native";
 import { HomeStackParamList } from "../../../../navigation/app/AppStackNavigator";
 import tw from "tailwind-react-native-classnames";
+import tailwind from "tailwind-rn";
+import { useDeleteStickerMutation } from "../../../../api/hooks/mutations/stickerPack";
+import { useQueryClient } from "react-query";
 
-const DownloadIcon = () => {
-    <Layout style={tw`flex-row mr-4`}>
-        <TouchableOpacity activeOpacity={0.7}>
-            <Icon name="download" fill="black" width={25} height={25} />
-        </TouchableOpacity>
-    </Layout>
-}
 
 type Props = StackScreenProps<HomeStackParamList, "StickerScreen">;
 const StickerScreen = ({ route, navigation }: Props): JSX.Element => {
-    const sticker = route.params.sticker;
+    const { stickerPack, sticker, allowDeleteSticker } = route.params;
+
+    const queryClient = useQueryClient();
+    const { mutate: deleteSticker } = useDeleteStickerMutation(queryClient);
+
+    const onPressDeleteSticker = async () => {
+        await deleteSticker({
+            stickerPackId: stickerPack.id,
+            stickerId: sticker.id,
+        })
+
+        navigation.pop();
+    }
+
+    const DeleteIcon = () => (
+        <Button
+            appearance="ghost"
+            status="danger"
+            style={tailwind("mx-3 px-1")}
+            onPress={onPressDeleteSticker}
+            accessoryLeft={(props) => (<Icon style={tw.style("w-8 h-8")} name="trash" {...props} />)}
+        />
+    );
 
     useEffect(() => {
         navigation.setOptions({
             headerTitle: "Sticker",
-            headerRight: DownloadIcon
+            headerRight: allowDeleteSticker ? DeleteIcon : undefined,
         });
     }, [])
 

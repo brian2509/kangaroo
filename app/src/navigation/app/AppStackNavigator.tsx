@@ -22,6 +22,8 @@ export type HomeStackParamList = {
     };
     StickerScreen: {
         sticker: StickerRo;
+        stickerPack: StickerPackRo;
+        allowDeleteSticker?: boolean;
     };
     CreateStickerPackScreen: undefined;
     CreateAddMembersScreen: {
