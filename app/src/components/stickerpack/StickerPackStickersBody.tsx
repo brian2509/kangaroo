@@ -6,6 +6,7 @@ import { Layout, Text } from "@ui-kitten/components"
 import { StickerPackRo, StickerRo } from "../../api/generated-typescript-api-client/src";
 import { Image, ScrollView, TouchableOpacity } from "react-native";
 import { lastUpdatedString } from "../../util/time";
+import { lastUpdatedInStickerPack } from "../../util/stickerpack_utils";
 
 const STICKERS_PER_ROW = 4;
 
@@ -67,6 +68,9 @@ interface StickerPackBodyProps {
     onStickerPress: (sticker: StickerRo) => void;
 }
 const StickerPackBody = ({ stickerPack, onStickerPress }: StickerPackBodyProps): JSX.Element => {
+
+    const lastUpdated = lastUpdatedInStickerPack(stickerPack);
+
     return (
         <ScrollView style={tailwind("p-6")}>
             <Layout style={tailwind("flex-row justify-between items-baseline pb-4 pt-2")}>
@@ -82,7 +86,7 @@ const StickerPackBody = ({ stickerPack, onStickerPress }: StickerPackBodyProps):
                     </Text>
                 </Layout>
                 <Text style={tailwind("text-gray-500 pb-2 text-xs")}>
-                    Last updated: {lastUpdatedString(stickerPack.updatedAt)}
+                    Last updated: {lastUpdatedString(lastUpdated)}
                 </Text>
             </Layout>
             <StickerGrid
