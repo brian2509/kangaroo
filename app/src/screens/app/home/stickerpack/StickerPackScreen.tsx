@@ -11,7 +11,7 @@ import { STICKER_FULL_SIZE_PX } from "../../../../constants/StickerSizes";
 import { generateName } from "../../../../util/placeholder_generation";
 import { useQueryClient } from "react-query";
 import { useStickerPack } from "../../../../api/hooks/query/stickerPack";
-import { useRemoveStickerPackMutation, useUploadStickerMutation } from "../../../../api/hooks/mutations/stickerPack";
+import { useUploadStickerMutation } from "../../../../api/hooks/mutations/stickerPack";
 import { NativeModules } from "react-native";
 import {
     DEFAULT_TRAY_ICON,
@@ -27,7 +27,6 @@ import StickerPackHeader from "../../../../components/stickerpack/StickerPackHea
 import StickerPackBody from "../../../../components/stickerpack/StickerPackStickersBody";
 import StickerPackActions from "./StickerPackActions";
 import { StickerRo } from "../../../../api/generated-typescript-api-client/src";
-import { showConfirmModal } from "../../../../components/common/ConfirmModal";
 
 // TODO make this a valid module.
 const { WhatsAppStickersModule } = NativeModules;
@@ -39,7 +38,6 @@ export const StickerPackScreen = ({ navigation, route }: Props): React.ReactElem
     const { data: stickerPack } = useStickerPack(route.params.stickerPack.id);
 
     const { mutate: uploadSticker } = useUploadStickerMutation(queryClient);
-    const { mutate: deleteStickerPack } = useRemoveStickerPackMutation(queryClient);
 
     useEffect(() => {
         navigation.setOptions({
@@ -156,23 +154,6 @@ export const StickerPackScreen = ({ navigation, route }: Props): React.ReactElem
         // TODO: Verify that stickerpack has been added successfully.
         // See: https://github.com/WhatsApp/stickers/tree/master/Android#check-if-pack-is-added-optional
     };
-
-    const onPressDeleteStickerPack = async () => {
-        if (!stickerPack) return;
-
-        const onPressConfirm = async () => {
-            await deleteStickerPack(stickerPack.id);
-            navigation.pop();
-        }
-
-        showConfirmModal({
-            message: "Are you sure?",
-            buttonText: "Delete Sticker Pack",
-            onPressConfirm,
-            status: "danger"
-        });
-    }
-
     return (
         <SafeAreaView style={tailwind("flex-1 bg-white")}>
             {stickerPack == undefined ? (
@@ -187,7 +168,6 @@ export const StickerPackScreen = ({ navigation, route }: Props): React.ReactElem
                         onPressAddToWhatsapp={onAddToWhatsapp}
                         onPressInviteFriends={() => console.log("invite friends")}
                         onPressUploadSticker={onPressUpload}
-                        onPressDeleteStickerPack={onPressDeleteStickerPack}
                     />
                 </>
             )}

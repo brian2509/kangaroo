@@ -6,13 +6,11 @@ interface Props {
     onPressUploadSticker: () => void;
     onPressInviteFriends: () => void;
     onPressAddToWhatsapp: () => void;
-    onPressDeleteStickerPack: () => void;
 }
 const StickerPackActions = ({
     onPressUploadSticker,
     onPressInviteFriends,
     onPressAddToWhatsapp,
-    onPressDeleteStickerPack
 }: Props): JSX.Element => {
     return (
         <FloatingAction
@@ -31,11 +29,6 @@ const StickerPackActions = ({
                 name: "add_to_whatsapp",
                 icon: require("../../../../assets/icons/whatsapp.png"),
                 color: "green"
-            }, {
-                text: "Delete Stickerpack",
-                name: "delete_stickerpack",
-                icon: require("../../../../assets/icons/trash.png"),
-                color: "darkred"
             }]}
             onPressItem={(name) => {
                 if (name === "add_sticker") {
@@ -44,8 +37,6 @@ const StickerPackActions = ({
                     onPressInviteFriends();
                 } else if (name === "add_to_whatsapp") {
                     onPressAddToWhatsapp();
-                } else if (name === "delete_stickerpack") {
-                    onPressDeleteStickerPack();
                 }
             }}
         />
