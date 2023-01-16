@@ -4,8 +4,8 @@ import { SafeAreaView, TouchableWithoutFeedback } from "react-native";
 import { StackScreenProps } from "@react-navigation/stack";
 import { Icon, IconProps, Input, Layout, Text } from "@ui-kitten/components";
 import tw from "tailwind-react-native-classnames";
-import { TextFieldActions } from "../../../components/common/TextFieldActions";
-import { HomeStackParamList } from "../../../navigation/app/AppStackNavigator";
+import { TextFieldActions } from "../../../../components/common/TextFieldActions";
+import { HomeStackParamList } from "../../../../navigation/app/AppStackNavigator";
 
 const updateScreenTitles = {
     email: "Email",

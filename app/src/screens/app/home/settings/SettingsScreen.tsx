@@ -2,13 +2,13 @@ import React, { useEffect } from "react";
 import tailwind from "tailwind-rn";
 import { Linking, SafeAreaView } from "react-native";
 import { StackScreenProps } from "@react-navigation/stack";
-import { ProfileIcon } from "../../../components/common/ProfileIcon";
+import { ProfileIcon } from "../../../../components/common/ProfileIcon";
 import { Button, Divider, Icon, Layout, List, ListItem, Text } from "@ui-kitten/components";
 import tw from "tailwind-react-native-classnames";
-import { AuthContext } from "../../../contexts/AuthContext";
-import { useMe } from "../../../api/hooks/query/user";
-import { HomeStackParamList } from "../../../navigation/app/AppStackNavigator";
-import { showConfirmModal } from "../../../components/common/ConfirmModal";
+import { AuthContext } from "../../../../contexts/AuthContext";
+import { useMe } from "../../../../api/hooks/query/user";
+import { HomeStackParamList } from "../../../../navigation/app/AppStackNavigator";
+import { showConfirmModal } from "../../../../components/common/ConfirmModal";
 
 type Props = StackScreenProps<HomeStackParamList, "SettingsScreen">;
 

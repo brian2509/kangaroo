@@ -7,10 +7,10 @@ import { StickerPackRo, StickerRo } from "../../api/generated-typescript-api-cli
 import { CreateStickerPackScreen } from "../../screens/app/home/stickerpack/CreateStickerPackScreen";
 import { CreateAddMembersScreen } from "../../screens/app/home/stickerpack/CreateAddMembersScreen";
 import { createStackNavigator } from "@react-navigation/stack";
-import { SettingsScreen } from "../../screens/app/home/SettingsScreen";
+import { SettingsScreen } from "../../screens/app/home/settings/SettingsScreen";
 import StickerScreen from "../../screens/app/home/stickerpack/StickerScreen";
-import { SettingsUpdateScreen } from "../../screens/app/home/SettingsUpdateScreen";
-import { PrivacyPolicyScreen } from "../../screens/app/home/PrivacyPolicyScreen";
+import { SettingsUpdateScreen } from "../../screens/app/home/settings/SettingsUpdateScreen";
+import { PrivacyPolicyScreen } from "../../screens/app/home/settings/PrivacyPolicyScreen";
 
 export type HomeStackParamList = {
     Homescreen: undefined;

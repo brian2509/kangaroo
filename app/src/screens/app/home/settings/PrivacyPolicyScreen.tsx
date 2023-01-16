@@ -5,7 +5,7 @@ import tailwind from "tailwind-rn";
 import { SafeAreaView } from "react-native";
 import { Layout, Text } from "@ui-kitten/components";
 import { StackScreenProps } from "@react-navigation/stack";
-import { HomeStackParamList } from "../../../navigation/app/AppStackNavigator";
+import { HomeStackParamList } from "../../../../navigation/app/AppStackNavigator";
 
 type Props = StackScreenProps<HomeStackParamList, "SettingsScreen">;
 
