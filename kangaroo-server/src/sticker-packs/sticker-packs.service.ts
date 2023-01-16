@@ -364,7 +364,7 @@ export class StickerPacksService {
     }
 
     if (!stickerPack.isMember(userId)) {
-      throw new ForbiddenException("Only the owner can make invite links.");
+      throw new ForbiddenException("Only members can create invite links.");
     }
 
     // Check if the expire date is set in the future.
@@ -403,8 +403,8 @@ export class StickerPacksService {
       throw new NotFoundException();
     }
 
-    if (!stickerPack.isOwner(userId)) {
-      throw new ForbiddenException("Only the owner can delete invites.");
+    if (!stickerPack.isMember(userId)) {
+      throw new ForbiddenException("Only members can delete invites.");
     }
 
     const invite = await this.inviteRepository.findOne({

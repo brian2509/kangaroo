@@ -60,6 +60,7 @@ export class StickersService {
     const sticker = await this.stickerRepository.findOne({
       where: { id },
     });
+
     if (!sticker) {
       throw new NotFoundException();
     }
