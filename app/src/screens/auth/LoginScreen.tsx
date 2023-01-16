@@ -37,7 +37,7 @@ export const LoginScreen = ({ navigation }: Props) => {
 
     return (
         <SafeAreaView style={tailwind("flex-1 bg-white")}>
-            <KeyboardAvoidingView behavior="position" style={tailwind("transition-all")}>
+            <KeyboardAvoidingView behavior="position">
                 <TouchableWithoutFeedback style={tailwind("flex-1")} onPress={Keyboard.dismiss}>
                     <Layout style={tailwind("items-center p-6")}>
                         <Layout style={tailwind("p-2")}>
