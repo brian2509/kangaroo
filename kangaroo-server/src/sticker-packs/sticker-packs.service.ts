@@ -156,6 +156,7 @@ export class StickerPacksService {
   async findAllPublicPacks(): Promise<StickerPackRo[]> {
     const stickerPacks = await this.stickerPackRepository.find({
       where: { personal: false },
+      order: { createdAt: "ASC" },
     });
     return stickerPacks.map((stickerPack) => stickerPack.toRO());
   }
