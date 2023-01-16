@@ -4,7 +4,7 @@ import tw from "tailwind-react-native-classnames";
 
 import { Layout, Text } from "@ui-kitten/components"
 import { StickerPackRo, StickerRo } from "../../api/generated-typescript-api-client/src";
-import { Image, ScrollView, TouchableOpacity } from "react-native";
+import { Image, RefreshControl, ScrollView, TouchableOpacity } from "react-native";
 import { lastUpdatedString } from "../../util/time";
 import { lastUpdatedInStickerPack } from "../../util/stickerpack_utils";
 
@@ -62,17 +62,21 @@ export const StickerGrid = ({ stickers, onStickerPress, stickersPerRow = 4 }: St
     );
 }
 
-
 interface StickerPackBodyProps {
     stickerPack: StickerPackRo;
     onStickerPress: (sticker: StickerRo) => void;
+    refreshing: boolean;
+    onRefresh: () => void;
 }
-const StickerPackBody = ({ stickerPack, onStickerPress }: StickerPackBodyProps): JSX.Element => {
+const StickerPackBody = ({ stickerPack, onStickerPress, refreshing, onRefresh }: StickerPackBodyProps): JSX.Element => {
 
     const lastUpdated = lastUpdatedInStickerPack(stickerPack);
 
     return (
-        <ScrollView style={tailwind("p-6")}>
+        <ScrollView
+            style={tailwind("p-6")}
+            refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+        >
             <Layout style={tailwind("flex-row justify-between items-baseline pb-4 pt-2")}>
                 <Layout style={tailwind("flex-row items-baseline")}>
                     <Text>

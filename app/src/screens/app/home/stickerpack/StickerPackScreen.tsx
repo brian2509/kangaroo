@@ -35,7 +35,7 @@ type Props = StackScreenProps<HomeStackParamList, "StickerPackDetailScreen">;
 export const StickerPackScreen = ({ navigation, route }: Props): React.ReactElement => {
     const queryClient = useQueryClient();
 
-    const { data: stickerPack } = useStickerPack(route.params.stickerPack.id);
+    const { data: stickerPack, isFetching, refetch } = useStickerPack(route.params.stickerPack.id);
 
     const { mutate: uploadSticker } = useUploadStickerMutation(queryClient);
 
@@ -163,7 +163,12 @@ export const StickerPackScreen = ({ navigation, route }: Props): React.ReactElem
             ) : (
                 <>
                     <StickerPackHeader stickerPack={stickerPack} onHeaderPress={onHeaderPress} />
-                    <StickerPackBody stickerPack={stickerPack} onStickerPress={onStickerPress} />
+                    <StickerPackBody
+                        stickerPack={stickerPack}
+                        onStickerPress={onStickerPress}
+                        onRefresh={refetch}
+                        refreshing={isFetching}
+                    />
                     <StickerPackActions
                         onPressAddToWhatsapp={onAddToWhatsapp}
                         onPressInviteFriends={() => console.log("invite friends")}
