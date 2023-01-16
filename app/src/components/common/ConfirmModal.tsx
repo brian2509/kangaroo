@@ -39,6 +39,9 @@ export const showConfirmModal = ({ message, buttonText, onPressConfirm, onPressC
                     <Button onPress={pressConfirm} status={status} appearance="ghost" size="large">
                         {buttonText}
                     </Button>
+                    <Button onPress={pressCancel} status="basic" appearance="ghost">
+                        Cancel
+                    </Button>
                 </Layout>
             </Layout>
         </TouchableOpacity>,
