@@ -16,7 +16,7 @@ import { UserModule } from "./users/user.module";
   imports: [
     TypeOrmModule.forRoot({
       type: "postgres",
-      url: `postgres://${process.env.POSTGRES_USER}:${process.env.POSTGRES_PASSWORD}@${process.env.POSTGRES_HOST}:5432/${process.env.POSTGRES_DB}`,
+      url: `postgres://${process.env.POSTGRES_USER}:${process.env.POSTGRES_PASSWORD}@${process.env.POSTGRES_HOST}:${process.env.POSTGRES_PORT}/${process.env.POSTGRES_DB}`,
       entities: [User, Sticker, PrivateFile, StickerPack, StickerPackInvite],
       synchronize: true,
     }),
