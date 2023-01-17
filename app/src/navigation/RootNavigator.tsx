@@ -1,7 +1,7 @@
 import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
-import { AuthContext } from "../contexts/AuthContext";
+import { useAuthContext } from "../contexts/AuthContext";
 import { Layout, Text } from "@ui-kitten/components";
 import { AuthStackNavigator } from "./auth/AuthStackNavigator";
 import { AppStackNavigator } from "./app/AppStackNavigator";
@@ -33,7 +33,7 @@ const RootStackNavigator = ({ isAuthenticated }: RootStackNavigatorProps) => (
 );
 
 export const RootNavigator = (): React.ReactElement => {
-    const { isAuthenticated } = React.useContext(AuthContext);
+    const { isAuthenticated } = useAuthContext();
 
     if (isAuthenticated == undefined) {
         // TODO: Create loading page

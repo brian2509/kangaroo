@@ -1,7 +1,7 @@
-import React from "react";
+import React, { ReactNode } from "react";
 import { Layout, Text, Input, Card, Icon, IconProps } from "@ui-kitten/components";
 import { Image, Keyboard, KeyboardAvoidingView, SafeAreaView, TouchableWithoutFeedback } from "react-native";
-import { AuthContext } from "../../contexts/AuthContext";
+import { useAuthContext } from "../../contexts/AuthContext";
 import { StackScreenProps } from "@react-navigation/stack";
 import { AuthStackParamList } from "../../navigation/auth/AuthStackNavigator";
 import tailwind from "tailwind-rn";
@@ -10,8 +10,8 @@ import { useLoginMutation } from "../../api/hooks/mutations/auth";
 
 type Props = StackScreenProps<AuthStackParamList, "Login">;
 
-export const LoginScreen = ({ navigation }: Props) => {
-    const { login } = React.useContext(AuthContext);
+export const LoginScreen = ({ navigation }: Props): ReactNode => {
+    const { login } = useAuthContext();
 
     const [username, setUsername] = React.useState("username2");
     const [password, setPassword] = React.useState("password123");

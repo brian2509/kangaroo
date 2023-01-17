@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import tailwind from "tailwind-rn";
 import { SafeAreaView } from "react-native";
-import { AuthContext } from "../../../contexts/AuthContext";
+import { useAuthContext } from "../../../contexts/AuthContext";
 import { StackScreenProps } from "@react-navigation/stack";
 import { HomeStackParamList } from "../../../navigation/app/AppStackNavigator";
 import { useQueryClient } from "react-query";
@@ -18,7 +18,7 @@ import { FloatingAction } from "react-native-floating-action";
 type Props = StackScreenProps<HomeStackParamList, "Homescreen">;
 
 export const HomeScreen = ({ navigation }: Props): React.ReactElement => {
-    const { accessToken } = React.useContext(AuthContext);
+    const { accessToken } = useAuthContext();
 
     const queryClient = useQueryClient();
 

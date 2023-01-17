@@ -5,8 +5,7 @@ import { StackScreenProps } from "@react-navigation/stack";
 import { ProfileIcon } from "../../../../components/common/ProfileIcon";
 import { Button, Divider, Icon, Layout, List, ListItem, Text } from "@ui-kitten/components";
 import tw from "tailwind-react-native-classnames";
-import { AuthContext } from "../../../../contexts/AuthContext";
-import { useMe } from "../../../../api/hooks/query/user";
+import { useAuthContext } from "../../../../contexts/AuthContext";
 import { HomeStackParamList } from "../../../../navigation/app/AppStackNavigator";
 import { showConfirmModal } from "../../../../components/common/ConfirmModal";
 
@@ -41,8 +40,7 @@ const SettingListItem = ({ item }: { item: SettingItem }) => {
 };
 
 export const SettingsScreen = ({ navigation }: Props): React.ReactElement => {
-    const { logout } = React.useContext(AuthContext);
-    const myUserQuery = useMe();
+    const { logout } = useAuthContext();
 
     useEffect(() => {
         navigation.setOptions({

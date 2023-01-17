@@ -1,4 +1,4 @@
-import React from "react";
+import React, { ReactNode } from "react";
 import { Layout, Text, Input, Icon, Card, IconProps } from "@ui-kitten/components";
 import {
     Alert,
@@ -13,7 +13,7 @@ import { StackScreenProps } from "@react-navigation/stack";
 import { AuthStackParamList } from "../../navigation/auth/AuthStackNavigator";
 import tailwind from "tailwind-rn";
 import validate from "validate.js";
-import { AuthContext } from "../../contexts/AuthContext";
+import { useAuthContext } from "../../contexts/AuthContext";
 import { useLoginMutation, useRegisterMutation } from "../../api/hooks/mutations/auth";
 import { TextFieldActions } from "../../components/common/TextFieldActions";
 
@@ -49,8 +49,8 @@ const constraints = {
     },
 };
 
-export const RegisterScreen = ({ navigation }: Props) => {
-    const { login } = React.useContext(AuthContext);
+export const RegisterScreen = ({ navigation }: Props): ReactNode => {
+    const { login } = useAuthContext();
 
     const [email, setEmail] = React.useState("test@gmail.com");
     const [username, setUsername] = React.useState("username2");
