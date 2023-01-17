@@ -178,6 +178,7 @@ export class StickerPacksService {
       where: { id },
       relations: ["author"],
     });
+
     if (!stickerPack) {
       throw new NotFoundException();
     }
