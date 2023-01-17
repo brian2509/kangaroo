@@ -2,11 +2,9 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
-import { Sticker } from "../../stickers/entities/sticker.entity";
 
 @Entity("file")
 export class PrivateFile {
