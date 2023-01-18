@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
-import { Alert, Platform, SafeAreaView, TouchableOpacity } from "react-native";
+import { Alert, Platform, SafeAreaView, ToastAndroid } from "react-native";
 
-import { Button, Icon, Layout, ModalService, Spinner, Text } from "@ui-kitten/components";
+import { Button, Icon, Layout, Spinner } from "@ui-kitten/components";
 import { StackScreenProps } from "@react-navigation/stack";
 import { HomeStackParamList } from "../../../../navigation/app/AppStackNavigator";
 import tailwind from "tailwind-rn";
@@ -65,6 +65,11 @@ export const StickerPackScreen = ({ navigation, route }: Props): React.ReactElem
 
 
     const pickAndUploadSticker = async (stickerPackId: string) => {
+        const showErrorAlert = () => {
+            // TODO: Add alert for iOS as well
+            ToastAndroid.show("Something went wrong while uploading the sticker, please try again.", 10000);
+        };
+
         ImagePicker.openPicker({
             width: STICKER_FULL_SIZE_PX,
             height: STICKER_FULL_SIZE_PX,
@@ -82,11 +87,15 @@ export const StickerPackScreen = ({ navigation, route }: Props): React.ReactElem
 
                 const dto = { stickerPackId, stickerName, file };
 
-                uploadSticker(dto);
+                uploadSticker(dto, {
+                    onError: showErrorAlert
+                });
             })
             .catch((error) => {
                 if (error.code !== "E_PICKER_CANCELLED") {
                     console.log(error);
+                } else {
+                    showErrorAlert();
                 }
             });
     };
