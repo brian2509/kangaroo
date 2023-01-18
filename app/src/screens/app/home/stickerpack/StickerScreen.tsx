@@ -18,7 +18,7 @@ const StickerScreen = ({ route, navigation }: Props): JSX.Element => {
     const [confirmModalVisible, setConfirmModalVisible] = useState(false)
 
     const queryClient = useQueryClient();
-    const { mutate: deleteSticker } = useDeleteStickerMutation(queryClient);
+    const { mutate: deleteSticker, isLoading } = useDeleteStickerMutation(queryClient);
 
     const onPressConfirmDelete = async () => {
         deleteSticker({
@@ -26,6 +26,7 @@ const StickerScreen = ({ route, navigation }: Props): JSX.Element => {
             stickerId: sticker.id,
         }, {
             onSuccess: () => {
+                setConfirmModalVisible(false);
                 navigation.pop();
             },
             onError: () => {
@@ -62,6 +63,8 @@ const StickerScreen = ({ route, navigation }: Props): JSX.Element => {
             />
             <ConfirmModal
                 visible={confirmModalVisible}
+                isLoading={isLoading}
+                loadingMessage="Deleting sticker..."
                 hideModal={() => setConfirmModalVisible(false)}
                 message="Are you sure?"
                 buttonText="Delete Sticker"
