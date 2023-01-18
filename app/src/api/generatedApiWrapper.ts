@@ -6,12 +6,15 @@ import {
     StickerPacksApi,
     UserApi,
 } from "./generated-typescript-api-client/src";
+import { refreshAccessTokenInterceptor } from "./interceptors/refreshAccessToken";
 
 const baseURL = `${Config.API_DOMAIN_NAME}`;
 
 export const instance = axios.create({
     baseURL: `${baseURL}/api`,
 });
+
+instance.interceptors.request.use(refreshAccessTokenInterceptor);
 
 const configuration = new Configuration();
 configuration.basePath = baseURL;
