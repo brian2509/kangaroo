@@ -41,8 +41,6 @@ export const StickerPackScreen = ({ navigation, route }: Props): React.ReactElem
 
     useEffect(() => {
         navigation.setOptions({
-            headerTitle: "Stickers",
-            headerTitleAlign: "center",
             headerRight: HeaderRight,
         });
     }, [stickerPack]);

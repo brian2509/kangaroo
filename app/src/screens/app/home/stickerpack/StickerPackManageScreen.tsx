@@ -48,8 +48,6 @@ export const StickerPackManageScreen = ({ navigation, route }: Props): React.Rea
 
     useEffect(() => {
         navigation.setOptions({
-            headerTitle: "Group Members",
-            headerTitleAlign: "center",
             headerRight: HeaderRight,
         });
     }, [stickerPack]);

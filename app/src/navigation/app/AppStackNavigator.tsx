@@ -47,31 +47,32 @@ export const AppStackNavigator = (): JSX.Element => (
         <AppStack.Screen
             name="StickerPackDetailScreen"
             component={StickerPackScreen}
-            options={{ title: "Details", headerBackTitle: " " }}
+            options={{ title: "Stickers", headerTitleAlign: "center" }}
         />
         <AppStack.Screen
             name="StickerScreen"
             component={StickerScreen}
-            options={{ title: "Sticker", headerBackTitle: " " }}
+            options={{ title: "Sticker", headerTitleAlign: "center" }}
         />
         <AppStack.Screen
             name="StickerPackManageScreen"
             component={StickerPackManageScreen}
-            options={{ title: "Group Members", headerBackTitle: " " }}
+            options={{ title: "Group Members", headerTitleAlign: "center" }}
         />
         <AppStack.Screen
             name="CreateStickerPackScreen"
             component={CreateStickerPackScreen}
-            options={{ title: "Create Sticker Pack", headerBackTitle: " " }}
+            options={{ title: "Create Sticker Pack" }}
         />
         <AppStack.Screen
             name="CreateAddMembersScreen"
             component={CreateAddMembersScreen}
-            options={{ title: "Create Sticker Pack", headerBackTitle: " " }}
+            options={{ title: "Create Sticker Pack" }}
         />
         <AppStack.Screen
             name="SettingsScreen"
             component={SettingsScreen}
+            options={{ title: "Settings" }}
         />
         <AppStack.Screen
             name="SettingsUpdateScreen"
@@ -80,6 +81,7 @@ export const AppStackNavigator = (): JSX.Element => (
         <AppStack.Screen
             name="PrivacyPolicyScreen"
             component={PrivacyPolicyScreen}
+            options={{ title: "Privacy Policy" }}
         />
     </AppStack.Navigator>
 );

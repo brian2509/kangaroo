@@ -42,12 +42,6 @@ const SettingListItem = ({ item }: { item: SettingItem }) => {
 export const SettingsScreen = ({ navigation }: Props): React.ReactElement => {
     const { logout } = useAuthContext();
 
-    useEffect(() => {
-        navigation.setOptions({
-            headerTitle: "Settings",
-        });
-    }, [])
-
     const onPressLogout = () => {
         const onPressConfirm = async () => {
             logout();

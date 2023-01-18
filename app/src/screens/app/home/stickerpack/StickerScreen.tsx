@@ -47,7 +47,6 @@ const StickerScreen = ({ route, navigation }: Props): JSX.Element => {
 
     useEffect(() => {
         navigation.setOptions({
-            headerTitle: "Sticker",
             headerRight: allowDeleteSticker ? DeleteIcon : undefined,
         });
     }, [])
