@@ -15,12 +15,12 @@ interface UserContextProviderProps {
     children: ReactNode;
 }
 export const UserContextProvider = ({ children }: UserContextProviderProps): ReactElement => {
-    const { accessToken } = useAuthContext();
+    const { isAuthenticated } = useAuthContext();
 
     const [me, setMe] = useState<UserPrivateRo | undefined>(undefined);
 
     useEffect(() => {
-        if (accessToken == undefined) {
+        if (!isAuthenticated) {
             setMe(undefined);
             return;
         }
@@ -33,7 +33,7 @@ export const UserContextProvider = ({ children }: UserContextProviderProps): Rea
         } catch {
             setMe(undefined);
         }
-    }, [accessToken]);
+    }, [isAuthenticated]);
 
     return (
         <UserContext.Provider

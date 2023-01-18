@@ -1,8 +1,7 @@
-import AsyncStorage from "@react-native-community/async-storage";
 import React, { ReactElement, ReactNode, useContext, useEffect } from "react";
-import { STORAGE_KEYS } from "../constants/StorageKeys";
-import { api, instance } from "../api/generatedApiWrapper";
+import { api } from "../api/generatedApiWrapper";
 import { JwtToken } from "../api/generated-typescript-api-client/src";
+import { getLocalAccessToken, updateLocalAccessToken, updateAxiosInstanceAccessToken } from "../util/access_token";
 
 export interface AuthContextProps {
     accessToken?: string;
@@ -24,54 +23,37 @@ interface AuthContextProviderProps {
     children: ReactNode;
 }
 export const AuthContextProvider = ({ children }: AuthContextProviderProps): ReactElement => {
-    const [accessToken, setAccessToken] = React.useState<string | undefined>(undefined);
-    const [isAuthenticated, setIsAuthenticated] = React.useState<boolean | undefined>(undefined);
+    const [accessToken, setAccessToken] = React.useState<string | undefined>();
+    const [isAuthenticated, setIsAuthenticated] = React.useState<boolean | undefined>();
 
     useEffect(() => {
-        const setStoredToken = async () => {
-            const storedToken: string | null = await AsyncStorage.getItem(
-                STORAGE_KEYS.accessTokenKey,
-            );
-            if (storedToken == null || storedToken == "") {
-                // Store undefined if no valid token is found in storage
-                setAccessToken(undefined);
-                return;
-            }
-            storeAccessToken(storedToken);
-        };
-        setStoredToken();
+        getLocalAccessToken().then(updateAccessToken)
     }, []);
 
     useEffect(() => {
-        api.auth
-            .testAuth()
+        api.auth.testAuth()
             .then(() => setIsAuthenticated(true))
             .catch(() => setIsAuthenticated(false));
     }, [accessToken]);
 
-    const storeAccessToken = (newToken: string | undefined) => {
-        // Store/remove token on device
-        if (newToken != undefined) {
-            AsyncStorage.setItem(STORAGE_KEYS.accessTokenKey, newToken);
-        } else {
-            AsyncStorage.removeItem(STORAGE_KEYS.accessTokenKey);
-        }
+    const updateAccessToken = (newToken: string | undefined) => {
+        // Store token on device (remove if undefined)
+        updateLocalAccessToken(newToken);
 
         // Set axios default authorization header
-        instance.defaults.headers.common["Authorization"] = newToken
-            ? "Bearer " + newToken
-            : undefined;
+        updateAxiosInstanceAccessToken(newToken);
 
         // Set access token state
         setAccessToken(newToken);
     };
 
-    const logout = () => {
-        storeAccessToken(undefined);
-    };
 
     const login = (jwtToken: JwtToken) => {
-        storeAccessToken(jwtToken.access_token);
+        updateAccessToken(jwtToken.access_token);
+    };
+
+    const logout = () => {
+        updateAccessToken(undefined);
     };
 
     return (
@@ -79,8 +61,8 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps): Rea
             value={{
                 accessToken,
                 isAuthenticated,
-                logout,
                 login,
+                logout,
             }}>
             {children}
         </AuthContext.Provider>

@@ -18,23 +18,17 @@ import { FloatingAction } from "react-native-floating-action";
 type Props = StackScreenProps<HomeStackParamList, "Homescreen">;
 
 export const HomeScreen = ({ navigation }: Props): React.ReactElement => {
-    const { accessToken } = useAuthContext();
-
     const queryClient = useQueryClient();
 
-    useEffect(() => {
-        () => queryClient.invalidateQueries(QUERY_KEYS.myStickerPacks);
-    }, [accessToken]);
-
-    const myStickerPacksQuery = useStickerPacks();
+    const { data: myStickerPacks, isLoading, dataUpdatedAt } = useStickerPacks();
 
     useEffect(() => {
         // TODO: move this to a more valid location?
-        if (myStickerPacksQuery.data) {
-            storeImages(myStickerPacksQuery.data);
-            registerStickerPacks(myStickerPacksQuery.data);
+        if (myStickerPacks) {
+            storeImages(myStickerPacks);
+            registerStickerPacks(myStickerPacks);
         }
-    }, [myStickerPacksQuery.dataUpdatedAt]);
+    }, [dataUpdatedAt]);
 
     return (
         <SafeAreaView style={tailwind("flex-1")}>
@@ -44,8 +38,8 @@ export const HomeScreen = ({ navigation }: Props): React.ReactElement => {
                 }}
             />
             <StickerPacksList
-                stickerPacks={sortedStickerPacks(myStickerPacksQuery.data || [])}
-                refreshing={myStickerPacksQuery.isLoading}
+                stickerPacks={sortedStickerPacks(myStickerPacks || [])}
+                refreshing={isLoading}
                 onRefresh={() => queryClient.invalidateQueries(QUERY_KEYS.myStickerPacks)}
                 onPressStickerPack={(stickerPack: StickerPackRo) => {
                     navigation.navigate("StickerPackDetailScreen", {
