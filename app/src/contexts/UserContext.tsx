@@ -1,4 +1,4 @@
-import React, { ReactNode, useContext, useEffect, useState } from "react";
+import React, { ReactElement, ReactNode, useContext, useEffect, useState } from "react";
 import { UserPrivateRo } from "../api/generated-typescript-api-client/src";
 import { api } from "../api/generatedApiWrapper";
 import { useAuthContext } from "./AuthContext";
@@ -14,7 +14,7 @@ export const UserContext = React.createContext<UserContextProps>({
 interface UserContextProviderProps {
     children: ReactNode;
 }
-export const UserContextProvider = ({ children }: UserContextProviderProps): ReactNode => {
+export const UserContextProvider = ({ children }: UserContextProviderProps): ReactElement => {
     const { accessToken } = useAuthContext();
 
     const [me, setMe] = useState<UserPrivateRo | undefined>(undefined);

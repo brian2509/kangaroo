@@ -1,5 +1,5 @@
 import AsyncStorage from "@react-native-community/async-storage";
-import React, { ReactNode, useContext, useEffect } from "react";
+import React, { ReactElement, ReactNode, useContext, useEffect } from "react";
 import { STORAGE_KEYS } from "../constants/StorageKeys";
 import { api, instance } from "../api/generatedApiWrapper";
 import { JwtToken } from "../api/generated-typescript-api-client/src";
@@ -23,7 +23,7 @@ export const AuthContext = React.createContext<AuthContextProps>({
 interface AuthContextProviderProps {
     children: ReactNode;
 }
-export const AuthContextProvider = ({ children }: AuthContextProviderProps): ReactNode => {
+export const AuthContextProvider = ({ children }: AuthContextProviderProps): ReactElement => {
     const [accessToken, setAccessToken] = React.useState<string | undefined>(undefined);
     const [isAuthenticated, setIsAuthenticated] = React.useState<boolean | undefined>(undefined);
 
