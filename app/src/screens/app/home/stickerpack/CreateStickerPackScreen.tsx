@@ -1,7 +1,7 @@
 import { StackScreenProps } from "@react-navigation/stack";
 import { Button, CheckBox, Icon, IconProps, Input, Layout, Spinner, Text } from "@ui-kitten/components";
 import React, { useState } from "react";
-import { Keyboard, SafeAreaView } from "react-native";
+import { Keyboard, SafeAreaView, ToastAndroid } from "react-native";
 import { useQueryClient } from "react-query";
 import tailwind from "tailwind-rn";
 import validate from "validate.js";
@@ -51,6 +51,9 @@ export const CreateStickerPackScreen = ({ navigation }: Props): React.ReactEleme
                     stickerPack: data,
                 });
             },
+            onError: () => {
+                ToastAndroid.show("Failed to create stickerpack, please try again.", 10000);
+            }
         });
     };
 
