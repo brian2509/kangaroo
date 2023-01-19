@@ -30,8 +30,9 @@
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="https"
-                    android:host="www.stickr.cf"/>
+                <data 
+                    android:scheme="https"
+                    android:host="kangaroo-brian2509.vercel.app" />
             </intent-filter>
         </activity>
         <activity android:name="com.facebook.react.devsupport.DevSettingsActivity" />
