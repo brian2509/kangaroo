@@ -85,8 +85,8 @@ const StickerPackListComponent = ({ stickerPack, onPressStickerPack }: StickerPa
                     style={tailwind(
                         "flex-row flex-grow py-2 pr-4 border-b border-gray-100 justify-between",
                     )}>
-                    <Layout style={tailwind("flex-col justify-around")}>
-                        <Text style={tailwind("text-base font-semibold")}>{stickerPack.name}</Text>
+                    <Layout style={tailwind("flex-col justify-center")}>
+                        <Text style={tailwind("text-base font-semibold mb-1")}>{stickerPack.name}</Text>
                         <StickerPreviews stickerPack={stickerPack} />
                     </Layout>
                     <StickerPackSideInfo
