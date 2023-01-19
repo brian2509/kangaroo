@@ -1,5 +1,5 @@
 import AsyncStorage from "@react-native-community/async-storage";
-import { instance } from "../api/generatedApiWrapper";
+import { AxiosInstance } from "axios";
 import { STORAGE_KEYS } from "../constants/StorageKeys";
 
 export const updateLocalAccessToken = async (accessToken: string | undefined): Promise<void> => {
@@ -24,19 +24,22 @@ export const getLocalAccessToken = async (): Promise<string | undefined> => {
     return storedAccessToken;
 }
 
-export const updateAxiosInstanceAccessToken = (accessToken: string | undefined): void => {
+export const updateAxiosInstanceAccessToken = (
+    axiosInstance: AxiosInstance, 
+    accessToken: string | undefined
+): void => {
     if (accessToken) {
-        setAxiosInstanceAccessToken(accessToken)
+        setAxiosInstanceAccessToken(axiosInstance, accessToken)
     } else {
-        removeAxiosInstanceAccessToken();
+        removeAxiosInstanceAccessToken(axiosInstance);
     }
 }
 
 
-export const setAxiosInstanceAccessToken = (accessToken: string): void => {
-    instance.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
+export const setAxiosInstanceAccessToken = (axiosInstance: AxiosInstance, accessToken: string): void => {
+    axiosInstance.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
 }
 
-export const removeAxiosInstanceAccessToken = (): void => {
-    instance.defaults.headers.common["Authorization"] = undefined;
+export const removeAxiosInstanceAccessToken = (axiosInstance: AxiosInstance): void => {
+    axiosInstance.defaults.headers.common["Authorization"] = undefined;
 }

@@ -1,5 +1,5 @@
 import React, { ReactElement, ReactNode, useContext, useEffect } from "react";
-import { api } from "../api/generatedApiWrapper";
+import { api, instance } from "../api/generatedApiWrapper";
 import { JwtToken } from "../api/generated-typescript-api-client/src";
 import { getLocalAccessToken, updateLocalAccessToken, updateAxiosInstanceAccessToken } from "../util/access_token";
 
@@ -35,7 +35,7 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps): Rea
         await updateLocalAccessToken(newToken);
 
         // Set axios default authorization header
-        updateAxiosInstanceAccessToken(newToken);
+        updateAxiosInstanceAccessToken(instance, newToken);
 
         // Set access token state
         setAccessToken(newToken);
