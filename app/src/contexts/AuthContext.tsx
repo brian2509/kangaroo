@@ -27,33 +27,37 @@ export const AuthContextProvider = ({ children }: AuthContextProviderProps): Rea
     const [isAuthenticated, setIsAuthenticated] = React.useState<boolean | undefined>();
 
     useEffect(() => {
-        getLocalAccessToken().then(updateAccessToken)
+        getLocalAccessToken().then(useNewAccessToken)
     }, []);
 
-    useEffect(() => {
-        api.auth.testAuth()
-            .then(() => setIsAuthenticated(true))
-            .catch(() => setIsAuthenticated(false));
-    }, [accessToken]);
-
-    const updateAccessToken = (newToken: string | undefined) => {
+    const useNewAccessToken = async (newToken: string | undefined) => {
         // Store token on device (remove if undefined)
-        updateLocalAccessToken(newToken);
+        await updateLocalAccessToken(newToken);
 
         // Set axios default authorization header
         updateAxiosInstanceAccessToken(newToken);
 
         // Set access token state
         setAccessToken(newToken);
+
+        // Test and update authentication status
+        if (newToken === undefined) {
+            // Set auth status to false if token is not defined, skip auth request
+            setIsAuthenticated(false)
+        } else {
+            api.auth.testAuth()
+                .then(() => setIsAuthenticated(true))
+                .catch(() => setIsAuthenticated(false));
+        }
     };
 
 
     const login = (jwtToken: JwtToken) => {
-        updateAccessToken(jwtToken.access_token);
+        useNewAccessToken(jwtToken.access_token);
     };
 
     const logout = () => {
-        updateAccessToken(undefined);
+        useNewAccessToken(undefined);
     };
 
     return (
