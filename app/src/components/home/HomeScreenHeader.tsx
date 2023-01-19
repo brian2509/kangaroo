@@ -1,59 +1,31 @@
 import React from "react";
 import tailwind from "tailwind-rn";
-import tw from "tailwind-react-native-classnames";
-import { Button, Icon, Input, Layout, Text } from "@ui-kitten/components";
+import { Layout, Text } from "@ui-kitten/components";
+import { TouchableOpacity } from "react-native";
+import { ProfileIcon } from "../common/ProfileIcon";
 
 interface Props {
-    onCreateStickerPack: () => void;
-    onLogout: () => void;
+    onPressProfile: () => void;
 }
-
-export class HomeScreenHeader extends React.Component<Props> {
-    AddIcon = (props: any) => (
-        <Icon style={tw.style("w-6 h-6", { tintColor: props.style.tintColor })} name="plus" />
-    );
-    LogoutIcon = (props: any) => (
-        <Icon
-            style={tw.style("w-6 h-6", { tintColor: props.style.tintColor })}
-            name="person-delete-outline"
-        />
-    );
-
-    HeaderIcons = (): React.ReactElement => (
-        <Layout style={tailwind("flex-row self-start bg-transparent")}>
-            <Button
-                appearance="ghost"
-                style={tailwind("px-1")}
-                onPress={this.props.onCreateStickerPack}
-                accessoryLeft={this.AddIcon}
-            />
-            <Button
-                appearance="ghost"
-                status="danger"
-                onPress={this.props.onLogout}
-                accessoryLeft={this.LogoutIcon}
-            />
-        </Layout>
-    );
-
-    render(): React.ReactElement {
-        return (
-            <Layout style={tailwind("p-5 pb-3 pt-1 bg-gray-100")}>
-                <Layout
-                    style={tailwind(
-                        "flex-row justify-between pt-2 pb-1 bg-transparent items-center",
-                    )}>
-                    <Text style={tailwind("text-4xl font-semibold bg-transparent")}>
-                        Sticker Packs
-                    </Text>
-                    <this.HeaderIcons />
-                </Layout>
-                <Input
-                    accessoryLeft={(props: any) => <Icon {...props} name="search" />}
-                    style={tw`rounded-xl`}
-                    placeholder="Search"
+export const HomeScreenHeader = ({ onPressProfile }: Props): JSX.Element => {
+    return (
+        <Layout style={tailwind("flex-row p-6 bg-gray-100 items-center border-b border-gray-300")}>
+            <TouchableOpacity onPressIn={onPressProfile} style={tailwind("mr-6")}>
+                <ProfileIcon size={10} />
+            </TouchableOpacity>
+            <Text style={tailwind("text-4xl font-bold")}>
+                Sticker Packs
+            </Text>
+            {/* <TouchableOpacity onPressIn={onPressProfile} style={tailwind("bg-gray-300 rounded-full p-2")}>
+                <Icon
+                    style={tailwind("w-8 h-8")}
+                    fill='#8F9BB3'
+                    name='person'
                 />
-            </Layout>
-        );
-    }
+            </TouchableOpacity> */}
+            {/* <TouchableOpacity onPressIn={onPressProfile} >
+                <ProfileIcon size={10} />
+            </TouchableOpacity> */}
+        </Layout >
+    );
 }

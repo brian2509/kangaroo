@@ -1,19 +1,21 @@
-import React from "react";
-import { Layout, Text, Button, Input, Icon, Card, IconProps } from "@ui-kitten/components";
+import React, { ReactNode } from "react";
+import { Layout, Text, Input, Icon, Card, IconProps } from "@ui-kitten/components";
 import {
     Alert,
     Keyboard,
+    KeyboardAvoidingView,
     Platform,
     SafeAreaView,
     ToastAndroid,
     TouchableWithoutFeedback,
 } from "react-native";
 import { StackScreenProps } from "@react-navigation/stack";
-import { AuthStackParamList } from "../../navigation/AppNavigator";
+import { AuthStackParamList } from "../../navigation/auth/AuthStackNavigator";
 import tailwind from "tailwind-rn";
 import validate from "validate.js";
-import { AuthContext } from "../../contexts/AuthContext";
+import { useAuthContext } from "../../contexts/AuthContext";
 import { useLoginMutation, useRegisterMutation } from "../../api/hooks/mutations/auth";
+import { TextFieldActions } from "../../components/common/TextFieldActions";
 
 type Props = StackScreenProps<AuthStackParamList, "Register">;
 
@@ -47,8 +49,8 @@ const constraints = {
     },
 };
 
-export const RegisterScreen = ({ navigation }: Props) => {
-    const { login } = React.useContext(AuthContext);
+export const RegisterScreen = ({ navigation }: Props): ReactNode => {
+    const { login } = useAuthContext();
 
     const [email, setEmail] = React.useState("test@gmail.com");
     const [username, setUsername] = React.useState("username2");
@@ -104,87 +106,87 @@ export const RegisterScreen = ({ navigation }: Props) => {
     const isPasswordValid = !inputValidations["password"];
 
     return (
-        <SafeAreaView style={tailwind("flex-1")}>
-            <Layout style={tailwind("flex-1 items-center px-4 pt-0 mt-0")}>
-                <Layout
-                    style={tailwind("w-full m-16")}
-                    onTouchStart={() => setFormInteracted(true)}>
-                    <Text style={tailwind("text-4xl font-bold pb-4")}>Register</Text>
-                    <Input
-                        style={tailwind("w-full")}
-                        label="E-mail"
-                        value={email}
-                        placeholder="Enter your E-mail"
-                        caption={!isEmailValid && inputValidations["email"][0]}
-                        status={!isEmailValid ? "danger" : "basic"}
-                        captionIcon={!isEmailValid ? AlertIcon : undefined}
-                        onChangeText={setEmail}
-                    />
-                    <Input
-                        style={tailwind("w-full my-3")}
-                        label="Username"
-                        value={username}
-                        placeholder="Enter your username"
-                        caption={!isUsernameValid && inputValidations["username"][0]}
-                        status={!isUsernameValid ? "danger" : "basic"}
-                        captionIcon={!isUsernameValid ? AlertIcon : undefined}
-                        onChangeText={setUsername}
-                    />
-                    <Input
-                        style={tailwind("w-full")}
-                        placeholder="Enter your password"
-                        caption={!isPasswordValid && inputValidations["password"][0]}
-                        accessoryRight={visibilityIcon}
-                        captionIcon={!isPasswordValid ? AlertIcon : undefined}
-                        secureTextEntry={!showPassword}
-                        label="Password"
-                        value={password}
-                        status={!isPasswordValid ? "danger" : "basic"}
-                        onChangeText={setPassword}
-                    />
+        <SafeAreaView style={tailwind("flex-1 bg-white")}>
+            <KeyboardAvoidingView behavior="position">
+                <TouchableWithoutFeedback style={tailwind("flex-1")} onPress={Keyboard.dismiss}>
+                    <Layout style={tailwind("items-center px-4")}>
+                        <Layout
+                            style={tailwind("w-full mt-16")}
+                            onTouchStart={() => setFormInteracted(true)}
+                        >
+                            <Text style={tailwind("text-4xl font-bold pb-4")}>Register</Text>
+                            <Input
+                                style={tailwind("w-full")}
+                                label="E-mail"
+                                value={email}
+                                placeholder="Enter your E-mail"
+                                caption={!isEmailValid && inputValidations["email"][0]}
+                                status={!isEmailValid ? "danger" : "basic"}
+                                captionIcon={!isEmailValid ? AlertIcon : undefined}
+                                onChangeText={setEmail}
+                            />
+                            <Input
+                                style={tailwind("w-full my-3")}
+                                label="Username"
+                                value={username}
+                                placeholder="Enter your username"
+                                caption={!isUsernameValid && inputValidations["username"][0]}
+                                status={!isUsernameValid ? "danger" : "basic"}
+                                captionIcon={!isUsernameValid ? AlertIcon : undefined}
+                                onChangeText={setUsername}
+                            />
+                            <Input
+                                style={tailwind("w-full")}
+                                placeholder="Enter your password"
+                                caption={!isPasswordValid && inputValidations["password"][0]}
+                                accessoryRight={visibilityIcon}
+                                captionIcon={!isPasswordValid ? AlertIcon : undefined}
+                                secureTextEntry={!showPassword}
+                                label="Password"
+                                value={password}
+                                status={!isPasswordValid ? "danger" : "basic"}
+                                onChangeText={setPassword}
+                            />
 
-                    <Layout style={tailwind("flex-row items-center justify-between pt-3")}>
-                        <Text
-                            style={tailwind("pl-2 font-semibold text-blue-500")}
-                            onPress={() => navigation.pop()}>
-                            Back to Login
-                        </Text>
-                        <Button
-                            style={tailwind("pl-10 pr-10")}
-                            onPress={() => {
-                                Keyboard.dismiss();
-                                !inputValidations && onRegister();
-                            }}
-                            disabled={formInteracted && !!inputValidations}>
-                            Register
-                        </Button>
+                            <Layout style={tailwind("mt-6")}>
+                                <TextFieldActions
+                                    cancelTitle="Back to Sign In"
+                                    doneTitle="Register"
+                                    onCancelPress={() => navigation.pop()}
+                                    onDonePress={() => {
+                                        Keyboard.dismiss();
+                                        !inputValidations && onRegister();
+                                    }}
+                                />
+                            </Layout>
+
+                            {registerMutation.error && (
+                                <Card style={tailwind("m-2 mt-20")} status="danger">
+                                    <Text
+                                        style={tailwind("text-center my-2")}
+                                        status="danger"
+                                        appearance="hint"
+                                        category="s1">
+                                        {registerMutation.error.response?.status == 400
+                                            ? registerMutation.error.response.data.message.map(
+                                                (errorMessage: string) => {
+                                                    return (
+                                                        errorMessage.charAt(0).toUpperCase() +
+                                                        errorMessage.slice(1)
+                                                    );
+                                                },
+                                            )
+                                            : registerMutation.error.response?.status == 403
+                                                ? // 403 Forbidden. Example: user with that username already exists
+                                                registerMutation.error.response?.data.message
+                                                : "Please try again later ..."}
+                                    </Text>
+                                </Card>
+                            )}
+                        </Layout>
                     </Layout>
-
-                    {registerMutation.error && (
-                        <Card style={tailwind("m-2 mt-20")} status="danger">
-                            <Text
-                                style={tailwind("text-center my-2")}
-                                status="danger"
-                                appearance="hint"
-                                category="s1">
-                                {registerMutation.error.response?.status == 400
-                                    ? registerMutation.error.response.data.message.map(
-                                          (errorMessage: string) => {
-                                              return (
-                                                  errorMessage.charAt(0).toUpperCase() +
-                                                  errorMessage.slice(1)
-                                              );
-                                          },
-                                      )
-                                    : registerMutation.error.response?.status == 403
-                                    ? // 403 Forbidden. Example: user with that username already exists
-                                      registerMutation.error.response?.data.message
-                                    : "Please try again later ..."}
-                            </Text>
-                        </Card>
-                    )}
-                </Layout>
-            </Layout>
+                </TouchableWithoutFeedback>
+            </KeyboardAvoidingView>
         </SafeAreaView>
     );
 };

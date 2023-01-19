@@ -1,10 +1,12 @@
 import { StackScreenProps } from "@react-navigation/stack";
-import { Button, CheckBox, Icon, IconProps, Input, Layout, Text } from "@ui-kitten/components";
+import { Button, CheckBox, Icon, IconProps, Input, Layout, Spinner, Text } from "@ui-kitten/components";
 import React, { useState } from "react";
 import { Keyboard, SafeAreaView } from "react-native";
+import { useQueryClient } from "react-query";
 import tailwind from "tailwind-rn";
 import validate from "validate.js";
-import { HomeStackParamList } from "../../../../navigation/AppNavigator";
+import { useCreateStickerPackMutation } from "../../../../api/hooks/mutations/stickerPack";
+import { HomeStackParamList } from "../../../../navigation/app/AppStackNavigator";
 
 const AlertIcon = (props: IconProps) => <Icon {...props} name="alert-circle-outline" />;
 
@@ -26,10 +28,31 @@ const constraints = {
 type Props = StackScreenProps<HomeStackParamList, "CreateStickerPackScreen">;
 export const CreateStickerPackScreen = ({ navigation }: Props): React.ReactElement => {
     const [stickerPackName, setStickerPackName] = useState("");
-    const [stickerPackPrivate, setStickerPackPrivate] = useState(false);
+    const [stickerPackAnimated, setStickerPackAnimated] = useState(false);
 
     const inputValidation = validate.validate({ name: stickerPackName }, constraints);
     const isNameValid = inputValidation !== undefined ? !inputValidation["name"] : true;
+
+    const queryClient = useQueryClient();
+
+    const { mutate: createStickerPackMutation, isLoading } = useCreateStickerPackMutation(queryClient);
+    const createStickerPack = () => {
+        if (!isNameValid) return;
+
+        const dto = {
+            name: stickerPackName,
+            personal: false,
+            animated: stickerPackAnimated,
+        };
+
+        createStickerPackMutation(dto, {
+            onSuccess: (data) => {
+                navigation.replace("StickerPackDetailScreen", {
+                    stickerPack: data,
+                });
+            },
+        });
+    };
 
     return (
         <SafeAreaView style={tailwind("h-full bg-white p-0")}>
@@ -51,21 +74,17 @@ export const CreateStickerPackScreen = ({ navigation }: Props): React.ReactEleme
                 <Layout style={tailwind("flex-row justify-between my-3")}>
                     <CheckBox
                         style={tailwind("ml-3")}
-                        checked={stickerPackPrivate}
-                        onChange={setStickerPackPrivate}>
-                        {() => <Text style={tailwind("mx-3 text-xs text-gray-400")}>Private</Text>}
+                        checked={stickerPackAnimated}
+                        onChange={setStickerPackAnimated}>
+                        {() => <Text style={tailwind("mx-3 text-xs text-gray-400")}>Animated</Text>}
                     </CheckBox>
                     <Button
                         style={tailwind("p-0 pl-2 pr-2")}
-                        onPress={() => {
-                            if (isNameValid) {
-                                navigation.navigate("CreateAddMembersScreen", {
-                                    name: stickerPackName,
-                                    personal: stickerPackPrivate,
-                                });
-                            }
-                        }}>
-                        Next
+                        onPress={createStickerPack}
+                        disabled={isLoading}
+                        accessoryLeft={() => (isLoading ? <Spinner size="small" status="basic" /> : <></>)}
+                    >
+                        Create Pack
                     </Button>
                 </Layout>
             </Layout>

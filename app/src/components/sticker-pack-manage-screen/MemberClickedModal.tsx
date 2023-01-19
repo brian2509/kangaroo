@@ -33,9 +33,6 @@ export const MemberClickedModal = ({
                     </Button>
                 )}>
                 <Button size="medium" appearance="ghost" status="basic">
-                    Show Account
-                </Button>
-                <Button size="medium" appearance="ghost" status="basic">
                     Remove as Admin
                 </Button>
                 <Button status="danger" size="medium" appearance="ghost">

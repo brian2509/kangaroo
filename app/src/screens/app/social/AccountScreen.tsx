@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { Image, SafeAreaView, TouchableOpacity } from "react-native";
 import { StackScreenProps } from "@react-navigation/stack";
-import { FeedStackParamList } from "../../../navigation/AppNavigator";
+import { FeedStackParamList } from "../../../navigation/app/AppStackNavigator";
 import { Icon, Layout, Text } from "@ui-kitten/components";
 import tw from "tailwind-react-native-classnames";
 import { TextStatElement } from "../../../components/common/TextStatElement";

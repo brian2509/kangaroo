@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import tailwind from "tailwind-rn";
 import { SafeAreaView } from "react-native";
 import { StackScreenProps } from "@react-navigation/stack";
-import { FeedStackParamList } from "../../../navigation/AppNavigator";
+import { FeedStackParamList } from "../../../navigation/app/AppStackNavigator";
 import { FeedHeader } from "../../../components/home/FeedHeader";
 import { TextStatElement } from "../../../components/common/TextStatElement";
 import { Button, Layout, Text } from "@ui-kitten/components";
@@ -25,6 +25,10 @@ const mockStickerPack: StickerPackRo = {
     likes: 10,
     createdAt: "10/10/2021",
     updatedAt: "10/10/2021",
+    author: {
+        id: "12345",
+        username: "Willem",
+    }
 };
 
 const FeedItemHeader = ({

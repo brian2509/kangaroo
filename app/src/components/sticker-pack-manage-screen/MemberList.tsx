@@ -30,7 +30,7 @@ export const MemberList = ({ stickerPack }: Props): JSX.Element => {
                 setClickedMember(user);
             }}
             title={`${user.username}`}
-            accessoryLeft={(props) => <Icon {...props} name="person" />}
+            accessoryLeft={(props) => <Icon name="person" {...props} />}
             accessoryRight={() => {
                 if (!isAuthor(stickerPack, user)) {
                     return <></>;

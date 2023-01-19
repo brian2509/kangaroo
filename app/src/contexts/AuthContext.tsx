@@ -1,12 +1,11 @@
-import AsyncStorage from "@react-native-community/async-storage";
-import React, { useEffect } from "react";
-import { STORAGE_KEYS } from "../constants/StorageKeys";
+import React, { ReactElement, ReactNode, useContext, useEffect } from "react";
 import { api, instance } from "../api/generatedApiWrapper";
 import { JwtToken } from "../api/generated-typescript-api-client/src";
+import { getLocalAccessToken, updateLocalAccessToken, updateAxiosInstanceAccessToken } from "../util/access_token";
 
 export interface AuthContextProps {
-    accessToken: string | undefined;
-    isAuthenticated: boolean | undefined;
+    accessToken?: string;
+    isAuthenticated?: boolean;
     login: (token: JwtToken) => void;
     logout: () => void;
 }
@@ -14,64 +13,51 @@ export interface AuthContextProps {
 export const AuthContext = React.createContext<AuthContextProps>({
     accessToken: undefined,
     isAuthenticated: undefined,
-    login: (token: JwtToken) => {},
-    logout: () => {},
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    login: (token: JwtToken) => { },
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    logout: () => { },
 });
 
-export const AuthContextProvider = ({ children }: any): React.ReactElement => {
-    const [accessToken, setAccessToken] = React.useState<string | undefined>(undefined);
-    const [isAuthenticated, setIsAuthenticated] = React.useState<boolean | undefined>(undefined);
+interface AuthContextProviderProps {
+    children: ReactNode;
+}
+export const AuthContextProvider = ({ children }: AuthContextProviderProps): ReactElement => {
+    const [accessToken, setAccessToken] = React.useState<string | undefined>();
+    const [isAuthenticated, setIsAuthenticated] = React.useState<boolean | undefined>();
 
     useEffect(() => {
-        const setStoredToken = async () => {
-            const storedToken: string | null = await AsyncStorage.getItem(
-                STORAGE_KEYS.accessTokenKey,
-            );
-            if (storedToken == null || storedToken == "") {
-                // Store undefined if no valid token is found in storage
-                setAccessToken(undefined);
-                return;
-            }
-            storeAccessToken(storedToken);
-        };
-        setStoredToken();
+        getLocalAccessToken().then(useNewAccessToken)
     }, []);
 
-    useEffect(() => {
-        if (accessToken == undefined) {
-            setIsAuthenticated(false);
-            return;
-        }
-
-        api.auth
-            .testAuth()
-            .then(() => setIsAuthenticated(true))
-            .catch(() => setIsAuthenticated(false));
-    }, [accessToken]);
-
-    const storeAccessToken = (newToken: string | undefined) => {
-        // Store/remove token on device
-        if (newToken != undefined) {
-            AsyncStorage.setItem(STORAGE_KEYS.accessTokenKey, newToken);
-        } else {
-            AsyncStorage.removeItem(STORAGE_KEYS.accessTokenKey);
-        }
+    const useNewAccessToken = async (newToken: string | undefined) => {
+        // Store token on device (remove if undefined)
+        await updateLocalAccessToken(newToken);
 
         // Set axios default authorization header
-        instance.defaults.headers.common["Authorization"] = newToken
-            ? "Bearer " + newToken
-            : undefined;
+        updateAxiosInstanceAccessToken(instance, newToken);
 
         // Set access token state
         setAccessToken(newToken);
+
+        // Test and update authentication status
+        if (newToken === undefined) {
+            // Set auth status to false if token is not defined, skip auth request
+            setIsAuthenticated(false)
+        } else {
+            api.auth.testAuth()
+                .then(() => setIsAuthenticated(true))
+                .catch(() => setIsAuthenticated(false));
+        }
+    };
+
+
+    const login = (jwtToken: JwtToken) => {
+        useNewAccessToken(jwtToken.access_token);
     };
 
     const logout = () => {
-        storeAccessToken(undefined);
-    };
-
-    const login = (jwtToken: JwtToken) => {
-        storeAccessToken(jwtToken.access_token);
+        useNewAccessToken(undefined);
     };
 
     return (
@@ -79,10 +65,12 @@ export const AuthContextProvider = ({ children }: any): React.ReactElement => {
             value={{
                 accessToken,
                 isAuthenticated,
-                logout,
                 login,
+                logout,
             }}>
             {children}
         </AuthContext.Provider>
     );
 };
+
+export const useAuthContext = (): AuthContextProps => useContext(AuthContext);

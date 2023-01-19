@@ -2,7 +2,7 @@ import { StackScreenProps } from "@react-navigation/stack";
 import { Button, Divider, Icon, Layout, List, ListItem, Text } from "@ui-kitten/components";
 import React, { useEffect } from "react";
 import { FeedHeader } from "../../../components/home/FeedHeader";
-import { DiscoverStackParamList } from "src/navigation/AppNavigator";
+import { DiscoverStackParamList } from "../../../navigation/app/AppStackNavigator";
 import { UserRo } from "src/api/generated-typescript-api-client/src";
 import { ScrollView } from "react-native";
 import tw from "tailwind-react-native-classnames";

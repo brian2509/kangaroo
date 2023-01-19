@@ -1,18 +1,16 @@
-import { Button, Icon, Layout, Spinner, Text } from "@ui-kitten/components";
-import { Image, Platform, SafeAreaView, ScrollView, TouchableOpacity } from "react-native";
+import React, { useEffect } from "react";
+import { Alert, Platform, SafeAreaView, TouchableOpacity } from "react-native";
+
+import { Button, Icon, Layout, ModalService, Spinner, Text } from "@ui-kitten/components";
 import { StackScreenProps } from "@react-navigation/stack";
-import { HomeStackParamList } from "../../../../navigation/AppNavigator";
+import { HomeStackParamList } from "../../../../navigation/app/AppStackNavigator";
 import tailwind from "tailwind-rn";
 import tw from "tailwind-react-native-classnames";
-import React, { useEffect, useState } from "react";
-import { StickerPackRo, StickerRo } from "../../../../api/generated-typescript-api-client/src";
-import { CoverStickerImage } from "../../../../components/common/CoverStickerImage";
 import ImagePicker, { Image as ImageData } from "react-native-image-crop-picker";
 import { STICKER_FULL_SIZE_PX } from "../../../../constants/StickerSizes";
 import { generateName } from "../../../../util/placeholder_generation";
 import { useQueryClient } from "react-query";
 import { useStickerPack } from "../../../../api/hooks/query/stickerPack";
-import { PlaceholderImage } from "../../../../components/common/PlaceholderImage";
 import { useUploadStickerMutation } from "../../../../api/hooks/mutations/stickerPack";
 import Clipboard from "@react-native-clipboard/clipboard";
 import { showToast } from "../../../../util/ui";
@@ -27,118 +25,50 @@ import {
     PUBLISHER_WEBSITE,
     STICKER_FILE_EXTENSION,
 } from "../../../../constants/StickerInfo";
+import StickerPackHeader from "../../../../components/stickerpack/StickerPackHeader";
+import StickerPackBody from "../../../../components/stickerpack/StickerPackStickersBody";
+import StickerPackActions from "./StickerPackActions";
 import { useCreateInviteMutation } from "../../../../api/hooks/mutations/invites";
-import { MAX_STICKERS_PER_PACK } from "../../../../constants/StickerPack";
+import { StickerRo } from "../../../../api/generated-typescript-api-client/src";
 import { createInviteUrl } from "../../../../util/invites";
-import { PackStickersView } from "../../../../components/stickerpack/PackStickersView";
-import { fullMemberList } from "../../../../util/stickerpack_utils";
 
 // TODO make this a valid module.
 const { WhatsAppStickersModule } = NativeModules;
-
-type StickerPackProps = {
-    stickerPack: StickerPackRo;
-    onStickerPress?: (sticker: StickerRo) => void;
-};
-interface BodyProps extends StickerPackProps {
-    onCreateAndShareInvite: () => Promise<void>;
-}
-
-const Body = ({ stickerPack, onStickerPress, onCreateAndShareInvite }: BodyProps) => {
-    return (
-        <ScrollView style={tailwind("p-4 pt-3")}>
-            <Layout style={tailwind("flex-row items-end items-baseline")}>
-                <Text style={tailwind("text-xl font-semibold mr-4")}>Stickers</Text>
-                <Text style={tailwind("text-gray-500 h-full pt-3 text-sm")}>
-                    {stickerPack.stickers.length}/{MAX_STICKERS_PER_PACK}
-                </Text>
-            </Layout>
-            <PackStickersView stickerPack={stickerPack} onStickerPress={onStickerPress} />
-            <Button style={tailwind("my-8")} onPress={onCreateAndShareInvite}>
-                Share invite!
-            </Button>
-        </ScrollView>
-    );
-};
-
-const ToolBar = ({ stickerPack }: StickerPackProps) => {
-    return (
-        <Layout style={tailwind("flex-col p-4 pt-2 pb-2 border-b-2 border-t border-gray-300")}>
-            <Layout style={tailwind("flex-row justify-between w-1/3 pb-1")}>
-                <Icon name="heart-outline" fill="gray" width={25} height={25} />
-                <Icon name="paper-plane-outline" fill="gray" width={25} height={25} />
-                <Icon name="upload" fill="gray" width={25} height={25} />
-            </Layout>
-            <Layout style={tailwind("flex-row pt-1")}>
-                <Text style={tw`text-xs font-semibold`}>{`${stickerPack.views} Views`}</Text>
-                <Text style={tw`text-xs pl-3 font-semibold`}>{`${stickerPack.likes} Likes`}</Text>
-                <Text
-                    style={tw`text-xs pl-3 font-semibold`}>{`${stickerPack.likes} Followers`}</Text>
-            </Layout>
-        </Layout>
-    );
-};
 
 type Props = StackScreenProps<HomeStackParamList, "StickerPackDetailScreen">;
 export const StickerPackScreen = ({ navigation, route }: Props): React.ReactElement => {
     const queryClient = useQueryClient();
 
-    const { data: stickerPack } = useStickerPack(route.params.stickerPackId);
+    const { data: stickerPack, isFetching, refetch } = useStickerPack(route.params.stickerPack.id);
 
-    const uploadStickerMutation = useUploadStickerMutation(queryClient);
+    const { mutate: uploadSticker } = useUploadStickerMutation(queryClient);
 
-    const createInviteMutation = useCreateInviteMutation(route.params.stickerPackId);
+    const createInviteMutation = useCreateInviteMutation(route.params.stickerPack.id);
 
     useEffect(() => {
         navigation.setOptions({
-            headerTitle: HeaderTitle,
-            headerTitleAlign: "left",
             headerRight: HeaderRight,
         });
     }, [stickerPack]);
 
     const onStickerPress = (sticker: StickerRo): void => {
-        navigation.navigate("StickerScreen", { sticker });
+        if (!stickerPack) return;
+
+        navigation.navigate("StickerScreen", {
+            sticker,
+            stickerPack,
+            allowDeleteSticker: true
+        });
     };
 
     const onHeaderPress = () => {
-        if (stickerPack == undefined) {
-            return;
-        }
+        if (stickerPack == undefined) return;
 
         navigation.navigate("StickerPackManageScreen", {
             stickerPack,
         });
     };
 
-    const HeaderTitle = () => (
-        <Layout style={tw`flex-row left-0`}>
-            {stickerPack == undefined ? (
-                <PlaceholderImage style={tw.style("w-9 h-9 mr-3 rounded-full")} />
-            ) : (
-                <>
-                    <CoverStickerImage
-                        stickerPack={stickerPack}
-                        style={tw.style("w-9 h-9 mr-3 rounded-full")}
-                        onStickerPress={onStickerPress}
-                    />
-                    <TouchableOpacity style={tw`w-full`} onPress={onHeaderPress}>
-                        <Layout style={tw`flex-col`}>
-                            <Text>{stickerPack.name}</Text>
-                            <Text style={tw`text-gray-500 text-xs`} numberOfLines={1}>
-                                {fullMemberList(stickerPack)
-                                    .map((member) => member.username)
-                                    .join(", ")}
-                            </Text>
-                        </Layout>
-                    </TouchableOpacity>
-                </>
-            )}
-        </Layout>
-    );
-    const AddIcon = (props: any) => (
-        <Icon style={tw.style("w-6 h-6", { tintColor: props.style.tintColor })} name="plus" />
-    );
 
     const pickAndUploadSticker = async (stickerPackId: string) => {
         ImagePicker.openPicker({
@@ -158,7 +88,7 @@ export const StickerPackScreen = ({ navigation, route }: Props): React.ReactElem
 
                 const dto = { stickerPackId, stickerName, file };
 
-                uploadStickerMutation.mutate(dto);
+                uploadSticker(dto);
             })
             .catch((error) => {
                 if (error.code !== "E_PICKER_CANCELLED") {
@@ -175,6 +105,9 @@ export const StickerPackScreen = ({ navigation, route }: Props): React.ReactElem
         pickAndUploadSticker(stickerPack.id);
     };
 
+    const AddIcon = (props: any) => (
+        <Icon style={tw.style("w-6 h-6", { tintColor: props.style.tintColor })} name="plus" />
+    );
     const HeaderRight = () => (
         <Layout style={tw`flex-row mr-4`}>
             <Button
@@ -194,8 +127,8 @@ export const StickerPackScreen = ({ navigation, route }: Props): React.ReactElem
         }
 
         // TODO: add empty stickers in order to reach > 2 stickers?
-        if (!stickerPack) {
-            // TODO: Error feedback to user.
+        if (!stickerPack || stickerPack.stickers.length < 3) {
+            Alert.alert("Invalid stickerpack", "Sticker packs require 3 stickers to be added to WhatsApp.");
             return;
         }
 
@@ -238,6 +171,8 @@ export const StickerPackScreen = ({ navigation, route }: Props): React.ReactElem
                 onError: (err) => {
                     if (err?.response?.data?.statusCode == 403) {
                         showToast("Unauthorized! Only the owner can create an invite");
+                    } else {
+                        showToast("Failed to create invite link, please try again.");
                     }
                 },
             },
@@ -252,17 +187,20 @@ export const StickerPackScreen = ({ navigation, route }: Props): React.ReactElem
                 </Layout>
             ) : (
                 <>
-                    <Button status={"success"} onPress={onAddToWhatsapp}>
-                        Add to WhatsApp!
-                    </Button>
-                    <Body
+                    <StickerPackHeader stickerPack={stickerPack} onHeaderPress={onHeaderPress} />
+                    <StickerPackBody
                         stickerPack={stickerPack}
                         onStickerPress={onStickerPress}
-                        onCreateAndShareInvite={onCreateAndShareInvite}
+                        onRefresh={refetch}
+                        refreshing={isFetching}
                     />
-                    <ToolBar stickerPack={stickerPack} />
+                    <StickerPackActions
+                        onPressAddToWhatsapp={onAddToWhatsapp}
+                        onPressInviteFriends={onCreateAndShareInvite}
+                        onPressUploadSticker={onPressUpload}
+                    />
                 </>
             )}
-        </SafeAreaView>
+        </SafeAreaView >
     );
 };
