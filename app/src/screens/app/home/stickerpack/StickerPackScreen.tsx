@@ -65,11 +65,6 @@ export const StickerPackScreen = ({ navigation, route }: Props): React.ReactElem
 
 
     const pickAndUploadSticker = async (stickerPackId: string) => {
-        const showErrorAlert = () => {
-            // TODO: Add alert for iOS as well
-            ToastAndroid.show("Something went wrong while uploading the sticker, please try again.", 10000);
-        };
-
         ImagePicker.openPicker({
             width: STICKER_FULL_SIZE_PX,
             height: STICKER_FULL_SIZE_PX,
@@ -88,14 +83,24 @@ export const StickerPackScreen = ({ navigation, route }: Props): React.ReactElem
                 const dto = { stickerPackId, stickerName, file };
 
                 uploadSticker(dto, {
-                    onError: showErrorAlert
+                    onError: () => {
+                        // TODO: Add alert for iOS as well
+                        ToastAndroid.show(
+                            "Something went wrong while uploading the sticker, please try again.",
+                            10000
+                        );
+                    }
                 });
             })
             .catch((error) => {
                 if (error.code !== "E_PICKER_CANCELLED") {
                     console.log(error);
                 } else {
-                    showErrorAlert();
+                    // TODO: Add alert for iOS as well
+                    ToastAndroid.show(
+                        "Something went wrong while selecting an image, please try again.",
+                        10000
+                    );
                 }
             });
     };
