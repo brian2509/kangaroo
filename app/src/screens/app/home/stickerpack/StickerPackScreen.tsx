@@ -31,6 +31,7 @@ import { useCreateInviteMutation } from "../../../../api/hooks/mutations/invites
 import { MAX_STICKERS_PER_PACK } from "../../../../constants/StickerPack";
 import { createInviteUrl } from "../../../../util/invites";
 import { PackStickersView } from "../../../../components/stickerpack/PackStickersView";
+import { fullMemberList } from "../../../../util/stickerpack_utils";
 
 // TODO make this a valid module.
 const { WhatsAppStickersModule } = NativeModules;
@@ -121,11 +122,13 @@ export const StickerPackScreen = ({ navigation, route }: Props): React.ReactElem
                         style={tw.style("w-9 h-9 mr-3 rounded-full")}
                         onStickerPress={onStickerPress}
                     />
-                    <TouchableOpacity onPress={onHeaderPress}>
+                    <TouchableOpacity style={tw`w-full`} onPress={onHeaderPress}>
                         <Layout style={tw`flex-col`}>
                             <Text>{stickerPack.name}</Text>
-                            <Text style={tw`text-gray-500 text-xs`}>
-                                Willem, Brian, Mika, Rowdy
+                            <Text style={tw`text-gray-500 text-xs`} numberOfLines={1}>
+                                {fullMemberList(stickerPack)
+                                    .map((member) => member.username)
+                                    .join(", ")}
                             </Text>
                         </Layout>
                     </TouchableOpacity>
@@ -133,7 +136,6 @@ export const StickerPackScreen = ({ navigation, route }: Props): React.ReactElem
             )}
         </Layout>
     );
-
     const AddIcon = (props: any) => (
         <Icon style={tw.style("w-6 h-6", { tintColor: props.style.tintColor })} name="plus" />
     );

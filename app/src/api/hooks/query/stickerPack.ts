@@ -14,7 +14,8 @@ export const useStickerPack = (id: string) =>
     );
 
 const getStickerPacks = async () => {
-    const { data } = await api.users.getOwnAndJoinedStickerPacks();
+    // TODO: After merge, use get "getOwnAndJoinedStickerPacks" method, which is not working at the time of merging
+    const { data } = await api.users.getOwnStickerPacks();
     return data;
 };
 
