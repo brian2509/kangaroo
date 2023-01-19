@@ -2,9 +2,10 @@ import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { useAuthContext } from "../contexts/AuthContext";
-import { Layout, Text } from "@ui-kitten/components";
+import { Layout, Spinner, Text } from "@ui-kitten/components";
 import { AuthStackNavigator } from "./auth/AuthStackNavigator";
 import { AppStackNavigator } from "./app/AppStackNavigator";
+import tailwind from "tailwind-rn";
 
 type RootStackNavigatorProps = {
     isAuthenticated: boolean
@@ -36,17 +37,10 @@ export const RootNavigator = (): React.ReactElement => {
     const { isAuthenticated } = useAuthContext();
 
     if (isAuthenticated == undefined) {
-        // TODO: Create loading page
         return (
-            <Layout
-                style={{
-                    width: "100%",
-                    height: "100%",
-                    justifyContent: "center",
-                    alignItems: "center",
-                }}>
-                <Text>Loading...</Text>
-            </Layout>
+            <Layout style={tailwind("flex-1 justify-center items-center")} >
+                <Spinner size="giant" />
+            </Layout >
         );
     }
 
