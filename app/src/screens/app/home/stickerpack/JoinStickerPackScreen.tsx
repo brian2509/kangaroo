@@ -3,16 +3,15 @@ import { Button, Layout, Spinner } from "@ui-kitten/components";
 import React, { useEffect } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import tailwind from "tailwind-rn";
-import { HomeStackParamList } from "../../../../navigation/AppNavigator";
+import { HomeStackParamList } from "../../../../navigation/app/AppStackNavigator";
 import tw from "tailwind-react-native-classnames";
 import { StickerPackRo } from "../../../../api/generated-typescript-api-client/src";
-import { ScrollView } from "react-native-gesture-handler";
-import { Text } from "react-native";
 import { useQueryClient } from "react-query";
 import { useInviteMutation } from "../../../../api/hooks/mutations/invites";
 import { useInvitePreview } from "../../../../api/hooks/query/invites";
 import { QUERY_KEYS } from "../../../../constants/ReactQueryKeys";
-import { PackStickersView } from "../../../../components/stickerpack/PackStickersView";
+import StickerPackBody from "../../../../components/stickerpack/StickerPackStickersBody";
+import StickerPackHeader from "../../../../components/stickerpack/StickerPackHeader";
 
 interface BodyProps {
     stickerPack: StickerPackRo;
@@ -21,19 +20,19 @@ interface BodyProps {
 
 const Body = ({ stickerPack, onJoinStickerPack }: BodyProps) => {
     return (
-        <ScrollView style={tailwind("p-4 pt-5")}>
-            <Text style={tailwind("w-full text-center text-2xl font-bold py-4 pb-6")}>
-                {stickerPack.name}
-            </Text>
-            <Layout style={tailwind("flex-row items-end items-baseline")}>
-                <Text style={tailwind("text-xl font-semibold mr-4")}>Stickers</Text>
-                <Text style={tailwind("text-gray-500 h-full pt-3 text-sm")}>
-                    {stickerPack.stickers.length}/30
-                </Text>
+        <Layout>
+            <StickerPackHeader stickerPack={stickerPack} />
+            <Layout style={tailwind("")}>
+                <Button
+                    style={tailwind("rounded-none")}
+                    size="giant"
+                    onPress={onJoinStickerPack}
+                >
+                    Join!
+                </Button>
             </Layout>
-            <PackStickersView stickerPack={stickerPack} />
-            <Button onPress={onJoinStickerPack}>Join!</Button>
-        </ScrollView>
+            <StickerPackBody stickerPack={stickerPack} />
+        </Layout>
     );
 };
 

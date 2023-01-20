@@ -63,9 +63,9 @@ export const StickerGrid = ({ stickers, onStickerPress, stickersPerRow = 4 }: St
 
 interface StickerPackBodyProps {
     stickerPack: StickerPackRo;
-    onStickerPress: (sticker: StickerRo) => void;
-    refreshing: boolean;
-    onRefresh: () => void;
+    onStickerPress?: (sticker: StickerRo) => void;
+    refreshing?: boolean;
+    onRefresh?: () => void;
 }
 const StickerPackBody = ({ stickerPack, onStickerPress, refreshing, onRefresh }: StickerPackBodyProps): JSX.Element => {
 
@@ -74,7 +74,7 @@ const StickerPackBody = ({ stickerPack, onStickerPress, refreshing, onRefresh }:
     return (
         <ScrollView
             style={tailwind("p-6")}
-            refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+            refreshControl={<RefreshControl refreshing={refreshing || false} onRefresh={onRefresh} />}
         >
             <Layout style={tailwind("flex-row justify-between items-baseline pb-4 pt-2")}>
                 <Layout style={tailwind("flex-row items-baseline")}>

@@ -8,7 +8,7 @@ import { TouchableOpacity } from "react-native";
 
 interface Props {
     stickerPack: StickerPackRo;
-    onHeaderPress: () => void;
+    onHeaderPress?: () => void;
 }
 const StickerPackHeader = ({ stickerPack, onHeaderPress }: Props): JSX.Element => {
     const numMembers = stickerPack.members.length + 1;
@@ -17,6 +17,7 @@ const StickerPackHeader = ({ stickerPack, onHeaderPress }: Props): JSX.Element =
         <TouchableOpacity
             style={tailwind("flex flex-row justify-between items-center p-4 border-b-2 border-gray-200")}
             onPress={onHeaderPress}
+            disabled={onHeaderPress === undefined}
         >
             <Layout style={tailwind("flex flex-row items-center")}>
                 <CoverStickerImage
@@ -35,11 +36,13 @@ const StickerPackHeader = ({ stickerPack, onHeaderPress }: Props): JSX.Element =
                     </Text>
                 </Layout>
             </Layout>
-            <Icon
-                style={tailwind("w-8 h-8")}
-                fill='#8F9BB3'
-                name='chevron-right-outline'
-            />
+            {onHeaderPress ? (
+                <Icon
+                    style={tailwind("w-8 h-8")}
+                    fill='#8F9BB3'
+                    name='chevron-right-outline'
+                />
+            ) : null}
         </TouchableOpacity >
     )
 }
