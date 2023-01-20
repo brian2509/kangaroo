@@ -18,8 +18,6 @@ export const StickerPackManageScreen = ({ navigation, route }: Props): React.Rea
     const { mutate: deleteStickerPack } = useRemoveStickerPackMutation(queryClient);
 
     const onPressDeleteStickerPack = async () => {
-        if (!stickerPack) return;
-
         const onPressConfirm = async () => {
             await deleteStickerPack(stickerPack.id);
             navigation.popToTop();
