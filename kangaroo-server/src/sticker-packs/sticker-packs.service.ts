@@ -122,17 +122,23 @@ export class StickerPacksService {
 
     if (stickerPack.stickers.length >= WHATSAPP_MAX_PACK_SIZE) {
       throw new ForbiddenException(
-        "This pack is full. The maximum amount of stickers in a pack is 30."
+        `This pack is full. The maximum amount of stickers in a pack is ${WHATSAPP_MAX_PACK_SIZE}.`
       );
     }
 
-    return await this.stickersService.create(
+    const stickerRo = await this.stickersService.create(
       id,
       createStickerDto,
       file,
       stickerPack.animated,
       userId
     );
+
+    // Manually change the updatedAt attribute on the sticker pack
+    stickerPack.updatedAt = new Date();
+    await this.stickerPackRepository.save(stickerPack);
+
+    return stickerRo;
   }
 
   async removeSticker(id: string, stickerId: string, userId: string) {
@@ -151,12 +157,19 @@ export class StickerPacksService {
       );
     }
 
-    return await this.stickersService.remove(stickerId);
+    const stickerRo = await this.stickersService.remove(stickerId);
+
+    // Manually change the updatedAt attribute on the sticker pack
+    stickerPack.updatedAt = new Date();
+    await this.stickerPackRepository.save(stickerPack);
+
+    return stickerRo;
   }
 
   async findAllPublicPacks(): Promise<StickerPackRo[]> {
     const stickerPacks = await this.stickerPackRepository.find({
       where: { personal: false },
+      order: { createdAt: "ASC" },
     });
     return stickerPacks.map((stickerPack) => stickerPack.toRO());
   }
@@ -166,6 +179,7 @@ export class StickerPacksService {
       where: { id },
       relations: ["author"],
     });
+
     if (!stickerPack) {
       throw new NotFoundException();
     }
