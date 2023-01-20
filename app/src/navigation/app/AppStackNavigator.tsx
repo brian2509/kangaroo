@@ -15,7 +15,7 @@ import { JoinStickerPackScreen } from "../../screens/app/home/stickerpack/JoinSt
 
 export type HomeStackParamList = {
     HomeScreen: undefined;
-    StickerPackDetailScreen: {
+    StickerPackScreen: {
         stickerPack: StickerPackRo;
     };
     StickerPackManageScreen: {
@@ -49,7 +49,7 @@ export const AppStackNavigator = (): JSX.Element => (
             options={{ headerShown: false }}
         />
         <AppStack.Screen
-            name="StickerPackDetailScreen"
+            name="StickerPackScreen"
             component={StickerPackScreen}
             options={{ title: "Stickers", headerTitleAlign: "center" }}
         />

@@ -35,7 +35,7 @@ import { createInviteUrl } from "../../../../util/invites";
 // TODO make this a valid module.
 const { WhatsAppStickersModule } = NativeModules;
 
-type Props = StackScreenProps<HomeStackParamList, "StickerPackDetailScreen">;
+type Props = StackScreenProps<HomeStackParamList, "StickerPackScreen">;
 export const StickerPackScreen = ({ navigation, route }: Props): React.ReactElement => {
     const queryClient = useQueryClient();
 

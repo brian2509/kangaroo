@@ -26,7 +26,6 @@ const StickerGridCell = ({ sticker, onStickerPress, stickersPerRow = 4 }: Render
                 marginVertical: "1%",
             }}
             onPress={() => onStickerPress && onStickerPress(sticker)}
-            delayLongPress={200}
             disabled={!onStickerPress}
         >
             <Image
