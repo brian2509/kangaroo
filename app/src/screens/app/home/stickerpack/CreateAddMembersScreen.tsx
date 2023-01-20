@@ -30,7 +30,7 @@ export const CreateAddMembersScreen = ({ route, navigation }: Props): React.Reac
 
         createStickerPackMutation.mutate(dto, {
             onSuccess: (data) => {
-                navigation.replace("StickerPackDetailScreen", {
+                navigation.replace("StickerPackScreen", {
                     stickerPack: data,
                 });
             },
