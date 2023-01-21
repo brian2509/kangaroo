@@ -342,8 +342,8 @@ export class StickerPacksService {
       throw new NotFoundException();
     }
 
-    if (!stickerPack.isOwner(userId)) {
-      throw new ForbiddenException("Only the owner can see invites.");
+    if (!stickerPack.isMember(userId)) {
+      throw new ForbiddenException("Only members can see invite links.");
     }
 
     const invites = await this.inviteRepository.find({
