@@ -14,7 +14,7 @@ import { PrivacyPolicyScreen } from "../../screens/app/home/settings/PrivacyPoli
 
 export type HomeStackParamList = {
     Homescreen: undefined;
-    StickerPackDetailScreen: {
+    StickerPackScreen: {
         stickerPack: StickerPackRo;
     };
     StickerPackManageScreen: {
@@ -45,7 +45,7 @@ export const AppStackNavigator = (): JSX.Element => (
             options={{ headerShown: false }}
         />
         <AppStack.Screen
-            name="StickerPackDetailScreen"
+            name="StickerPackScreen"
             component={StickerPackScreen}
             options={{ title: "Stickers", headerTitleAlign: "center" }}
         />
