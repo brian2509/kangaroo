@@ -495,16 +495,17 @@ export class StickerPacksService {
       relations: ["author", "members"],
     });
 
-    if (!stickerPack.isOwner(userId)) {
-      throw new ForbiddenException("Not the owner of the pack.");
-    }
-
-    if (userToBeKicked === userId) {
-      throw new ForbiddenException("You can not kick yourself.");
-    }
-
     if (!stickerPack) {
       throw new NotFoundException();
+    }
+
+    if (!stickerPack.isOwner(userId)) {
+      throw new ForbiddenException("Not the owner of the pack.");
+
+    }
+    if (userToBeKicked === userId) {
+      throw new ForbiddenException("You can not kick yourself.");
+
     }
 
     const toBeKicked = stickerPack.members.find(
