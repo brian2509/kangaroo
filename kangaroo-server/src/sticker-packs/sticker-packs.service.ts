@@ -75,7 +75,7 @@ export class StickerPacksService {
   async remove(id: string, userId: string): Promise<StickerPackRo> {
     const stickerPack = await this.stickerPackRepository.findOne({
       where: { id },
-      relations: ["author"],
+      relations: ["author", "invites"],
     });
 
     if (!stickerPack) {
@@ -95,6 +95,11 @@ export class StickerPacksService {
         await this.stickersService.remove(sticker.id);
       }
     }
+
+    // TODO: make this faster
+    const invites = stickerPack.invites;
+    await this.inviteRepository.remove(invites);
+
     await this.stickerPackRepository.delete(id);
     return stickerPack.toRO();
   }
@@ -490,10 +495,6 @@ export class StickerPacksService {
 
     if (!stickerPack) {
       throw new NotFoundException();
-    }
-
-    if (!stickerPack.isOwner(userId)) {
-      throw new ForbiddenException("Not the owner of the pack.");
     }
 
     const toBeKicked = stickerPack.members.find(
