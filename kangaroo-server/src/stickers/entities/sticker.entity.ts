@@ -21,7 +21,7 @@ export class Sticker {
   @Column()
   name: string;
 
-  @ManyToOne(() => User, (user) => user.stickers)
+  @ManyToOne(() => User, (user) => user.stickers, { eager: true })
   author: User;
 
   @ManyToOne(() => StickerPack, (stickerPack) => stickerPack.stickers)
@@ -45,6 +45,7 @@ export class Sticker {
     return {
       id: this.id,
       name: this.name,
+      author: this.author.toRo(),
       fileUrl: this.whatsAppStickerImageFile.fileUrl(),
       whatsAppStickerImageFileUrl: this.whatsAppStickerImageFile.fileUrl(),
       whatsAppIconImageFileUrl: this.whatsAppIconImageFile.fileUrl(),
