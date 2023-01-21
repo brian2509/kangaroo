@@ -483,14 +483,22 @@ export class StickerPacksService {
     return stickerPack.toRO();
   }
 
-  async kickMember(id: string, userId: string, userToBeKicked: string): Promise<StickerPackRo> {
+  async kickMember(
+    id: string,
+    userId: string,
+    userToBeKicked: string
+  ): Promise<StickerPackRo> {
     const stickerPack = await this.stickerPackRepository.findOne({
       where: { id },
       relations: ["author", "members"],
     });
 
+    if (!stickerPack.isOwner(userId)) {
+      throw new ForbiddenException("Not the owner of the pack.");
+    }
+
     if (userToBeKicked === userId) {
-      throw new ForbiddenException("Admin cannot kick itself.");
+      throw new ForbiddenException("You can not kick yourself.");
     }
 
     if (!stickerPack) {
