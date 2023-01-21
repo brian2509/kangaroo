@@ -157,9 +157,11 @@ export class StickerPacksService {
       throw new NotFoundException();
     }
 
-    if (!stickerPack.isOwner(userId) && !stickerPack.isMember(userId)) {
+    const sticker = await this.stickersService.get(stickerId);
+
+    if (sticker.author.id !== userId && !stickerPack.isOwner(userId)) {
       throw new ForbiddenException(
-        "You are not the author or a member of this sticker pack."
+        "You can only remove your own stickers or you must be an admin."
       );
     }
 
