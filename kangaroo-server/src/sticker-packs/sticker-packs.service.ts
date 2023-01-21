@@ -134,8 +134,9 @@ export class StickerPacksService {
     );
 
     // Manually change the updatedAt attribute on the sticker pack
-    stickerPack.updatedAt = new Date();
-    await this.stickerPackRepository.save(stickerPack);
+    await this.stickerPackRepository.update(id, {
+      updatedAt: new Date(),
+    });
 
     return stickerRo;
   }
@@ -159,9 +160,9 @@ export class StickerPacksService {
     const stickerRo = await this.stickersService.remove(stickerId);
 
     // Manually change the updatedAt attribute on the sticker pack
-    stickerPack.updatedAt = new Date();
-    await this.stickerPackRepository.save(stickerPack);
-
+    await this.stickerPackRepository.update(id, {
+      updatedAt: new Date(),
+    });
     return stickerRo;
   }
 
