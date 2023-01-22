@@ -217,4 +217,16 @@ export class StickerPacksController {
   ): Promise<InviteRoDto> {
     return await this.stickerPacksService.removeInvite(id, inviteId, user.id);
   }
+
+  @ApiOperation({
+    summary: "Kick a user from a sticker pack.",
+  })
+  @Post(":id/kick/:userIdToBeKicked")
+  async kickMember(
+    @Param("id") id: string,
+    @Param("userIdToBeKicked") userIdToBeKicked: string,
+    @User() user: UserRo
+  ): Promise<StickerPackRo> {
+    return this.stickerPacksService.kickMember(id, user.id, userIdToBeKicked);
+  }
 }
