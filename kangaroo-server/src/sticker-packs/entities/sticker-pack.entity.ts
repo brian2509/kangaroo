@@ -44,7 +44,11 @@ export class StickerPack {
 
   @OneToOne(() => PrivateFile, { eager: true, nullable: true })
   @JoinColumn()
-  whatsAppIconImageFile: PrivateFile;
+  trayIconImageFile: PrivateFile;
+
+  @OneToOne(() => PrivateFile, { eager: true, nullable: true })
+  @JoinColumn()
+  trayIconImageFileOriginal: PrivateFile;
 
   @Column()
   animated: boolean;
@@ -79,7 +83,9 @@ export class StickerPack {
       stickers: !this.stickers
         ? []
         : this.stickers.map((sticker) => sticker.toRO()),
-      whatsAppIconImageFileUrl: this.whatsAppIconImageFile.fileUrl(),
+      trayIconImageFileUrl: this.trayIconImageFile?.fileUrl() ?? undefined,
+      trayIconImageFileUrlOriginal:
+        this.trayIconImageFileOriginal?.fileUrl() ?? undefined,
       members: !this.members ? [] : this.members.map((member) => member.toRo()),
       author: this.author.toRo(),
       views: this.views,

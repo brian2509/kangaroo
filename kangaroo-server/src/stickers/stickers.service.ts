@@ -8,6 +8,8 @@ import { CreateStickerDto } from "./dto/create-sticker.dto";
 import { StickerRo } from "./dto/response-sticker.dto";
 import { Sticker } from "./entities/sticker.entity";
 import { ImagesService } from "./images.service";
+import { PrivateFile } from "../files/entities/file.entity";
+import { streamToBuffer } from "../util/streams";
 
 @Injectable()
 export class StickersService {
@@ -25,7 +27,10 @@ export class StickersService {
     animated: boolean,
     userId: string
   ): Promise<StickerRo> {
-    const whatsAppStickerImage = await this.imagesService.createWhatsappImage(file.buffer, animated);
+    const whatsAppStickerImage = await this.imagesService.createWhatsappImage(
+      file.buffer,
+      animated
+    );
 
     const whatsAppStickerImageFile = await this.filesService.uploadFile(
       whatsAppStickerImage,
@@ -62,5 +67,28 @@ export class StickersService {
     );
 
     return sticker.toRO();
+  }
+
+  async transformAndUploadTrayIcon(
+    file: MulterFile | Buffer
+  ): Promise<PrivateFile> {
+    const buffer = file instanceof Buffer ? file : file.buffer;
+    const whatsAppIconImage = await this.imagesService.createWhatsappIcon(
+      buffer
+    );
+
+    return await this.filesService.uploadFile(
+      whatsAppIconImage,
+      "whatsapp-icon.png"
+    );
+  }
+
+  async stickerFileToBuffer(stickerFile: PrivateFile): Promise<Buffer> {
+    const file = await this.filesService.getFile(stickerFile.fileName);
+    return await streamToBuffer(file.stream);
+  }
+
+  async deleteTrayIcon(file: PrivateFile): Promise<void> {
+    await this.filesService.deleteFile(file.fileName);
   }
 }

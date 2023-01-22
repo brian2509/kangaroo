@@ -6,13 +6,10 @@ import {
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { MulterFile } from "../files/file.validation";
-import { FilesService } from "../files/files.service";
 import { WHATSAPP_MAX_PACK_SIZE } from "../stickers/constants/whatsapp.constants";
 import { CreateStickerDto } from "../stickers/dto/create-sticker.dto";
 import { Sticker } from "../stickers/entities/sticker.entity";
-import { ImagesService } from "../stickers/images.service";
 import { StickersService } from "../stickers/stickers.service";
-import { streamToBuffer } from "../util/streams";
 import { CreateInviteDto } from "./dto/create-invite.dto";
 import { CreateStickerPackDto } from "./dto/create-sticker-pack.dto";
 import { InviteRoDto } from "./dto/invite-ro.dto";
@@ -30,9 +27,7 @@ export class StickerPacksService {
     private stickerRepository: Repository<Sticker>,
     @InjectRepository(StickerPackInvite)
     private inviteRepository: Repository<StickerPackInvite>,
-    private stickersService: StickersService,
-    private imagesService: ImagesService,
-    private filesService: FilesService
+    private stickersService: StickersService
   ) {}
 
   async create(
@@ -147,107 +142,6 @@ export class StickerPacksService {
     });
 
     return stickerRo;
-  }
-
-  async setTrayIcon(id: string, file: MulterFile | Buffer, userId: string) {
-    const stickerPack = await this.stickerPackRepository.findOne({
-      where: { id },
-      relations: ["author"],
-    });
-
-    if (!stickerPack) {
-      throw new NotFoundException("Did not find sticker pack with this ID.");
-    }
-
-    if (!stickerPack.isOwner(userId) && !stickerPack.isMember(userId)) {
-      throw new ForbiddenException(
-        "You are not the author or a member of this sticker pack."
-      );
-    }
-
-    const buffer = file instanceof Buffer ? file : file.buffer;
-    const whatsAppIconImage = await this.imagesService.createWhatsappIcon(
-      buffer
-    );
-
-    stickerPack.whatsAppIconImageFile = await this.filesService.uploadFile(
-      whatsAppIconImage,
-      "whatsapp-icon.png"
-    );
-    await this.stickerPackRepository.save(stickerPack);
-
-    return stickerPack.toRO();
-  }
-
-  async setTrayIconFromExistingSticker(
-    id: string,
-    stickerId: string,
-    userId: string
-  ) {
-    const stickerPack = await this.stickerPackRepository.findOne({
-      where: { id },
-      relations: ["author"],
-    });
-
-    const sticker = await this.stickerRepository.findOne({
-      where: { id: stickerId },
-    });
-
-    if (!stickerPack) {
-      throw new NotFoundException("Did not find sticker pack with this ID.");
-    }
-
-    if (!sticker) {
-      throw new NotFoundException("Did not find sticker with this ID.");
-    }
-
-    if (!stickerPack.isOwner(userId) && !stickerPack.isMember(userId)) {
-      throw new ForbiddenException(
-        "You are not the author or a member of this sticker pack."
-      );
-    }
-
-    // Check if sticker is located in the pack.
-    if (
-      stickerPack.stickers.find((sticker) => sticker.id === stickerId) ===
-      undefined
-    ) {
-      throw new ForbiddenException("The sticker is not located in this pack.");
-    }
-
-    const file = await this.filesService.getFile(
-      sticker.whatsAppStickerImageFile.fileName
-    );
-    const buffer = await streamToBuffer(file.stream);
-
-    // TODO: Some redundant DB operations here when calling this function.
-    return this.setTrayIcon(id, buffer, userId);
-  }
-
-  async deleteTrayIcon(id: string, userId: string) {
-    const stickerPack = await this.stickerPackRepository.findOne({
-      where: { id },
-      relations: ["author"],
-    });
-
-    if (!stickerPack) {
-      throw new NotFoundException("Did not find sticker pack with this ID.");
-    }
-
-    if (!stickerPack.isOwner(userId) && !stickerPack.isMember(userId)) {
-      throw new ForbiddenException(
-        "You are not the author or a member of this sticker pack."
-      );
-    }
-
-    const file = stickerPack.whatsAppIconImageFile;
-    if (file) {
-      await this.filesService.deleteFile(file.fileName);
-    }
-    stickerPack.whatsAppIconImageFile = undefined;
-    await this.stickerRepository.save(stickerPack);
-
-    return stickerPack.toRO();
   }
 
   async removeSticker(id: string, stickerId: string, userId: string) {
@@ -584,5 +478,107 @@ export class StickerPacksService {
       invite.stickerPack.id
     );
     return stickerPack.toRO();
+  }
+
+  async setTrayIconFromExistingSticker(
+    id: string,
+    stickerId: string,
+    userId: string
+  ) {
+    const stickerPack = await this.stickerPackRepository.findOne({
+      where: { id },
+      relations: ["author"],
+    });
+
+    const sticker = await this.stickerRepository.findOne({
+      where: { id: stickerId },
+    });
+
+    if (!stickerPack) {
+      throw new NotFoundException("Did not find sticker pack with this ID.");
+    }
+
+    if (!sticker) {
+      throw new NotFoundException("Did not find sticker with this ID.");
+    }
+
+    if (!stickerPack.isOwner(userId) && !stickerPack.isMember(userId)) {
+      throw new ForbiddenException(
+        "You are not the author or a member of this sticker pack."
+      );
+    }
+
+    if (
+      stickerPack.stickers.find((sticker) => sticker.id === stickerId) ===
+      undefined
+    ) {
+      throw new ForbiddenException("The sticker is not located in this pack.");
+    }
+
+    if (
+      stickerPack.trayIconImageFile ||
+      stickerPack.trayIconImageFileOriginal
+    ) {
+      throw new ForbiddenException("The stickerpack already has a tray icon.");
+    }
+
+    const buffer = await this.stickersService.stickerFileToBuffer(
+      sticker.whatsAppStickerImageFile
+    );
+
+    stickerPack.trayIconImageFile = await this.stickersService.transformAndUploadTrayIcon(
+      buffer
+    );
+    stickerPack.trayIconImageFileOriginal = sticker.whatsAppStickerImageFile;
+
+    await this.stickerPackRepository.save(stickerPack);
+
+    return stickerPack.toRO();
+  }
+
+  async deleteTrayIcon(id: string, userId: string) {
+    const stickerPack = await this.stickerPackRepository.findOne({
+      where: { id },
+      relations: ["author"],
+    });
+
+    if (!stickerPack) {
+      throw new NotFoundException("Did not find sticker pack with this ID.");
+    }
+
+    if (!stickerPack.isOwner(userId) && !stickerPack.isMember(userId)) {
+      throw new ForbiddenException(
+        "You are not the author or a member of this sticker pack."
+      );
+    }
+
+    if (!stickerPack.trayIconImageFile) {
+      throw new NotFoundException("This pack does not have a tray icon.");
+    }
+
+    console.log(stickerPack.trayIconImageFile);
+
+    // TODO: Reverse these actions/use transactions.
+    // We only remove the tray icon, not the original sticker.
+    const file = stickerPack.trayIconImageFile;
+    await this.stickerPackRepository
+      .createQueryBuilder()
+      .where({ id: id })
+      .update({
+        trayIconImageFileOriginal: null,
+        trayIconImageFile: null,
+      })
+      .execute();
+    if (file) {
+      console.log("Deleting.");
+      await this.stickersService.deleteTrayIcon(file);
+    }
+
+    return (
+      await this.stickerPackRepository.findOne({
+        where: { id },
+        relations: ["author"],
+      })
+    ).toRO();
   }
 }

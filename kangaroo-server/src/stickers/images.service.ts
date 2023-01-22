@@ -72,7 +72,7 @@ export class ImagesService {
     const metaData = await sharp(data).metadata();
 
     // TODO: Test behaviour when making a tray icon from a gif.
-    const allowedFileFormat = ["jpeg", "png", "gif"];
+    const allowedFileFormat = ["jpeg", "png", "gif", "webp"];
     if (!allowedFileFormat.includes(metaData.format)) {
       throw new ForbiddenException("This format is not allowed.");
     }
