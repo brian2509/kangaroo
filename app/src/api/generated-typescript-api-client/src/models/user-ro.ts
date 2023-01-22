@@ -25,13 +25,12 @@ export interface UserRo {
      * @type {string}
      * @memberof UserRo
      */
-    id: string;
+    'id': string;
     /**
      * 
      * @type {string}
      * @memberof UserRo
      */
-    username: string;
+    'username': string;
 }
-
 

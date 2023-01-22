@@ -13,6 +13,9 @@
  */
 
 
+// May contain unused imports in some cases
+// @ts-ignore
+import { UserRo } from './user-ro';
 
 /**
  * 
@@ -25,43 +28,42 @@ export interface StickerRo {
      * @type {string}
      * @memberof StickerRo
      */
-    id: string;
+    'id': string;
     /**
      * 
      * @type {string}
      * @memberof StickerRo
      */
-    name: string;
+    'name': string;
+    /**
+     * 
+     * @type {UserRo}
+     * @memberof StickerRo
+     */
+    'author': UserRo;
     /**
      * 
      * @type {string}
      * @memberof StickerRo
      */
-    fileUrl: string;
+    'fileUrl': string;
     /**
      * 
      * @type {string}
      * @memberof StickerRo
      */
-    whatsAppStickerImageFileUrl: string;
+    'whatsAppStickerImageFileUrl': string;
     /**
      * 
      * @type {string}
      * @memberof StickerRo
      */
-    whatsAppIconImageFileUrl: string;
+    'createdAt': string;
     /**
      * 
      * @type {string}
      * @memberof StickerRo
      */
-    createdAt: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof StickerRo
-     */
-    updatedAt: string;
+    'updatedAt': string;
 }
-
 

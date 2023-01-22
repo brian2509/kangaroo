@@ -25,19 +25,18 @@ export interface UserPrivateRo {
      * @type {string}
      * @memberof UserPrivateRo
      */
-    id: string;
+    'id': string;
     /**
      * 
      * @type {string}
      * @memberof UserPrivateRo
      */
-    username: string;
+    'username': string;
     /**
      * 
      * @type {string}
      * @memberof UserPrivateRo
      */
-    email: string;
+    'email': string;
 }
-
 
