@@ -39,7 +39,7 @@ import { StickerPacksService } from "./sticker-packs.service";
 @ApiBearerAuth()
 @Controller("sticker-packs")
 export class StickerPacksController {
-  constructor(private readonly stickerPacksService: StickerPacksService) {}
+  constructor(private readonly stickerPacksService: StickerPacksService) { }
 
   @ApiOperation({
     summary: "Create a sticker pack (without stickers).",
@@ -216,6 +216,34 @@ export class StickerPacksController {
     @User() user: UserRo
   ): Promise<InviteRoDto> {
     return await this.stickerPacksService.removeInvite(id, inviteId, user.id);
+  }
+
+  @ApiOperation({
+    summary: `Set a tray icon of a sticker pack you own or a member of. See description for requirements.`,
+  })
+  @Post(":id/tray-icon/:stickerId")
+  async setTrayIconFromSticker(
+    @Param("id") id: string,
+    @Param("stickerId") stickerId: string,
+    @User() user: UserRo
+  ): Promise<StickerPackRo> {
+    return this.stickerPacksService.setTrayIconFromExistingSticker(
+      id,
+      stickerId,
+      user.id
+    );
+  }
+
+  @ApiOperation({
+    summary: `Remove the tray-icon from the pack if it exists.`,
+  })
+  @Delete(":id/tray-icon")
+  async deleteTrayIcon(
+    @Param("id") id: string,
+    @Param("stickerId") stickerId: string,
+    @User() user: UserRo
+  ): Promise<StickerPackRo> {
+    return this.stickerPacksService.deleteTrayIcon(id, user.id);
   }
 
   @ApiOperation({
