@@ -11,7 +11,7 @@ interface Props {
     onHeaderPress?: () => void;
 }
 const StickerPackHeader = ({ stickerPack, onHeaderPress }: Props): JSX.Element => {
-    const numMembers = stickerPack.members.length + 1;
+    const numMembers = stickerPack.members.length;
 
     return (
         <TouchableOpacity

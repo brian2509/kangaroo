@@ -19,7 +19,7 @@ export type HomeStackParamList = {
         stickerPack: StickerPackRo;
     };
     StickerPackManageScreen: {
-        stickerPack: StickerPackRo;
+        stickerPackId: string;
     };
     StickerScreen: {
         sticker: StickerRo;

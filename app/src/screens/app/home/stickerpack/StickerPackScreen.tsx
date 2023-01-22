@@ -65,7 +65,7 @@ export const StickerPackScreen = ({ navigation, route }: Props): React.ReactElem
         if (stickerPack == undefined) return;
 
         navigation.navigate("StickerPackManageScreen", {
-            stickerPack,
+            stickerPackId: stickerPack.id,
         });
     };
 

@@ -16,7 +16,7 @@ export const useStickerPack = (id: string) =>
 
 const getStickerPacks = async () => {
     // TODO: After merge, use get "getOwnAndJoinedStickerPacks" method, which is not working at the time of merging
-    const { data } = await api.users.getOwnStickerPacks();
+    const { data } = await api.users.getOwnAndJoinedStickerPacks();
     // Backend returns stickers in reverse order, so we need to sort them first.
     for (let i = 0; i < data.length; i++) {
         data[i].stickers = sortStickersByCreatedAt(data[i].stickers);
