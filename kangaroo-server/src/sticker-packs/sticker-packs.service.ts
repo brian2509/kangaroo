@@ -8,6 +8,7 @@ import { Repository } from "typeorm";
 import { MulterFile } from "../files/file.validation";
 import { WHATSAPP_MAX_PACK_SIZE } from "../stickers/constants/whatsapp.constants";
 import { CreateStickerDto } from "../stickers/dto/create-sticker.dto";
+import { Sticker } from "../stickers/entities/sticker.entity";
 import { StickersService } from "../stickers/stickers.service";
 import { CreateInviteDto } from "./dto/create-invite.dto";
 import { CreateStickerPackDto } from "./dto/create-sticker-pack.dto";
@@ -22,10 +23,12 @@ export class StickerPacksService {
   constructor(
     @InjectRepository(StickerPack)
     private stickerPackRepository: Repository<StickerPack>,
+    @InjectRepository(Sticker)
+    private stickerRepository: Repository<Sticker>,
     @InjectRepository(StickerPackInvite)
     private inviteRepository: Repository<StickerPackInvite>,
     private stickersService: StickersService
-  ) {}
+  ) { }
 
   async create(
     createStickerPackDto: CreateStickerPackDto,
@@ -34,6 +37,7 @@ export class StickerPacksService {
     const stickerPack = this.stickerPackRepository.create({
       ...createStickerPackDto,
       author: { id: userId },
+      members: [{ id: userId }],
     });
     const result = await this.stickerPackRepository.save(stickerPack);
     return result.toRO();
@@ -74,7 +78,7 @@ export class StickerPacksService {
   async remove(id: string, userId: string): Promise<StickerPackRo> {
     const stickerPack = await this.stickerPackRepository.findOne({
       where: { id },
-      relations: ["author"],
+      relations: ["author", "invites"],
     });
 
     if (!stickerPack) {
@@ -94,6 +98,11 @@ export class StickerPacksService {
         await this.stickersService.remove(sticker.id);
       }
     }
+
+    // TODO: make this faster
+    const invites = stickerPack.invites;
+    await this.inviteRepository.remove(invites);
+
     await this.stickerPackRepository.delete(id);
     return stickerPack.toRO();
   }
@@ -110,7 +119,7 @@ export class StickerPacksService {
     });
 
     if (!stickerPack) {
-      throw new NotFoundException("Did not find sticker pack with this ID.");
+      throw new NotFoundException("Did not find sticker with this ID.");
     }
 
     if (!stickerPack.isOwner(userId) && !stickerPack.isMember(userId)) {
@@ -151,9 +160,11 @@ export class StickerPacksService {
       throw new NotFoundException();
     }
 
-    if (!stickerPack.isOwner(userId) && !stickerPack.isMember(userId)) {
+    const sticker = await this.stickersService.get(stickerId);
+
+    if (sticker.author.id !== userId && !stickerPack.isOwner(userId)) {
       throw new ForbiddenException(
-        "You are not the author or a member of this sticker pack."
+        "You can only remove your own stickers or you must be an admin."
       );
     }
 
@@ -163,6 +174,7 @@ export class StickerPacksService {
     await this.stickerPackRepository.update(id, {
       updatedAt: new Date(),
     });
+
     return stickerRo;
   }
 
@@ -336,8 +348,8 @@ export class StickerPacksService {
       throw new NotFoundException();
     }
 
-    if (!stickerPack.isOwner(userId)) {
-      throw new ForbiddenException("Only the owner can see invites.");
+    if (!stickerPack.isMember(userId)) {
+      throw new ForbiddenException("Only members can see invite links.");
     }
 
     const invites = await this.inviteRepository.find({
@@ -377,8 +389,8 @@ export class StickerPacksService {
       throw new NotFoundException();
     }
 
-    if (!stickerPack.isOwner(userId)) {
-      throw new ForbiddenException("Only the owner can make invite links.");
+    if (!stickerPack.isMember(userId)) {
+      throw new ForbiddenException("Only members can create invite links.");
     }
 
     // Check if the expire date is set in the future.
@@ -417,8 +429,8 @@ export class StickerPacksService {
       throw new NotFoundException();
     }
 
-    if (!stickerPack.isOwner(userId)) {
-      throw new ForbiddenException("Only the owner can delete invites.");
+    if (!stickerPack.isMember(userId)) {
+      throw new ForbiddenException("Only members can delete invites.");
     }
 
     const invite = await this.inviteRepository.findOne({
@@ -475,5 +487,137 @@ export class StickerPacksService {
       invite.stickerPack.id
     );
     return stickerPack.toRO();
+  }
+
+  async setTrayIconFromExistingSticker(
+    id: string,
+    stickerId: string,
+    userId: string
+  ) {
+    const stickerPack = await this.stickerPackRepository.findOne({
+      where: { id },
+      relations: ["author"],
+    });
+
+    const sticker = await this.stickerRepository.findOne({
+      where: { id: stickerId },
+    });
+
+    if (!stickerPack) {
+      throw new NotFoundException("Did not find sticker pack with this ID.");
+    }
+
+    if (!sticker) {
+      throw new NotFoundException("Did not find sticker with this ID.");
+    }
+
+    if (!stickerPack.isOwner(userId) && !stickerPack.isMember(userId)) {
+      throw new ForbiddenException(
+        "You are not the author or a member of this sticker pack."
+      );
+    }
+
+    if (
+      stickerPack.stickers.find((sticker) => sticker.id === stickerId) ===
+      undefined
+    ) {
+      throw new ForbiddenException("The sticker is not located in this pack.");
+    }
+
+    // TODO: add logs when we have a logger set-up
+
+    const buffer = await this.stickersService.stickerFileToBuffer(
+      sticker.whatsAppStickerImageFile
+    );
+
+    stickerPack.trayIconImageFile = await this.stickersService.transformAndUploadTrayIcon(
+      buffer
+    );
+    stickerPack.trayIconImageFileOriginal = sticker.whatsAppStickerImageFile;
+
+    await this.stickerPackRepository.save(stickerPack);
+
+    return stickerPack.toRO();
+  }
+
+  async deleteTrayIcon(id: string, userId: string) {
+    const stickerPack = await this.stickerPackRepository.findOne({
+      where: { id },
+      relations: ["author"],
+    });
+
+    if (!stickerPack) {
+      throw new NotFoundException("Did not find sticker pack with this ID.");
+    }
+
+    if (!stickerPack.isOwner(userId) && !stickerPack.isMember(userId)) {
+      throw new ForbiddenException(
+        "You are not the author or a member of this sticker pack."
+      );
+    }
+
+    if (!stickerPack.trayIconImageFile) {
+      throw new NotFoundException("This pack does not have a tray icon.");
+    }
+
+    // TODO: Reverse these actions/use transactions.
+    // We only remove the tray icon, not the original sticker.
+    const file = stickerPack.trayIconImageFile;
+    await this.stickerPackRepository
+      .createQueryBuilder()
+      .where({ id: id })
+      .update({
+        trayIconImageFileOriginal: null,
+        trayIconImageFile: null,
+      })
+      .execute();
+    if (file) {
+      // TODO: add logs when we have a logger set-up
+      await this.stickersService.deleteTrayIcon(file);
+    }
+
+    return (
+      await this.stickerPackRepository.findOne({
+        where: { id },
+        relations: ["author"],
+      })
+    ).toRO();
+  }
+
+  async kickMember(
+    id: string,
+    userId: string,
+    userToBeKicked: string
+  ): Promise<StickerPackRo> {
+    const stickerPack = await this.stickerPackRepository.findOne({
+      where: { id },
+      relations: ["author", "members"],
+    });
+
+    if (!stickerPack) {
+      throw new NotFoundException();
+    }
+
+    if (!stickerPack.isOwner(userId)) {
+      throw new ForbiddenException("Not the owner of the pack.");
+    }
+
+    if (userToBeKicked === userId) {
+      throw new ForbiddenException("You can not kick yourself.");
+    }
+
+    const toBeKicked = stickerPack.members.find(
+      (member) => member.id === userToBeKicked
+    );
+
+    if (!toBeKicked) {
+      throw new ForbiddenException("Member is not in the pack.");
+    }
+
+    stickerPack.members = stickerPack.members.filter(
+      (member) => member.id !== userToBeKicked
+    );
+
+    return (await this.stickerPackRepository.save(stickerPack)).toRO();
   }
 }

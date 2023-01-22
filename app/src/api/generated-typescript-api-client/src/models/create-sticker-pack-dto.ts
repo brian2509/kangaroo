@@ -25,19 +25,18 @@ export interface CreateStickerPackDto {
      * @type {string}
      * @memberof CreateStickerPackDto
      */
-    name: string;
+    'name': string;
     /**
      * 
      * @type {boolean}
      * @memberof CreateStickerPackDto
      */
-    personal: boolean;
+    'personal': boolean;
     /**
      * 
      * @type {boolean}
      * @memberof CreateStickerPackDto
      */
-    animated: boolean;
+    'animated': boolean;
 }
-
 

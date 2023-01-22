@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { Repository } from "typeorm";
+import { In, Repository } from "typeorm";
 import { StickerPack } from "../sticker-packs/entities/sticker-pack.entity";
 import { UserPrivateRo } from "./dto/response-user-private.dto";
 import { UserPublicRo } from "./dto/response-user-public.dto";
@@ -39,15 +39,6 @@ export class UsersService {
     return this.userRepository.save(user);
   }
 
-  async getOwnedStickerPacks(userId: string) {
-    const stickerPacks = await this.stickerPackRepository.find({
-      where: { author: { id: userId } },
-      relations: ["author"],
-    });
-
-    return stickerPacks.map((stickerPack) => stickerPack.toRO());
-  }
-
   async getPrivateUser(userId: string): Promise<UserPrivateRo> {
     const user = await this.userRepository.findOne({ where: { id: userId } });
     if (!user) {
@@ -73,43 +64,47 @@ export class UsersService {
     };
   }
 
+  async getOwnedStickerPacks(userId: string) {
+    const stickerPacks = await this.stickerPackRepository.find({
+      where: { author: { id: userId } },
+      relations: ["author"],
+    });
+
+    return stickerPacks.map((stickerPack) => stickerPack.toRO());
+  }
+
   async getJoinedStickerPacks(userId: string) {
-    const stickerPacks = await this.stickerPackRepository
-      .createQueryBuilder("stickerpack")
-      .leftJoinAndSelect("stickerpack.author", "author")
-      .leftJoinAndSelect("stickerpack.members", "member")
-      .leftJoinAndSelect("stickerpack.stickers", "sticker")
-      .leftJoinAndSelect(
-        "sticker.whatsAppStickerImageFile",
-        "whatsAppStickerImageFile"
-      )
-      .leftJoinAndSelect(
-        "sticker.whatsAppIconImageFile",
-        "whatsAppIconImageFile"
-      )
-      .where("member.id = :id", { id: userId })
-      .getMany();
+    const stickerPacksIds = (
+      await this.stickerPackRepository
+        .createQueryBuilder("stickerpack")
+        .leftJoinAndSelect("stickerpack.author", "author")
+        .leftJoinAndSelect("stickerpack.members", "member")
+        .where("member.id = :id", { id: userId })
+        .getMany()
+    ).map((stickerPack) => stickerPack.id);
+
+    const stickerPacks = await this.stickerPackRepository.find({
+      where: { id: In(stickerPacksIds) },
+    });
 
     return stickerPacks.map((stickerPack) => stickerPack.toRO());
   }
 
   async getOwnedAndJoinedStickerPacks(userId: string) {
-    const stickerPacks = await this.stickerPackRepository
-      .createQueryBuilder("stickerpack")
-      .leftJoinAndSelect("stickerpack.author", "author")
-      .leftJoinAndSelect("stickerpack.members", "member")
-      .leftJoinAndSelect("stickerpack.stickers", "sticker")
-      .leftJoinAndSelect(
-        "sticker.whatsAppStickerImageFile",
-        "whatsAppStickerImageFile"
-      )
-      .leftJoinAndSelect(
-        "sticker.whatsAppIconImageFile",
-        "whatsAppIconImageFile"
-      )
-      .where("member.id = :id", { id: userId })
-      .orWhere("author.id =:id", { id: userId })
-      .getMany();
+    const stickerPacksIds = (
+      await this.stickerPackRepository
+        .createQueryBuilder("stickerpack")
+        .leftJoinAndSelect("stickerpack.author", "author")
+        .leftJoinAndSelect("stickerpack.members", "member")
+        .leftJoinAndSelect("stickerpack.stickers", "sticker")
+        .where("member.id = :id", { id: userId })
+        .orWhere("author.id =:id", { id: userId })
+        .getMany()
+    ).map((stickerPack) => stickerPack.id);
+
+    const stickerPacks = await this.stickerPackRepository.find({
+      where: { id: In(stickerPacksIds) },
+    });
 
     return stickerPacks.map((stickerPack) => stickerPack.toRO());
   }
