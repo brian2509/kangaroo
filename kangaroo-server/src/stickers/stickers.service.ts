@@ -52,10 +52,23 @@ export class StickersService {
     ).toRO();
   }
 
+  async get(id: string): Promise<Sticker> {
+    const sticker = await this.stickerRepository.findOne({
+      where: { id },
+    });
+
+    if (!sticker) {
+      throw new NotFoundException();
+    }
+
+    return sticker;
+  }
+
   async remove(id: string): Promise<StickerRo> {
     const sticker = await this.stickerRepository.findOne({
       where: { id },
     });
+
     if (!sticker) {
       throw new NotFoundException();
     }

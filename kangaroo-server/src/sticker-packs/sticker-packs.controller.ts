@@ -39,7 +39,7 @@ import { StickerPacksService } from "./sticker-packs.service";
 @ApiBearerAuth()
 @Controller("sticker-packs")
 export class StickerPacksController {
-  constructor(private readonly stickerPacksService: StickerPacksService) {}
+  constructor(private readonly stickerPacksService: StickerPacksService) { }
 
   @ApiOperation({
     summary: "Create a sticker pack (without stickers).",
@@ -244,5 +244,17 @@ export class StickerPacksController {
     @User() user: UserRo
   ): Promise<StickerPackRo> {
     return this.stickerPacksService.deleteTrayIcon(id, user.id);
+  }
+
+  @ApiOperation({
+    summary: "Kick a user from a sticker pack.",
+  })
+  @Post(":id/kick/:userIdToBeKicked")
+  async kickMember(
+    @Param("id") id: string,
+    @Param("userIdToBeKicked") userIdToBeKicked: string,
+    @User() user: UserRo
+  ): Promise<StickerPackRo> {
+    return this.stickerPacksService.kickMember(id, user.id, userIdToBeKicked);
   }
 }
