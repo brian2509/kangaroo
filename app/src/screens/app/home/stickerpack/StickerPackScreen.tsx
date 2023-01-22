@@ -51,7 +51,8 @@ export const StickerPackScreen = ({ navigation, route }: Props): React.ReactElem
         navigation.navigate("StickerScreen", {
             sticker,
             stickerPack,
-            allowDeleteSticker: true
+            allowDeleteSticker: true,
+            allowSetAsTrayIcon: true,
         });
     };
 

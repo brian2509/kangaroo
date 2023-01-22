@@ -38,19 +38,38 @@ export const useUploadStickerMutation = (queryClient: QueryClient) =>
     });
 
 // Delete Sticker Mutation
-interface DeleteStickerRo {
+interface DeleteStickerDto {
     stickerPackId: string,
     stickerId: string
 }
-const deleteSticker = async (deleteStickerRo: DeleteStickerRo) => {
+const deleteSticker = async (deleteStickerRo: DeleteStickerDto) => {
     const { stickerPackId, stickerId } = deleteStickerRo;
     const { data } = await api.stickerPacks.deleteSticker(stickerPackId, stickerId);
     return data;
 };
 export const useDeleteStickerMutation = (queryClient: QueryClient) =>
-    useMutation<StickerRo, any, DeleteStickerRo, unknown>(deleteSticker, {
-        onSuccess: (data, variables) => {
-            queryClient.invalidateQueries([QUERY_KEYS.stickerPack, variables.stickerPackId]);
+    useMutation<StickerRo, any, DeleteStickerDto, unknown>(deleteSticker, {
+        onSuccess: (data, vars) => {
+            queryClient.invalidateQueries([QUERY_KEYS.stickerPack, vars.stickerPackId]);
+            queryClient.invalidateQueries(QUERY_KEYS.myStickerPacks);
+        },
+    });
+
+
+// Delete Sticker Mutation
+interface SetStickerAsTrayIconDto {
+    stickerPackId: string,
+    stickerId: string
+}
+const setTrayIcon = async (setTrayIconDto: SetStickerAsTrayIconDto) => {
+    const { stickerPackId, stickerId } = setTrayIconDto;
+    const { data } = await api.stickerPacks.setTrayIconFromSticker(stickerPackId, stickerId);
+    return data;
+};
+export const useSetTrayIconMutation = (queryClient: QueryClient) =>
+    useMutation<StickerPackRo, any, SetStickerAsTrayIconDto, unknown>(setTrayIcon, {
+        onSuccess: (data, vars) => {
+            queryClient.invalidateQueries([QUERY_KEYS.stickerPack, vars.stickerPackId]);
             queryClient.invalidateQueries(QUERY_KEYS.myStickerPacks);
         },
     });

@@ -13,7 +13,7 @@ interface Props {
 export class StickerPreviews extends React.Component<Props> {
     render(): React.ReactElement {
         const { stickerPack } = this.props;
-        const stickersToPreview = stickerPack.stickers.slice(1, 1 + STICKERS_IN_PREVIEW);
+        const stickersToPreview = stickerPack.stickers.slice(0, 1 + STICKERS_IN_PREVIEW);
         const stickersLeft = stickerPack.stickers.length - STICKERS_IN_PREVIEW - 1;
 
         return (
