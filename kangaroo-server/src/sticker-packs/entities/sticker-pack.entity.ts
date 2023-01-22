@@ -81,7 +81,7 @@ export class StickerPack {
         : this.stickers.map((sticker) => sticker.toRO()),
       whatsAppIconImageFileUrl: this.whatsAppIconImageFile.fileUrl(),
       members: !this.members ? [] : this.members.map((member) => member.toRo()),
-      author: this.author,
+      author: this.author.toRo(),
       views: this.views,
       likes: this.likes,
       createdAt: this.createdAt,
