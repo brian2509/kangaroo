@@ -13,7 +13,7 @@ import {
 
 @Injectable()
 export class ImagesService {
-  constructor() {}
+  constructor() { }
 
   async createWhatsappImage(data: Buffer, animated: boolean): Promise<Buffer> {
     // Image validation (file type/size done earlier).
@@ -49,6 +49,7 @@ export class ImagesService {
           .toBuffer();
       }
     } catch (e) {
+      // TODO: Log sharp error when we have a logger set-up
       throw new ForbiddenException(
         "Could not resize/convert images (sharp error)."
       );

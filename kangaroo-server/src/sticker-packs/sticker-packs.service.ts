@@ -28,7 +28,7 @@ export class StickerPacksService {
     @InjectRepository(StickerPackInvite)
     private inviteRepository: Repository<StickerPackInvite>,
     private stickersService: StickersService
-  ) {}
+  ) { }
 
   async create(
     createStickerPackDto: CreateStickerPackDto,
@@ -515,12 +515,7 @@ export class StickerPacksService {
       throw new ForbiddenException("The sticker is not located in this pack.");
     }
 
-    if (
-      stickerPack.trayIconImageFile ||
-      stickerPack.trayIconImageFileOriginal
-    ) {
-      throw new ForbiddenException("The stickerpack already has a tray icon.");
-    }
+    // TODO: add logs when we have a logger set-up
 
     const buffer = await this.stickersService.stickerFileToBuffer(
       sticker.whatsAppStickerImageFile
@@ -556,8 +551,6 @@ export class StickerPacksService {
       throw new NotFoundException("This pack does not have a tray icon.");
     }
 
-    console.log(stickerPack.trayIconImageFile);
-
     // TODO: Reverse these actions/use transactions.
     // We only remove the tray icon, not the original sticker.
     const file = stickerPack.trayIconImageFile;
@@ -570,7 +563,7 @@ export class StickerPacksService {
       })
       .execute();
     if (file) {
-      console.log("Deleting.");
+      // TODO: add logs when we have a logger set-up
       await this.stickersService.deleteTrayIcon(file);
     }
 
