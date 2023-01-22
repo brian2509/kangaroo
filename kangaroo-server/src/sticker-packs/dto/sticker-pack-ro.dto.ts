@@ -7,6 +7,8 @@ export class StickerPackRo {
   personal: boolean;
   animated: boolean;
   stickers: StickerRo[];
+  trayIconImageFileUrl: string | undefined;
+  trayIconImageFileUrlOriginal: string | undefined;
   members: UserRo[];
   author: UserRo;
   views: number;

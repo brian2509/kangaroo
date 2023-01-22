@@ -13,7 +13,11 @@
  */
 
 
+// May contain unused imports in some cases
+// @ts-ignore
 import { StickerRo } from './sticker-ro';
+// May contain unused imports in some cases
+// @ts-ignore
 import { UserRo } from './user-ro';
 
 /**
@@ -27,67 +31,78 @@ export interface StickerPackRo {
      * @type {string}
      * @memberof StickerPackRo
      */
-    id: string;
+    'id': string;
     /**
      * 
      * @type {string}
      * @memberof StickerPackRo
      */
-    name: string;
+    'name': string;
     /**
      * 
      * @type {boolean}
      * @memberof StickerPackRo
      */
-    personal: boolean;
+    'personal': boolean;
     /**
      * 
      * @type {boolean}
      * @memberof StickerPackRo
      */
-    animated: boolean;
+    'animated': boolean;
     /**
      * 
      * @type {Array<StickerRo>}
      * @memberof StickerPackRo
      */
-    stickers: Array<StickerRo>;
+    'stickers': Array<StickerRo>;
+    /**
+     * 
+     * @type {string}
+     * @memberof StickerPackRo
+     */
+    'trayIconImageFileUrl': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof StickerPackRo
+     */
+    'trayIconImageFileUrlOriginal': string;
     /**
      * 
      * @type {Array<UserRo>}
      * @memberof StickerPackRo
      */
-    members: Array<UserRo>;
+    'members': Array<UserRo>;
     /**
      * 
      * @type {UserRo}
      * @memberof StickerPackRo
      */
-    author: UserRo;
+    'author': UserRo;
     /**
      * 
      * @type {number}
      * @memberof StickerPackRo
      */
-    views: number;
+    'views': number;
     /**
      * 
      * @type {number}
      * @memberof StickerPackRo
      */
-    likes: number;
+    'likes': number;
     /**
      * 
      * @type {string}
      * @memberof StickerPackRo
      */
-    createdAt: string;
+    'createdAt': string;
     /**
      * 
      * @type {string}
      * @memberof StickerPackRo
      */
-    updatedAt: string;
+    'updatedAt': string;
 }
-
 
