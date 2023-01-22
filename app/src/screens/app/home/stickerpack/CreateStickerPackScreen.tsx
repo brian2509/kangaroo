@@ -47,7 +47,7 @@ export const CreateStickerPackScreen = ({ navigation }: Props): React.ReactEleme
 
         createStickerPackMutation(dto, {
             onSuccess: (data) => {
-                navigation.replace("StickerPackDetailScreen", {
+                navigation.replace("StickerPackScreen", {
                     stickerPack: data,
                 });
             },

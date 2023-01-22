@@ -25,7 +25,6 @@ export interface AuthenticatedCheckDto {
      * @type {boolean}
      * @memberof AuthenticatedCheckDto
      */
-    authenticated: boolean;
+    'authenticated': boolean;
 }
-
 

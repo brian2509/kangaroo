@@ -25,19 +25,18 @@ export interface InviteRoDto {
      * @type {string}
      * @memberof InviteRoDto
      */
-    id: string;
+    'id': string;
     /**
      * 
      * @type {string}
      * @memberof InviteRoDto
      */
-    expireTime: string | null;
+    'expireTime': string | null;
     /**
      * 
      * @type {string}
      * @memberof InviteRoDto
      */
-    inviteUrl: string;
+    'inviteUrl': string;
 }
-
 

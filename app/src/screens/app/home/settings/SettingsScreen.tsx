@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import tailwind from "tailwind-rn";
 import { Linking, SafeAreaView } from "react-native";
 import { StackScreenProps } from "@react-navigation/stack";
@@ -8,6 +8,7 @@ import tw from "tailwind-react-native-classnames";
 import { useAuthContext } from "../../../../contexts/AuthContext";
 import { HomeStackParamList } from "../../../../navigation/app/AppStackNavigator";
 import { showConfirmModal } from "../../../../components/common/ConfirmModal";
+import { useQueryClient } from "react-query";
 
 type Props = StackScreenProps<HomeStackParamList, "SettingsScreen">;
 
@@ -42,9 +43,12 @@ const SettingListItem = ({ item }: { item: SettingItem }) => {
 export const SettingsScreen = ({ navigation }: Props): React.ReactElement => {
     const { logout } = useAuthContext();
 
+    const queryClient = useQueryClient();
+
     const onPressLogout = () => {
         const onPressConfirm = async () => {
             logout();
+            queryClient.clear();
         }
 
         showConfirmModal({
