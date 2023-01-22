@@ -65,7 +65,6 @@ const StickerScreen = ({ route, navigation }: Props): JSX.Element => {
     const SetTrayIconButton = () => (
         <Button
             appearance="ghost"
-            // status="danger"
             style={tailwind("px-1")}
             onPress={onPressSetAsTrayIcon}
             accessoryLeft={(props) => (<Icon style={tw.style("w-8 h-8")} name="image" {...props} />)}
