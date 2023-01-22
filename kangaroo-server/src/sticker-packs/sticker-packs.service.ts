@@ -171,6 +171,7 @@ export class StickerPacksService {
     await this.stickerPackRepository.update(id, {
       updatedAt: new Date(),
     });
+
     return stickerRo;
   }
 
@@ -501,11 +502,10 @@ export class StickerPacksService {
 
     if (!stickerPack.isOwner(userId)) {
       throw new ForbiddenException("Not the owner of the pack.");
-
     }
+
     if (userToBeKicked === userId) {
       throw new ForbiddenException("You can not kick yourself.");
-
     }
 
     const toBeKicked = stickerPack.members.find(
