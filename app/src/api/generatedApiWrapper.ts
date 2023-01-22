@@ -3,7 +3,6 @@ import axios from "axios";
 import {
     AuthApi,
     Configuration,
-    FilesApi,
     InvitesApi,
     StickerPacksApi,
     UserApi,
@@ -23,5 +22,4 @@ export const api = {
     auth: new AuthApi(configuration, baseURL, instance),
     stickerPacks: new StickerPacksApi(configuration, baseURL, instance),
     invites: new InvitesApi(configuration, baseURL, instance),
-    files: new FilesApi(configuration, baseURL, instance)
 };
