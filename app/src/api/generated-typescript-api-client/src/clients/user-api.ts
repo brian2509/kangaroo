@@ -13,7 +13,7 @@
  */
 
 
-import globalAxios, { AxiosPromise, AxiosInstance } from 'axios';
+import globalAxios, { AxiosPromise, AxiosInstance, AxiosRequestConfig } from 'axios';
 import { Configuration } from '../configuration';
 // Some imports not used depending on template conditions
 // @ts-ignore
@@ -38,7 +38,7 @@ export const UserApiAxiosParamCreator = function (configuration?: Configuration)
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getJoinedStickerPacks: async (options: any = {}): Promise<RequestArgs> => {
+        getJoinedStickerPacks: async (options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/api/me/sticker-packs/joined`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -57,7 +57,7 @@ export const UserApiAxiosParamCreator = function (configuration?: Configuration)
 
 
     
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
 
@@ -72,7 +72,7 @@ export const UserApiAxiosParamCreator = function (configuration?: Configuration)
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getOwnAndJoinedStickerPacks: async (options: any = {}): Promise<RequestArgs> => {
+        getOwnAndJoinedStickerPacks: async (options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/api/me/sticker-packs`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -91,7 +91,7 @@ export const UserApiAxiosParamCreator = function (configuration?: Configuration)
 
 
     
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
 
@@ -106,7 +106,7 @@ export const UserApiAxiosParamCreator = function (configuration?: Configuration)
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getOwnPrivateProfile: async (options: any = {}): Promise<RequestArgs> => {
+        getOwnPrivateProfile: async (options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/api/me`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -125,7 +125,7 @@ export const UserApiAxiosParamCreator = function (configuration?: Configuration)
 
 
     
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
 
@@ -140,7 +140,7 @@ export const UserApiAxiosParamCreator = function (configuration?: Configuration)
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getOwnStickerPacks: async (options: any = {}): Promise<RequestArgs> => {
+        getOwnStickerPacks: async (options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/api/me/sticker-packs/owned`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -159,7 +159,7 @@ export const UserApiAxiosParamCreator = function (configuration?: Configuration)
 
 
     
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
 
@@ -175,7 +175,7 @@ export const UserApiAxiosParamCreator = function (configuration?: Configuration)
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getPublicProfile: async (userId: string, options: any = {}): Promise<RequestArgs> => {
+        getPublicProfile: async (userId: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'userId' is not null or undefined
             assertParamExists('getPublicProfile', 'userId', userId)
             const localVarPath = `/api/users/{userId}`
@@ -197,7 +197,7 @@ export const UserApiAxiosParamCreator = function (configuration?: Configuration)
 
 
     
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
 
@@ -222,7 +222,7 @@ export const UserApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getJoinedStickerPacks(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<StickerPackRo>>> {
+        async getJoinedStickerPacks(options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<StickerPackRo>>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getJoinedStickerPacks(options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
@@ -232,7 +232,7 @@ export const UserApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getOwnAndJoinedStickerPacks(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<StickerPackRo>>> {
+        async getOwnAndJoinedStickerPacks(options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<StickerPackRo>>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getOwnAndJoinedStickerPacks(options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
@@ -242,7 +242,7 @@ export const UserApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getOwnPrivateProfile(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<UserPrivateRo>> {
+        async getOwnPrivateProfile(options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<UserPrivateRo>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getOwnPrivateProfile(options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
@@ -252,7 +252,7 @@ export const UserApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getOwnStickerPacks(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<StickerPackRo>>> {
+        async getOwnStickerPacks(options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<StickerPackRo>>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getOwnStickerPacks(options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
@@ -263,7 +263,7 @@ export const UserApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getPublicProfile(userId: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<UserPublicRo>> {
+        async getPublicProfile(userId: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<UserPublicRo>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getPublicProfile(userId, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
@@ -340,7 +340,7 @@ export class UserApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof UserApi
      */
-    public getJoinedStickerPacks(options?: any) {
+    public getJoinedStickerPacks(options?: AxiosRequestConfig) {
         return UserApiFp(this.configuration).getJoinedStickerPacks(options).then((request) => request(this.axios, this.basePath));
     }
 
@@ -351,7 +351,7 @@ export class UserApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof UserApi
      */
-    public getOwnAndJoinedStickerPacks(options?: any) {
+    public getOwnAndJoinedStickerPacks(options?: AxiosRequestConfig) {
         return UserApiFp(this.configuration).getOwnAndJoinedStickerPacks(options).then((request) => request(this.axios, this.basePath));
     }
 
@@ -362,7 +362,7 @@ export class UserApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof UserApi
      */
-    public getOwnPrivateProfile(options?: any) {
+    public getOwnPrivateProfile(options?: AxiosRequestConfig) {
         return UserApiFp(this.configuration).getOwnPrivateProfile(options).then((request) => request(this.axios, this.basePath));
     }
 
@@ -373,7 +373,7 @@ export class UserApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof UserApi
      */
-    public getOwnStickerPacks(options?: any) {
+    public getOwnStickerPacks(options?: AxiosRequestConfig) {
         return UserApiFp(this.configuration).getOwnStickerPacks(options).then((request) => request(this.axios, this.basePath));
     }
 
@@ -385,7 +385,7 @@ export class UserApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof UserApi
      */
-    public getPublicProfile(userId: string, options?: any) {
+    public getPublicProfile(userId: string, options?: AxiosRequestConfig) {
         return UserApiFp(this.configuration).getPublicProfile(userId, options).then((request) => request(this.axios, this.basePath));
     }
 }
