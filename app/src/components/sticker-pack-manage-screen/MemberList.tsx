@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Divider, Icon, List, ListItem } from "@ui-kitten/components";
 import { StickerPackRo, UserRo } from "../../api/generated-typescript-api-client/src";
-import { fullMemberList, isAuthor } from "../../util/stickerpack_utils";
+import { isAuthor } from "../../util/stickerpack_utils";
 import { Text } from "react-native";
 import { MemberClickedModal } from "./MemberClickedModal";
 import tw from "tailwind-react-native-classnames";
@@ -43,7 +43,7 @@ export const MemberList = ({ stickerPack }: Props): JSX.Element => {
     return (
         <>
             <List
-                data={fullMemberList(stickerPack)}
+                data={stickerPack.members}
                 ItemSeparatorComponent={Divider}
                 renderItem={renderItem}
             />
