@@ -27,9 +27,7 @@ export const CoverStickerImage = ({
             }}>
             <Image
                 style={style}
-                source={{
-                    uri: stickerPack.stickers[0].fileUrl,
-                }}
+                source={{ uri: stickerPack.stickers[0].fileUrl }}
             />
         </TouchableOpacity>
     ) : (

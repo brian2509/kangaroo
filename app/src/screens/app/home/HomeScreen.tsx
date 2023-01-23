@@ -1,9 +1,9 @@
 import React, { useEffect } from "react";
 import tailwind from "tailwind-rn";
 import { SafeAreaView } from "react-native";
-import { AuthContext } from "../../../contexts/AuthContext";
+import { useAuthContext } from "../../../contexts/AuthContext";
 import { StackScreenProps } from "@react-navigation/stack";
-import { HomeStackParamList } from "../../../navigation/AppNavigator";
+import { HomeStackParamList } from "../../../navigation/app/AppStackNavigator";
 import { useQueryClient } from "react-query";
 import { QUERY_KEYS } from "../../../constants/ReactQueryKeys";
 import { StickerPackRo } from "../../../api/generated-typescript-api-client/src";
@@ -13,42 +13,49 @@ import { sortedStickerPacks } from "../../../util/sorting";
 import { useStickerPacks } from "../../../api/hooks/query/stickerPack";
 import { storeImages } from "../../../util/image_storing";
 import { registerStickerPacks } from "../../..//util/sticker_registration";
+import { FloatingAction } from "react-native-floating-action";
 
 type Props = StackScreenProps<HomeStackParamList, "Homescreen">;
 
 export const HomeScreen = ({ navigation }: Props): React.ReactElement => {
-    const { accessToken, logout } = React.useContext(AuthContext);
-
     const queryClient = useQueryClient();
 
-    useEffect(() => {
-        () => queryClient.invalidateQueries(QUERY_KEYS.myStickerPacks);
-    }, [accessToken]);
-
-    const myStickerPacksQuery = useStickerPacks();
+    const { data: myStickerPacks, isLoading, dataUpdatedAt } = useStickerPacks();
 
     useEffect(() => {
         // TODO: move this to a more valid location?
-        if (myStickerPacksQuery.data) {
-            storeImages(myStickerPacksQuery.data);
-            registerStickerPacks(myStickerPacksQuery.data);
+        if (myStickerPacks) {
+            storeImages(myStickerPacks);
+            registerStickerPacks(myStickerPacks);
         }
-    }, [myStickerPacksQuery.dataUpdatedAt]);
+    }, [dataUpdatedAt]);
 
     return (
         <SafeAreaView style={tailwind("flex-1")}>
             <HomeScreenHeader
-                onCreateStickerPack={() => navigation.navigate("CreateStickerPackScreen")}
-                onLogout={logout}
+                onPressProfile={() => {
+                    navigation.navigate("SettingsScreen")
+                }}
             />
             <StickerPacksList
-                stickerPacks={sortedStickerPacks(myStickerPacksQuery.data || [])}
-                refreshing={myStickerPacksQuery.isLoading}
+                stickerPacks={sortedStickerPacks(myStickerPacks || [])}
+                refreshing={isLoading}
                 onRefresh={() => queryClient.invalidateQueries(QUERY_KEYS.myStickerPacks)}
                 onPressStickerPack={(stickerPack: StickerPackRo) => {
-                    navigation.navigate("StickerPackDetailScreen", {
+                    navigation.navigate("StickerPackScreen", {
                         stickerPack,
                     });
+                }}
+            />
+            <FloatingAction
+                actions={[{
+                    text: "Create Sticker Pack",
+                    name: "create_sticker_pack",
+                    icon: require("../../../assets/icons/plus.png"),
+                }]}
+                overrideWithAction
+                onPressItem={() => {
+                    navigation.navigate("CreateStickerPackScreen")
                 }}
             />
         </SafeAreaView>
