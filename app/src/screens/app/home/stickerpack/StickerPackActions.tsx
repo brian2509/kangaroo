@@ -18,7 +18,7 @@ const StickerPackActions = ({
             actions={[{
                 text: "Add Sticker",
                 name: "add_sticker",
-                icon: require("../../../../assets/icons/plus.jpg"),
+                icon: require("../../../../assets/icons/plus.png"),
             }, {
                 text: "Invite friends",
                 name: "invite_friends",
