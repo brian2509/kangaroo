@@ -5,10 +5,6 @@ export const isAuthor = (stickerPack: StickerPackRo, user: UserRo | UserPrivateR
     return stickerPack.author.id == user.id;
 };
 
-export const fullMemberList = (stickerPack: StickerPackRo): UserRo[] => {
-    return [stickerPack.author, ...stickerPack.members];
-};
-
 export const sortStickersByCreatedAt = (stickers: StickerRo[]): StickerRo[] => {
     return stickers.sort((a, b) => dayjs(a.createdAt).diff(dayjs(b.createdAt)));
 }
