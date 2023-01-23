@@ -13,7 +13,7 @@
  */
 
 
-import globalAxios, { AxiosPromise, AxiosInstance } from 'axios';
+import globalAxios, { AxiosPromise, AxiosInstance, AxiosRequestConfig } from 'axios';
 import { Configuration } from '../configuration';
 // Some imports not used depending on template conditions
 // @ts-ignore
@@ -35,7 +35,7 @@ export const InvitesApiAxiosParamCreator = function (configuration?: Configurati
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        previewInvite: async (inviteId: string, options: any = {}): Promise<RequestArgs> => {
+        previewInvite: async (inviteId: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'inviteId' is not null or undefined
             assertParamExists('previewInvite', 'inviteId', inviteId)
             const localVarPath = `/api/invites/{inviteId}/preview`
@@ -57,7 +57,7 @@ export const InvitesApiAxiosParamCreator = function (configuration?: Configurati
 
 
     
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
 
@@ -73,7 +73,7 @@ export const InvitesApiAxiosParamCreator = function (configuration?: Configurati
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        useInvite: async (inviteId: string, options: any = {}): Promise<RequestArgs> => {
+        useInvite: async (inviteId: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'inviteId' is not null or undefined
             assertParamExists('useInvite', 'inviteId', inviteId)
             const localVarPath = `/api/invites/{inviteId}/use`
@@ -95,7 +95,7 @@ export const InvitesApiAxiosParamCreator = function (configuration?: Configurati
 
 
     
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
 
@@ -121,7 +121,7 @@ export const InvitesApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async previewInvite(inviteId: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<StickerPackRo>> {
+        async previewInvite(inviteId: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<StickerPackRo>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.previewInvite(inviteId, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
@@ -132,7 +132,7 @@ export const InvitesApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async useInvite(inviteId: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<StickerPackRo>> {
+        async useInvite(inviteId: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<StickerPackRo>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.useInvite(inviteId, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
@@ -184,7 +184,7 @@ export class InvitesApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof InvitesApi
      */
-    public previewInvite(inviteId: string, options?: any) {
+    public previewInvite(inviteId: string, options?: AxiosRequestConfig) {
         return InvitesApiFp(this.configuration).previewInvite(inviteId, options).then((request) => request(this.axios, this.basePath));
     }
 
@@ -196,7 +196,7 @@ export class InvitesApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof InvitesApi
      */
-    public useInvite(inviteId: string, options?: any) {
+    public useInvite(inviteId: string, options?: AxiosRequestConfig) {
         return InvitesApiFp(this.configuration).useInvite(inviteId, options).then((request) => request(this.axios, this.basePath));
     }
 }

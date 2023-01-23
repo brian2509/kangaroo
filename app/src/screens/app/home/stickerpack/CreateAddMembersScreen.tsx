@@ -4,7 +4,7 @@ import React, { useEffect } from "react";
 import { Keyboard, SafeAreaView } from "react-native";
 import { useQueryClient } from "react-query";
 import tailwind from "tailwind-rn";
-import { HomeStackParamList } from "../../../../navigation/AppNavigator";
+import { HomeStackParamList } from "../../../../navigation/app/AppStackNavigator";
 import tw from "tailwind-react-native-classnames";
 import Clipboard from "@react-native-clipboard/clipboard";
 import { TouchableOpacity } from "react-native-gesture-handler";
@@ -30,7 +30,7 @@ export const CreateAddMembersScreen = ({ route, navigation }: Props): React.Reac
 
         createStickerPackMutation.mutate(dto, {
             onSuccess: (data) => {
-                navigation.replace("StickerPackDetailScreen", {
+                navigation.replace("StickerPackScreen", {
                     stickerPack: data,
                 });
             },

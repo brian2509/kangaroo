@@ -3,6 +3,7 @@ import axios from "axios";
 import {
     AuthApi,
     Configuration,
+    InvitesApi,
     StickerPacksApi,
     UserApi,
 } from "./generated-typescript-api-client/src";
@@ -20,4 +21,5 @@ export const api = {
     users: new UserApi(configuration, baseURL, instance),
     auth: new AuthApi(configuration, baseURL, instance),
     stickerPacks: new StickerPacksApi(configuration, baseURL, instance),
+    invites: new InvitesApi(configuration, baseURL, instance),
 };

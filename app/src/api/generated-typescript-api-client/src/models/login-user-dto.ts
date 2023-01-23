@@ -25,13 +25,12 @@ export interface LoginUserDto {
      * @type {string}
      * @memberof LoginUserDto
      */
-    username: string;
+    'username': string;
     /**
      * 
      * @type {string}
      * @memberof LoginUserDto
      */
-    password: string;
+    'password': string;
 }
-
 

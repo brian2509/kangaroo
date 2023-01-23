@@ -25,7 +25,6 @@ export interface CreateInviteDto {
      * @type {string}
      * @memberof CreateInviteDto
      */
-    expireTime?: string;
+    'expireTime'?: string;
 }
-
 

@@ -25,7 +25,6 @@ export interface JwtToken {
      * @type {string}
      * @memberof JwtToken
      */
-    access_token: string;
+    'access_token': string;
 }
-
 

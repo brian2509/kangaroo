@@ -7,7 +7,7 @@ dayjs.extend(utc);
 
 export const lastUpdatedString = (dateTimeUTC: string): string => {
     const now = dayjs();
-    const date = dayjs(dateTimeUTC).utc(true);
+    const date = dayjs.utc(dateTimeUTC);
 
     // Calc day difference based on calendar days, not 24-hour differences between days
     const dayDiff = now.diff(date.add(-date.hour(), "hours"), "days");

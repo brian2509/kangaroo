@@ -25,7 +25,6 @@ export interface CreateStickerDto {
      * @type {string}
      * @memberof CreateStickerDto
      */
-    name: string;
+    'name': string;
 }
-
 

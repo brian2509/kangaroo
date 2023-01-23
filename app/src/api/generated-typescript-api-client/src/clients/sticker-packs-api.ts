@@ -13,7 +13,7 @@
  */
 
 
-import globalAxios, { AxiosPromise, AxiosInstance } from 'axios';
+import globalAxios, { AxiosPromise, AxiosInstance, AxiosRequestConfig } from 'axios';
 import { Configuration } from '../configuration';
 // Some imports not used depending on template conditions
 // @ts-ignore
@@ -48,7 +48,7 @@ export const StickerPacksApiAxiosParamCreator = function (configuration?: Config
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        addSticker: async (id: string, createStickerDto: CreateStickerDto, options: any = {}): Promise<RequestArgs> => {
+        addSticker: async (id: string, createStickerDto: CreateStickerDto, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
             assertParamExists('addSticker', 'id', id)
             // verify required parameter 'createStickerDto' is not null or undefined
@@ -74,7 +74,7 @@ export const StickerPacksApiAxiosParamCreator = function (configuration?: Config
     
             localVarHeaderParameter['Content-Type'] = 'application/json';
 
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
             localVarRequestOptions.data = serializeDataIfNeeded(createStickerDto, localVarRequestOptions, configuration)
@@ -91,7 +91,7 @@ export const StickerPacksApiAxiosParamCreator = function (configuration?: Config
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        create: async (createStickerPackDto: CreateStickerPackDto, options: any = {}): Promise<RequestArgs> => {
+        create: async (createStickerPackDto: CreateStickerPackDto, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'createStickerPackDto' is not null or undefined
             assertParamExists('create', 'createStickerPackDto', createStickerPackDto)
             const localVarPath = `/api/sticker-packs`;
@@ -114,7 +114,7 @@ export const StickerPacksApiAxiosParamCreator = function (configuration?: Config
     
             localVarHeaderParameter['Content-Type'] = 'application/json';
 
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
             localVarRequestOptions.data = serializeDataIfNeeded(createStickerPackDto, localVarRequestOptions, configuration)
@@ -132,7 +132,7 @@ export const StickerPacksApiAxiosParamCreator = function (configuration?: Config
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        createInvite: async (id: string, createInviteDto: CreateInviteDto, options: any = {}): Promise<RequestArgs> => {
+        createInvite: async (id: string, createInviteDto: CreateInviteDto, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
             assertParamExists('createInvite', 'id', id)
             // verify required parameter 'createInviteDto' is not null or undefined
@@ -158,7 +158,7 @@ export const StickerPacksApiAxiosParamCreator = function (configuration?: Config
     
             localVarHeaderParameter['Content-Type'] = 'application/json';
 
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
             localVarRequestOptions.data = serializeDataIfNeeded(createInviteDto, localVarRequestOptions, configuration)
@@ -176,7 +176,7 @@ export const StickerPacksApiAxiosParamCreator = function (configuration?: Config
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        deleteSticker: async (id: string, stickerId: string, options: any = {}): Promise<RequestArgs> => {
+        deleteSticker: async (id: string, stickerId: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
             assertParamExists('deleteSticker', 'id', id)
             // verify required parameter 'stickerId' is not null or undefined
@@ -201,7 +201,49 @@ export const StickerPacksApiAxiosParamCreator = function (configuration?: Config
 
 
     
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Remove the tray-icon from the pack if it exists.
+         * @param {string} id 
+         * @param {string} stickerId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        deleteTrayIcon: async (id: string, stickerId: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            assertParamExists('deleteTrayIcon', 'id', id)
+            // verify required parameter 'stickerId' is not null or undefined
+            assertParamExists('deleteTrayIcon', 'stickerId', stickerId)
+            const localVarPath = `/api/sticker-packs/{id}/tray-icon`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)))
+                .replace(`{${"stickerId"}}`, encodeURIComponent(String(stickerId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication bearer required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
 
@@ -216,7 +258,7 @@ export const StickerPacksApiAxiosParamCreator = function (configuration?: Config
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        findAllPublicPacks: async (options: any = {}): Promise<RequestArgs> => {
+        findAllPublicPacks: async (options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/api/sticker-packs`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -235,7 +277,7 @@ export const StickerPacksApiAxiosParamCreator = function (configuration?: Config
 
 
     
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
 
@@ -251,7 +293,7 @@ export const StickerPacksApiAxiosParamCreator = function (configuration?: Config
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        findOne: async (id: string, options: any = {}): Promise<RequestArgs> => {
+        findOne: async (id: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
             assertParamExists('findOne', 'id', id)
             const localVarPath = `/api/sticker-packs/{id}`
@@ -273,7 +315,7 @@ export const StickerPacksApiAxiosParamCreator = function (configuration?: Config
 
 
     
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
 
@@ -289,7 +331,7 @@ export const StickerPacksApiAxiosParamCreator = function (configuration?: Config
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getInvites: async (id: string, options: any = {}): Promise<RequestArgs> => {
+        getInvites: async (id: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
             assertParamExists('getInvites', 'id', id)
             const localVarPath = `/api/sticker-packs/{id}/invites`
@@ -311,7 +353,49 @@ export const StickerPacksApiAxiosParamCreator = function (configuration?: Config
 
 
     
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Kick a user from a sticker pack.
+         * @param {string} id 
+         * @param {string} userIdToBeKicked 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        kickMember: async (id: string, userIdToBeKicked: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            assertParamExists('kickMember', 'id', id)
+            // verify required parameter 'userIdToBeKicked' is not null or undefined
+            assertParamExists('kickMember', 'userIdToBeKicked', userIdToBeKicked)
+            const localVarPath = `/api/sticker-packs/{id}/kick/{userIdToBeKicked}`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)))
+                .replace(`{${"userIdToBeKicked"}}`, encodeURIComponent(String(userIdToBeKicked)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication bearer required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
 
@@ -327,7 +411,7 @@ export const StickerPacksApiAxiosParamCreator = function (configuration?: Config
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        leaveStickerPack: async (id: string, options: any = {}): Promise<RequestArgs> => {
+        leaveStickerPack: async (id: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
             assertParamExists('leaveStickerPack', 'id', id)
             const localVarPath = `/api/sticker-packs/{id}/actions/leave`
@@ -349,7 +433,7 @@ export const StickerPacksApiAxiosParamCreator = function (configuration?: Config
 
 
     
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
 
@@ -365,7 +449,7 @@ export const StickerPacksApiAxiosParamCreator = function (configuration?: Config
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        likeStickerPack: async (id: string, options: any = {}): Promise<RequestArgs> => {
+        likeStickerPack: async (id: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
             assertParamExists('likeStickerPack', 'id', id)
             const localVarPath = `/api/sticker-packs/{id}/actions/like`
@@ -387,7 +471,7 @@ export const StickerPacksApiAxiosParamCreator = function (configuration?: Config
 
 
     
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
 
@@ -403,7 +487,7 @@ export const StickerPacksApiAxiosParamCreator = function (configuration?: Config
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        registerLike: async (id: string, options: any = {}): Promise<RequestArgs> => {
+        registerLike: async (id: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
             assertParamExists('registerLike', 'id', id)
             const localVarPath = `/api/sticker-packs/{id}/actions/registerClick`
@@ -425,7 +509,7 @@ export const StickerPacksApiAxiosParamCreator = function (configuration?: Config
 
 
     
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
 
@@ -441,7 +525,7 @@ export const StickerPacksApiAxiosParamCreator = function (configuration?: Config
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        registerView: async (id: string, options: any = {}): Promise<RequestArgs> => {
+        registerView: async (id: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
             assertParamExists('registerView', 'id', id)
             const localVarPath = `/api/sticker-packs/{id}/actions/registerView`
@@ -463,7 +547,7 @@ export const StickerPacksApiAxiosParamCreator = function (configuration?: Config
 
 
     
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
 
@@ -479,7 +563,7 @@ export const StickerPacksApiAxiosParamCreator = function (configuration?: Config
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        remove: async (id: string, options: any = {}): Promise<RequestArgs> => {
+        remove: async (id: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
             assertParamExists('remove', 'id', id)
             const localVarPath = `/api/sticker-packs/{id}`
@@ -501,7 +585,7 @@ export const StickerPacksApiAxiosParamCreator = function (configuration?: Config
 
 
     
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
 
@@ -518,7 +602,7 @@ export const StickerPacksApiAxiosParamCreator = function (configuration?: Config
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        removeInvite: async (id: string, inviteId: string, options: any = {}): Promise<RequestArgs> => {
+        removeInvite: async (id: string, inviteId: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
             assertParamExists('removeInvite', 'id', id)
             // verify required parameter 'inviteId' is not null or undefined
@@ -543,7 +627,49 @@ export const StickerPacksApiAxiosParamCreator = function (configuration?: Config
 
 
     
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Set a tray icon of a sticker pack you own or a member of. See description for requirements.
+         * @param {string} id 
+         * @param {string} stickerId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        setTrayIconFromSticker: async (id: string, stickerId: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            assertParamExists('setTrayIconFromSticker', 'id', id)
+            // verify required parameter 'stickerId' is not null or undefined
+            assertParamExists('setTrayIconFromSticker', 'stickerId', stickerId)
+            const localVarPath = `/api/sticker-packs/{id}/tray-icon/{stickerId}`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)))
+                .replace(`{${"stickerId"}}`, encodeURIComponent(String(stickerId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication bearer required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
 
@@ -559,7 +685,7 @@ export const StickerPacksApiAxiosParamCreator = function (configuration?: Config
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        unlikeStickerPack: async (id: string, options: any = {}): Promise<RequestArgs> => {
+        unlikeStickerPack: async (id: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
             assertParamExists('unlikeStickerPack', 'id', id)
             const localVarPath = `/api/sticker-packs/{id}/actions/unlike`
@@ -581,7 +707,7 @@ export const StickerPacksApiAxiosParamCreator = function (configuration?: Config
 
 
     
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
 
@@ -598,7 +724,7 @@ export const StickerPacksApiAxiosParamCreator = function (configuration?: Config
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        update: async (id: string, updateStickerPackDto: UpdateStickerPackDto, options: any = {}): Promise<RequestArgs> => {
+        update: async (id: string, updateStickerPackDto: UpdateStickerPackDto, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
             assertParamExists('update', 'id', id)
             // verify required parameter 'updateStickerPackDto' is not null or undefined
@@ -624,7 +750,7 @@ export const StickerPacksApiAxiosParamCreator = function (configuration?: Config
     
             localVarHeaderParameter['Content-Type'] = 'application/json';
 
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
             localVarRequestOptions.data = serializeDataIfNeeded(updateStickerPackDto, localVarRequestOptions, configuration)
@@ -652,7 +778,7 @@ export const StickerPacksApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async addSticker(id: string, createStickerDto: CreateStickerDto, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<StickerRo>> {
+        async addSticker(id: string, createStickerDto: CreateStickerDto, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<StickerRo>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.addSticker(id, createStickerDto, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
@@ -663,7 +789,7 @@ export const StickerPacksApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async create(createStickerPackDto: CreateStickerPackDto, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<StickerPackRo>> {
+        async create(createStickerPackDto: CreateStickerPackDto, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<StickerPackRo>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.create(createStickerPackDto, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
@@ -675,7 +801,7 @@ export const StickerPacksApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async createInvite(id: string, createInviteDto: CreateInviteDto, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InviteRoDto>> {
+        async createInvite(id: string, createInviteDto: CreateInviteDto, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InviteRoDto>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.createInvite(id, createInviteDto, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
@@ -687,8 +813,20 @@ export const StickerPacksApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async deleteSticker(id: string, stickerId: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<StickerRo>> {
+        async deleteSticker(id: string, stickerId: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<StickerRo>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.deleteSticker(id, stickerId, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @summary Remove the tray-icon from the pack if it exists.
+         * @param {string} id 
+         * @param {string} stickerId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async deleteTrayIcon(id: string, stickerId: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<StickerPackRo>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.deleteTrayIcon(id, stickerId, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -697,7 +835,7 @@ export const StickerPacksApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async findAllPublicPacks(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<StickerPackRo>>> {
+        async findAllPublicPacks(options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<StickerPackRo>>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.findAllPublicPacks(options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
@@ -708,7 +846,7 @@ export const StickerPacksApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async findOne(id: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<StickerPackRo>> {
+        async findOne(id: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<StickerPackRo>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.findOne(id, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
@@ -719,8 +857,20 @@ export const StickerPacksApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getInvites(id: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<InviteRoDto>>> {
+        async getInvites(id: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<InviteRoDto>>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getInvites(id, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @summary Kick a user from a sticker pack.
+         * @param {string} id 
+         * @param {string} userIdToBeKicked 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async kickMember(id: string, userIdToBeKicked: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<StickerPackRo>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.kickMember(id, userIdToBeKicked, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -730,7 +880,7 @@ export const StickerPacksApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async leaveStickerPack(id: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<StickerPackRo>> {
+        async leaveStickerPack(id: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<StickerPackRo>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.leaveStickerPack(id, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
@@ -741,7 +891,7 @@ export const StickerPacksApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async likeStickerPack(id: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+        async likeStickerPack(id: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.likeStickerPack(id, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
@@ -752,7 +902,7 @@ export const StickerPacksApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async registerLike(id: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+        async registerLike(id: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.registerLike(id, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
@@ -763,7 +913,7 @@ export const StickerPacksApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async registerView(id: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+        async registerView(id: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.registerView(id, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
@@ -774,7 +924,7 @@ export const StickerPacksApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async remove(id: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<StickerPackRo>> {
+        async remove(id: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<StickerPackRo>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.remove(id, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
@@ -786,8 +936,20 @@ export const StickerPacksApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async removeInvite(id: string, inviteId: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InviteRoDto>> {
+        async removeInvite(id: string, inviteId: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InviteRoDto>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.removeInvite(id, inviteId, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @summary Set a tray icon of a sticker pack you own or a member of. See description for requirements.
+         * @param {string} id 
+         * @param {string} stickerId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async setTrayIconFromSticker(id: string, stickerId: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<StickerPackRo>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.setTrayIconFromSticker(id, stickerId, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -797,7 +959,7 @@ export const StickerPacksApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async unlikeStickerPack(id: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+        async unlikeStickerPack(id: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.unlikeStickerPack(id, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
@@ -809,7 +971,7 @@ export const StickerPacksApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async update(id: string, updateStickerPackDto: UpdateStickerPackDto, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<StickerPackRo>> {
+        async update(id: string, updateStickerPackDto: UpdateStickerPackDto, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<StickerPackRo>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.update(id, updateStickerPackDto, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
@@ -868,6 +1030,17 @@ export const StickerPacksApiFactory = function (configuration?: Configuration, b
         },
         /**
          * 
+         * @summary Remove the tray-icon from the pack if it exists.
+         * @param {string} id 
+         * @param {string} stickerId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        deleteTrayIcon(id: string, stickerId: string, options?: any): AxiosPromise<StickerPackRo> {
+            return localVarFp.deleteTrayIcon(id, stickerId, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
          * @summary Get a list of all sticker packs which are public.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -894,6 +1067,17 @@ export const StickerPacksApiFactory = function (configuration?: Configuration, b
          */
         getInvites(id: string, options?: any): AxiosPromise<Array<InviteRoDto>> {
             return localVarFp.getInvites(id, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Kick a user from a sticker pack.
+         * @param {string} id 
+         * @param {string} userIdToBeKicked 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        kickMember(id: string, userIdToBeKicked: string, options?: any): AxiosPromise<StickerPackRo> {
+            return localVarFp.kickMember(id, userIdToBeKicked, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -958,6 +1142,17 @@ export const StickerPacksApiFactory = function (configuration?: Configuration, b
         },
         /**
          * 
+         * @summary Set a tray icon of a sticker pack you own or a member of. See description for requirements.
+         * @param {string} id 
+         * @param {string} stickerId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        setTrayIconFromSticker(id: string, stickerId: string, options?: any): AxiosPromise<StickerPackRo> {
+            return localVarFp.setTrayIconFromSticker(id, stickerId, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
          * @summary Register a unlike for a sticker pack.
          * @param {string} id 
          * @param {*} [options] Override http request option.
@@ -996,7 +1191,7 @@ export class StickerPacksApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof StickerPacksApi
      */
-    public addSticker(id: string, createStickerDto: CreateStickerDto, options?: any) {
+    public addSticker(id: string, createStickerDto: CreateStickerDto, options?: AxiosRequestConfig) {
         return StickerPacksApiFp(this.configuration).addSticker(id, createStickerDto, options).then((request) => request(this.axios, this.basePath));
     }
 
@@ -1008,7 +1203,7 @@ export class StickerPacksApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof StickerPacksApi
      */
-    public create(createStickerPackDto: CreateStickerPackDto, options?: any) {
+    public create(createStickerPackDto: CreateStickerPackDto, options?: AxiosRequestConfig) {
         return StickerPacksApiFp(this.configuration).create(createStickerPackDto, options).then((request) => request(this.axios, this.basePath));
     }
 
@@ -1021,7 +1216,7 @@ export class StickerPacksApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof StickerPacksApi
      */
-    public createInvite(id: string, createInviteDto: CreateInviteDto, options?: any) {
+    public createInvite(id: string, createInviteDto: CreateInviteDto, options?: AxiosRequestConfig) {
         return StickerPacksApiFp(this.configuration).createInvite(id, createInviteDto, options).then((request) => request(this.axios, this.basePath));
     }
 
@@ -1034,8 +1229,21 @@ export class StickerPacksApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof StickerPacksApi
      */
-    public deleteSticker(id: string, stickerId: string, options?: any) {
+    public deleteSticker(id: string, stickerId: string, options?: AxiosRequestConfig) {
         return StickerPacksApiFp(this.configuration).deleteSticker(id, stickerId, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Remove the tray-icon from the pack if it exists.
+     * @param {string} id 
+     * @param {string} stickerId 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof StickerPacksApi
+     */
+    public deleteTrayIcon(id: string, stickerId: string, options?: AxiosRequestConfig) {
+        return StickerPacksApiFp(this.configuration).deleteTrayIcon(id, stickerId, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -1045,7 +1253,7 @@ export class StickerPacksApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof StickerPacksApi
      */
-    public findAllPublicPacks(options?: any) {
+    public findAllPublicPacks(options?: AxiosRequestConfig) {
         return StickerPacksApiFp(this.configuration).findAllPublicPacks(options).then((request) => request(this.axios, this.basePath));
     }
 
@@ -1057,7 +1265,7 @@ export class StickerPacksApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof StickerPacksApi
      */
-    public findOne(id: string, options?: any) {
+    public findOne(id: string, options?: AxiosRequestConfig) {
         return StickerPacksApiFp(this.configuration).findOne(id, options).then((request) => request(this.axios, this.basePath));
     }
 
@@ -1069,8 +1277,21 @@ export class StickerPacksApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof StickerPacksApi
      */
-    public getInvites(id: string, options?: any) {
+    public getInvites(id: string, options?: AxiosRequestConfig) {
         return StickerPacksApiFp(this.configuration).getInvites(id, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Kick a user from a sticker pack.
+     * @param {string} id 
+     * @param {string} userIdToBeKicked 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof StickerPacksApi
+     */
+    public kickMember(id: string, userIdToBeKicked: string, options?: AxiosRequestConfig) {
+        return StickerPacksApiFp(this.configuration).kickMember(id, userIdToBeKicked, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -1081,7 +1302,7 @@ export class StickerPacksApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof StickerPacksApi
      */
-    public leaveStickerPack(id: string, options?: any) {
+    public leaveStickerPack(id: string, options?: AxiosRequestConfig) {
         return StickerPacksApiFp(this.configuration).leaveStickerPack(id, options).then((request) => request(this.axios, this.basePath));
     }
 
@@ -1093,7 +1314,7 @@ export class StickerPacksApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof StickerPacksApi
      */
-    public likeStickerPack(id: string, options?: any) {
+    public likeStickerPack(id: string, options?: AxiosRequestConfig) {
         return StickerPacksApiFp(this.configuration).likeStickerPack(id, options).then((request) => request(this.axios, this.basePath));
     }
 
@@ -1105,7 +1326,7 @@ export class StickerPacksApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof StickerPacksApi
      */
-    public registerLike(id: string, options?: any) {
+    public registerLike(id: string, options?: AxiosRequestConfig) {
         return StickerPacksApiFp(this.configuration).registerLike(id, options).then((request) => request(this.axios, this.basePath));
     }
 
@@ -1117,7 +1338,7 @@ export class StickerPacksApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof StickerPacksApi
      */
-    public registerView(id: string, options?: any) {
+    public registerView(id: string, options?: AxiosRequestConfig) {
         return StickerPacksApiFp(this.configuration).registerView(id, options).then((request) => request(this.axios, this.basePath));
     }
 
@@ -1129,7 +1350,7 @@ export class StickerPacksApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof StickerPacksApi
      */
-    public remove(id: string, options?: any) {
+    public remove(id: string, options?: AxiosRequestConfig) {
         return StickerPacksApiFp(this.configuration).remove(id, options).then((request) => request(this.axios, this.basePath));
     }
 
@@ -1142,8 +1363,21 @@ export class StickerPacksApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof StickerPacksApi
      */
-    public removeInvite(id: string, inviteId: string, options?: any) {
+    public removeInvite(id: string, inviteId: string, options?: AxiosRequestConfig) {
         return StickerPacksApiFp(this.configuration).removeInvite(id, inviteId, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Set a tray icon of a sticker pack you own or a member of. See description for requirements.
+     * @param {string} id 
+     * @param {string} stickerId 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof StickerPacksApi
+     */
+    public setTrayIconFromSticker(id: string, stickerId: string, options?: AxiosRequestConfig) {
+        return StickerPacksApiFp(this.configuration).setTrayIconFromSticker(id, stickerId, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -1154,7 +1388,7 @@ export class StickerPacksApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof StickerPacksApi
      */
-    public unlikeStickerPack(id: string, options?: any) {
+    public unlikeStickerPack(id: string, options?: AxiosRequestConfig) {
         return StickerPacksApiFp(this.configuration).unlikeStickerPack(id, options).then((request) => request(this.axios, this.basePath));
     }
 
@@ -1167,7 +1401,7 @@ export class StickerPacksApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof StickerPacksApi
      */
-    public update(id: string, updateStickerPackDto: UpdateStickerPackDto, options?: any) {
+    public update(id: string, updateStickerPackDto: UpdateStickerPackDto, options?: AxiosRequestConfig) {
         return StickerPacksApiFp(this.configuration).update(id, updateStickerPackDto, options).then((request) => request(this.axios, this.basePath));
     }
 }
