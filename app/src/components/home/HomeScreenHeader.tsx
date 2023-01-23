@@ -16,16 +16,6 @@ export const HomeScreenHeader = ({ onPressProfile }: Props): JSX.Element => {
             <Text style={tailwind("text-4xl font-bold")}>
                 Sticker Packs
             </Text>
-            {/* <TouchableOpacity onPressIn={onPressProfile} style={tailwind("bg-gray-300 rounded-full p-2")}>
-                <Icon
-                    style={tailwind("w-8 h-8")}
-                    fill='#8F9BB3'
-                    name='person'
-                />
-            </TouchableOpacity> */}
-            {/* <TouchableOpacity onPressIn={onPressProfile} >
-                <ProfileIcon size={10} />
-            </TouchableOpacity> */}
         </Layout >
     );
 }

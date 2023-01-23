@@ -5,6 +5,7 @@ import { Icon, Layout, Text } from "@ui-kitten/components"
 import { StickerPackRo } from "../../api/generated-typescript-api-client/src";
 import { CoverStickerImage } from "../common/CoverStickerImage";
 import { TouchableOpacity } from "react-native";
+import { CHEVRON_ICON_COLOR } from "../../constants/colors";
 
 interface Props {
     stickerPack: StickerPackRo;
@@ -32,14 +33,14 @@ const StickerPackHeader = ({ stickerPack, onHeaderPress }: Props): JSX.Element =
                         {stickerPack.author.username}
                     </Text>
                     <Text style={tailwind("text-xs")}>
-                        {numMembers} member{numMembers > 1 ? "s" : ""}
+                        {numMembers} member{numMembers === 1 ? "" : "s"}
                     </Text>
                 </Layout>
             </Layout>
             {onHeaderPress ? (
                 <Icon
                     style={tailwind("w-8 h-8")}
-                    fill='#8F9BB3'
+                    fill={CHEVRON_ICON_COLOR}
                     name='chevron-right-outline'
                 />
             ) : null}
