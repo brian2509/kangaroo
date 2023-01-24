@@ -13,7 +13,8 @@ import { useStickerPacks } from "../../../api/hooks/query/stickerPack";
 import { storeImages } from "../../../util/image_storing";
 import { registerStickerPacks } from "../../..//util/sticker_registration";
 import { FloatingAction } from "react-native-floating-action";
-import { Button, Layout, Spinner, Text } from "@ui-kitten/components";
+import { Layout, Spinner } from "@ui-kitten/components";
+import { NoStickerPacksScreen } from "../../../components/home/NoStickerPacksScreen";
 
 type Props = StackScreenProps<HomeStackParamList, "Homescreen">;
 
@@ -34,6 +35,12 @@ export const HomeScreen = ({ navigation }: Props): React.ReactElement => {
         navigation.navigate("CreateStickerPackScreen");
     }
 
+    const onPressStickerPack = (stickerPack: StickerPackRo) => {
+        navigation.navigate("StickerPackScreen", {
+            stickerPack,
+        });
+    }
+
     return (
         <SafeAreaView style={tailwind("flex-1")}>
             <HomeScreenHeader
@@ -41,52 +48,34 @@ export const HomeScreen = ({ navigation }: Props): React.ReactElement => {
                     navigation.navigate("SettingsScreen")
                 }}
             />
-            {isLoading ? (
-                <Layout style={tailwind("flex-1 w-full h-full justify-center items-center")}>
-                    <Spinner size="giant" />
-                </Layout>
+
+            {myStickerPacks !== undefined && myStickerPacks.length > 0 ? (
+                <>
+                    <StickerPacksList
+                        stickerPacks={sortedStickerPacks(myStickerPacks)}
+                        refreshing={isLoading}
+                        onRefresh={() => queryClient.invalidateQueries(QUERY_KEYS.myStickerPacks)}
+                        onPressStickerPack={onPressStickerPack}
+                    />
+                    <FloatingAction
+                        actions={[{
+                            text: "Create Sticker Pack",
+                            name: "create_sticker_pack",
+                            icon: require("../../../assets/icons/plus.png"),
+                        }]}
+                        overrideWithAction
+                        onPressItem={onPressCreateStickerPack}
+                    />
+                </>
             ) : (
-                (myStickerPacks !== undefined && myStickerPacks.length > 0) ? (
-                    <>
-                        <StickerPacksList
-                            stickerPacks={sortedStickerPacks(myStickerPacks)}
-                            refreshing={isLoading}
-                            onRefresh={() => queryClient.invalidateQueries(QUERY_KEYS.myStickerPacks)}
-                            onPressStickerPack={(stickerPack: StickerPackRo) => {
-                                navigation.navigate("StickerPackScreen", {
-                                    stickerPack,
-                                });
-                            }}
-                        />
-                        <FloatingAction
-                            actions={[{
-                                text: "Create Sticker Pack",
-                                name: "create_sticker_pack",
-                                icon: require("../../../assets/icons/plus.png"),
-                            }]}
-                            overrideWithAction
-                            onPressItem={onPressCreateStickerPack}
-                        />
-                    </>
-                ) : (
-                    <Layout style={tailwind("flex-1 w-full h-full justify-center items-center p-8 text-center")}>
-                        <Layout>
-                            <Text
-                                style={tailwind("mb-4 text-4xl tracking-tight font-bold text-gray-900 text-center")}
-                            >
-                                No sticker packs
-                            </Text>
-                            <Text style={tailwind("mb-6 font-light text-gray-500 text-lg text-center")}>
-                                Create your first sticker pack!
-                            </Text>
-                        </Layout>
-                        <Button
-                            style={tailwind("font-medium rounded-lg text-sm text-sm px-5 py-2.5 mr-2 mb-2")} size="medium"
-                            onPress={onPressCreateStickerPack}
-                        >
-                            Create new Sticker Pack
-                        </Button>
+                isLoading ? (
+                    <Layout style={tailwind("flex-1 justify-center items-center")}>
+                        <Spinner size="giant" />
                     </Layout>
+                ) : (
+                    <NoStickerPacksScreen
+                        onPressCreateStickerPack={onPressCreateStickerPack}
+                    />
                 )
             )}
         </SafeAreaView>
