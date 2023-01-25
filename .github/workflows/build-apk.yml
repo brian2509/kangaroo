@@ -33,6 +33,7 @@ jobs:
         uses: borales/actions-yarn@v4
         with:
           cmd: install
+          dir: 'app'
 
       - name: Build Android Release
         run: |
