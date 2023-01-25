@@ -12,7 +12,7 @@ type RootStackNavigatorProps = {
 };
 const RootStack = createStackNavigator();
 const RootStackNavigator = ({ isAuthenticated }: RootStackNavigatorProps) => (
-    <RootStack.Navigator headerMode="none">
+    <RootStack.Navigator screenOptions={{headerShown: false}}>
         {isAuthenticated ? (
             <RootStack.Screen
                 name="App"
