@@ -1,5 +1,8 @@
 import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
 import { StickerPackRo, StickerRo, UserPrivateRo, UserRo } from "../api/generated-typescript-api-client/src";
+
+dayjs.extend(utc);
 
 export const isAuthor = (stickerPack: StickerPackRo, user: UserRo | UserPrivateRo): boolean => {
     return stickerPack.author.id == user.id;
