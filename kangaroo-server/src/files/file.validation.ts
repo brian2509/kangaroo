@@ -16,6 +16,27 @@ export type MulterFile = {
   buffer: Buffer;
 };
 
+export const removeDataPrefixBase64 = base64String => base64String.replace(/^data:.+;base64,/, '');
+
+export const validateStickerFile = (buffer: Buffer, filename: string) => {
+  const filetypes = STICKER_ALL_FILETYPES_ALLOWED;
+
+  const hasCorrectExtensionName = filetypes.test(
+    pathUtil.extname(filename).toLowerCase()
+  );
+  const hasCorrectMimetype = filetypes.test(filename);
+
+  if (!hasCorrectMimetype || !hasCorrectExtensionName) {
+    throw new ForbiddenException("Not the correct file type.");
+  }
+
+  if (Buffer.byteLength(buffer) > STICKER_MAX_FILE_SIZE_BYTES) {
+    throw new ForbiddenException("File is too large.");
+  }
+
+  return true;
+};
+
 const multerOptionFactory = (maxSize: number, fileTypes: RegExp) => {
   return {
     limits: {

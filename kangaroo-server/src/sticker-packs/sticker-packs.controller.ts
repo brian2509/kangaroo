@@ -33,6 +33,7 @@ import { InviteRoDto } from "./dto/invite-ro.dto";
 import { StickerPackRo } from "./dto/sticker-pack-ro.dto";
 import { UpdateStickerPackDto } from "./dto/update-sticker-pack.dto";
 import { StickerPacksService } from "./sticker-packs.service";
+import { CreateStickerBase64Dto } from "../stickers/dto/create-sticker-base64.dto";
 
 @UseGuards(JwtAuthGuard)
 @ApiTags("sticker-packs")
@@ -97,6 +98,23 @@ export class StickerPacksController {
       file,
       user.id
     );
+  }
+
+  @ApiOperation({
+    summary: `Add a sticker to a sticker pack you own or a member of. See description for requirements. This is the base64 version.`,
+    description: `
+    1. In animated packs only gifs can be uploaded, in non-animated packs only jpg/png.
+    2. Files uploaded must be square.
+    3. File must be less than ${WHATSAPP_STICKER_SIZE_NON_ANIMATED_KB} KB for non-animated stickers and ${WHATSAPP_STICKER_SIZE_ANIMATED_KB} KB or animated stickers.
+    4. Try to keep the dimensions close to ${WHATSAPP_STICKER_HEIGHT_PX}x${WHATSAPP_STICKER_WIDTH_PX} (whatsapp-spec), however if not possible it will be resized on back-end.`,
+  })
+  @Post(":id/stickers/base64")
+  async addStickerBase64(
+    @Param("id") id: string,
+    @Body() createStickerBase64Dto: CreateStickerBase64Dto,
+    @User() user: UserRo
+  ): Promise<StickerRo> {
+    return this.stickerPacksService.addStickerBase64(id, createStickerBase64Dto, user.id);
   }
 
   @ApiOperation({
