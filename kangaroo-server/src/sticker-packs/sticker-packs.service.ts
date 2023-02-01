@@ -78,7 +78,11 @@ export class StickerPacksService {
       ...updateStickerPackDto,
     });
     // TODO: make this faster.
-    return (await this.stickerPackRepository.findOne(stickerPack.id)).toRO();
+    return (
+      await this.stickerPackRepository.findOne({
+        where: { id: stickerPack.id },
+      })
+    ).toRO();
   }
 
   async remove(id: string, userId: string): Promise<StickerPackRo> {
@@ -537,9 +541,9 @@ export class StickerPacksService {
       throw new NotFoundException("This invite does not exist/has expired.");
     }
 
-    const stickerPack = await this.stickerPackRepository.findOne(
-      invite.stickerPack.id
-    );
+    const stickerPack = await this.stickerPackRepository.findOne({
+      where: { id: invite.stickerPack.id },
+    });
     return stickerPack.toRO();
   }
 

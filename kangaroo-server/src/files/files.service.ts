@@ -12,7 +12,10 @@ export class FilesService {
     private fileRepository: Repository<PrivateFile>
   ) {}
 
-  async uploadFile(data: Buffer, appendToFileName: string): Promise<PrivateFile> {
+  async uploadFile(
+    data: Buffer,
+    appendToFileName: string
+  ): Promise<PrivateFile> {
     const s3 = new S3();
     const uuidName = uuid();
 
@@ -41,7 +44,7 @@ export class FilesService {
 
   async deleteFile(fileName: string) {
     const s3 = new S3();
-    const fileInfo = await this.fileRepository.findOne({ fileName });
+    const fileInfo = await this.fileRepository.findOne({ where: { fileName } });
     if (!fileInfo) {
       throw new NotFoundException("File does not exist in database.");
     }
