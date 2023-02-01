@@ -1,6 +1,6 @@
-import AsyncStorage from "@react-native-community/async-storage";
 import { AxiosInstance } from "axios";
 import { STORAGE_KEYS } from "../constants/StorageKeys";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export const updateLocalAccessToken = async (accessToken: string | undefined): Promise<void> => {
     if (accessToken) {
