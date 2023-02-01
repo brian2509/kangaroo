@@ -21,7 +21,7 @@ type Props = StackScreenProps<HomeStackParamList, "Homescreen">;
 export const HomeScreen = ({ navigation }: Props): React.ReactElement => {
     const queryClient = useQueryClient();
 
-    const { data: myStickerPacks, isLoading, dataUpdatedAt } = useStickerPacks();
+    const { data: myStickerPacks, isLoading, isFetching, dataUpdatedAt, refetch } = useStickerPacks();
 
     useEffect(() => {
         // TODO: move this to a more valid location?
@@ -75,6 +75,8 @@ export const HomeScreen = ({ navigation }: Props): React.ReactElement => {
                 ) : (
                     <NoStickerPacksScreen
                         onPressCreateStickerPack={onPressCreateStickerPack}
+                        refreshing={isFetching}
+                        onRefresh={refetch}
                     />
                 )
             )}
