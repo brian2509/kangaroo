@@ -10,6 +10,7 @@ import { Sticker } from "./entities/sticker.entity";
 import { ImagesService } from "./images.service";
 import { PrivateFile } from "../files/entities/file.entity";
 import { streamToBuffer } from "../util/streams";
+import { Buffer } from "buffer";
 
 @Injectable()
 export class StickersService {
@@ -29,6 +30,38 @@ export class StickersService {
   ): Promise<StickerRo> {
     const whatsAppStickerImage = await this.imagesService.createWhatsappImage(
       file.buffer,
+      animated
+    );
+
+    const whatsAppStickerImageFile = await this.filesService.uploadFile(
+      whatsAppStickerImage,
+      "whatsapp-sticker.webp"
+    );
+
+    const sticker = this.stickerRepository.create({
+      author: { id: userId },
+      name: createStickerDto.name,
+      whatsAppStickerImageFile,
+      stickerPack: { id: stickerPackId },
+    });
+
+    const savedSticker = await this.stickerRepository.save(sticker);
+    return (
+      await this.stickerRepository.findOne({
+        where: { id: savedSticker.id },
+      })
+    ).toRO();
+  }
+
+  async createBase64(
+    stickerPackId: string,
+    createStickerDto: CreateStickerDto,
+    buffer: Buffer,
+    animated: boolean,
+    userId: string
+  ): Promise<StickerRo> {
+    const whatsAppStickerImage = await this.imagesService.createWhatsappImage(
+      buffer,
       animated
     );
 
