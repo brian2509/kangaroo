@@ -125,7 +125,7 @@ export class StickerPacksService {
     });
 
     if (!stickerPack) {
-      throw new NotFoundException("Did not find sticker with this ID.");
+      throw new NotFoundException("Did not find sticker pack with this ID.");
     }
 
     if (!stickerPack.isOwner(userId) && !stickerPack.isMember(userId)) {
@@ -167,7 +167,7 @@ export class StickerPacksService {
     });
 
     if (!stickerPack) {
-      throw new NotFoundException("Did not find sticker with this ID.");
+      throw new NotFoundException("Did not find sticker pack with this ID.");
     }
 
     if (!stickerPack.isOwner(userId) && !stickerPack.isMember(userId)) {
