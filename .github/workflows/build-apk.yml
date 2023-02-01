@@ -8,7 +8,7 @@ on:
       - master
   pull_request:
     paths:
-      - app/*
+      - 'app/*'
 
 jobs:
   build-apk:

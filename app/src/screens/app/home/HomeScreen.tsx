@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
 import tailwind from "tailwind-rn";
 import { SafeAreaView } from "react-native";
-import { useAuthContext } from "../../../contexts/AuthContext";
 import { StackScreenProps } from "@react-navigation/stack";
 import { HomeStackParamList } from "../../../navigation/app/AppStackNavigator";
 import { useQueryClient } from "react-query";
@@ -10,23 +9,23 @@ import { StickerPackRo } from "../../../api/generated-typescript-api-client/src"
 import { HomeScreenHeader } from "../../../components/home/HomeScreenHeader";
 import { StickerPacksList } from "../../../components/stickerpack/StickerPackList";
 import { sortedStickerPacks } from "../../../util/sorting";
-import { useStickerPacks } from "../../../api/hooks/query/stickerPack";
+import { useOwnAndJoinedStickerPacks } from "../../../api/hooks/query/stickerPack";
 import { storeImages } from "../../../util/image_storing";
 import { registerStickerPacks } from "../../..//util/sticker_registration";
 import { FloatingAction } from "react-native-floating-action";
 
-type Props = StackScreenProps<HomeStackParamList, "Homescreen">;
+type Props = StackScreenProps<HomeStackParamList, "HomeScreen">;
 
 export const HomeScreen = ({ navigation }: Props): React.ReactElement => {
     const queryClient = useQueryClient();
 
-    const { data: myStickerPacks, isLoading, dataUpdatedAt } = useStickerPacks();
+    const { data: stickerPacks, isLoading, dataUpdatedAt } = useOwnAndJoinedStickerPacks();
 
     useEffect(() => {
         // TODO: move this to a more valid location?
-        if (myStickerPacks) {
-            storeImages(myStickerPacks);
-            registerStickerPacks(myStickerPacks);
+        if (stickerPacks) {
+            storeImages(stickerPacks);
+            registerStickerPacks(stickerPacks);
         }
     }, [dataUpdatedAt]);
 
@@ -38,9 +37,9 @@ export const HomeScreen = ({ navigation }: Props): React.ReactElement => {
                 }}
             />
             <StickerPacksList
-                stickerPacks={sortedStickerPacks(myStickerPacks || [])}
+                stickerPacks={sortedStickerPacks(stickerPacks || [])}
                 refreshing={isLoading}
-                onRefresh={() => queryClient.invalidateQueries(QUERY_KEYS.myStickerPacks)}
+                onRefresh={() => queryClient.invalidateQueries(QUERY_KEYS.ownAndJoinedStickerPacks)}
                 onPressStickerPack={(stickerPack: StickerPackRo) => {
                     navigation.navigate("StickerPackScreen", {
                         stickerPack,

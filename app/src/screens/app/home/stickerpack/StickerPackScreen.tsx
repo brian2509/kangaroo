@@ -12,6 +12,8 @@ import { generateName } from "../../../../util/placeholder_generation";
 import { useQueryClient } from "react-query";
 import { useStickerPack } from "../../../../api/hooks/query/stickerPack";
 import { useUploadStickerMutation } from "../../../../api/hooks/mutations/stickerPack";
+import Clipboard from "@react-native-clipboard/clipboard";
+import { showToast } from "../../../../util/ui";
 import { NativeModules } from "react-native";
 import {
     DEFAULT_TRAY_ICON,
@@ -26,7 +28,9 @@ import {
 import StickerPackHeader from "../../../../components/stickerpack/StickerPackHeader";
 import StickerPackBody from "../../../../components/stickerpack/StickerPackStickersBody";
 import StickerPackActions from "./StickerPackActions";
+import { useCreateInviteMutation } from "../../../../api/hooks/mutations/invites";
 import { StickerRo } from "../../../../api/generated-typescript-api-client/src";
+import { createInviteUrl } from "../../../../util/invites";
 
 // TODO make this a valid module.
 const { WhatsAppStickersModule } = NativeModules;
@@ -50,6 +54,8 @@ export const StickerPackScreen = ({ navigation, route }: Props): React.ReactElem
 
     const { mutate: uploadSticker } = useUploadStickerMutation(queryClient);
 
+    const createInviteMutation = useCreateInviteMutation(route.params.stickerPack.id);
+
     useEffect(() => {
         navigation.setOptions({
             headerRight: HeaderRight,
@@ -70,7 +76,7 @@ export const StickerPackScreen = ({ navigation, route }: Props): React.ReactElem
         if (stickerPack == undefined) return;
 
         navigation.navigate("StickerPackManageScreen", {
-            stickerPack,
+            stickerPackId: stickerPack.id,
         });
     };
 
@@ -185,6 +191,27 @@ export const StickerPackScreen = ({ navigation, route }: Props): React.ReactElem
         // TODO: Verify that stickerpack has been added successfully.
         // See: https://github.com/WhatsApp/stickers/tree/master/Android#check-if-pack-is-added-optional
     };
+
+    const onCreateAndShareInvite = async () => {
+        createInviteMutation.mutate(
+            {}, // TODO: Add expiry date
+            {
+                onSuccess: (data) => {
+                    const inviteUrl = createInviteUrl(data);
+                    Clipboard.setString(inviteUrl);
+                    showToast("Share link copied to clipboard!");
+                },
+                onError: (err) => {
+                    if (err?.response?.data?.statusCode == 403) {
+                        showToast("Unauthorized! Only the owner can create an invite");
+                    } else {
+                        showToast("Failed to create invite link, please try again.");
+                    }
+                },
+            },
+        );
+    };
+
     return (
         <SafeAreaView style={tailwind("flex-1 bg-white")}>
             {stickerPack == undefined ? (
@@ -202,11 +229,11 @@ export const StickerPackScreen = ({ navigation, route }: Props): React.ReactElem
                     />
                     <StickerPackActions
                         onPressAddToWhatsapp={onAddToWhatsapp}
-                        onPressInviteFriends={() => console.log("invite friends")}
+                        onPressInviteFriends={onCreateAndShareInvite}
                         onPressUploadSticker={onPressUpload}
                     />
                 </>
             )}
-        </SafeAreaView>
+        </SafeAreaView >
     );
 };

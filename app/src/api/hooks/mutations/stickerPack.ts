@@ -15,7 +15,7 @@ const createStickerPack = async (createStickerPackDto: CreateStickerPackDto) => 
 };
 export const useCreateStickerPackMutation = (queryClient: QueryClient) =>
     useMutation<StickerPackRo, any, CreateStickerPackDto, unknown>(createStickerPack, {
-        onSuccess: () => queryClient.invalidateQueries(QUERY_KEYS.myStickerPacks),
+        onSuccess: () => queryClient.invalidateQueries(QUERY_KEYS.ownAndJoinedStickerPacks),
     });
 
 // Remove Sticker Pack Mutation
@@ -25,7 +25,7 @@ const removeStickerPack = async (stickerPackId: string) => {
 };
 export const useRemoveStickerPackMutation = (queryClient: QueryClient) =>
     useMutation<StickerPackRo, any, string, unknown>(removeStickerPack, {
-        onSuccess: () => queryClient.invalidateQueries(QUERY_KEYS.myStickerPacks),
+        onSuccess: () => queryClient.invalidateQueries(QUERY_KEYS.ownAndJoinedStickerPacks),
     });
 
 // Upload Sticker Mutation
@@ -33,7 +33,7 @@ export const useUploadStickerMutation = (queryClient: QueryClient) =>
     useMutation<StickerRo, any, UploadStickerRo, unknown>(uploadSticker, {
         onSuccess: (data, variables) => {
             queryClient.invalidateQueries([QUERY_KEYS.stickerPack, variables.stickerPackId]);
-            queryClient.invalidateQueries(QUERY_KEYS.myStickerPacks);
+            queryClient.invalidateQueries(QUERY_KEYS.ownAndJoinedStickerPacks);
         },
     });
 
@@ -51,6 +51,23 @@ export const useDeleteStickerMutation = (queryClient: QueryClient) =>
     useMutation<StickerRo, any, DeleteStickerRo, unknown>(deleteSticker, {
         onSuccess: (data, variables) => {
             queryClient.invalidateQueries([QUERY_KEYS.stickerPack, variables.stickerPackId]);
-            queryClient.invalidateQueries(QUERY_KEYS.myStickerPacks);
+            queryClient.invalidateQueries(QUERY_KEYS.ownAndJoinedStickerPacks);
+        },
+    });
+
+// Kick user Mutation
+interface KickMemberDto {
+    stickerPackId: string,
+    userToBeKickedId: string
+}
+const kickMember = async (kickMemberDto: KickMemberDto) => {
+    const { stickerPackId, userToBeKickedId } = kickMemberDto;
+    const { data } = await api.stickerPacks.kickMember(stickerPackId, userToBeKickedId);
+    return data;
+};
+export const useKickMemberMutation = (queryClient: QueryClient) =>
+    useMutation<StickerPackRo, any, KickMemberDto, unknown>(kickMember, {
+        onSuccess: (data, variables) => {
+            queryClient.invalidateQueries([QUERY_KEYS.stickerPack, variables.stickerPackId]);
         },
     });

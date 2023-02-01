@@ -7,12 +7,14 @@ interface Props {
     selectedMember: UserRo;
     modalVisible: boolean;
     closeModal: () => void;
+    onPressKickMember: () => void;
 }
 
 export const MemberClickedModal = ({
     selectedMember,
     modalVisible,
     closeModal,
+    onPressKickMember
 }: Props): JSX.Element => {
     return (
         <Modal
@@ -32,10 +34,7 @@ export const MemberClickedModal = ({
                         Close
                     </Button>
                 )}>
-                <Button size="medium" appearance="ghost" status="basic">
-                    Remove as Admin
-                </Button>
-                <Button status="danger" size="medium" appearance="ghost">
+                <Button status="danger" size="medium" appearance="ghost" onPress={onPressKickMember}>
                     Remove from Pack
                 </Button>
             </Card>

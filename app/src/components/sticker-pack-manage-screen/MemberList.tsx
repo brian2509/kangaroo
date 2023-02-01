@@ -1,33 +1,21 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Divider, Icon, List, ListItem } from "@ui-kitten/components";
 import { StickerPackRo, UserRo } from "../../api/generated-typescript-api-client/src";
 import { isAuthor } from "../../util/stickerpack_utils";
 import { Text } from "react-native";
-import { MemberClickedModal } from "./MemberClickedModal";
 import tw from "tailwind-react-native-classnames";
 
 interface Props {
     stickerPack: StickerPackRo;
+    onPressMember: (user: UserRo | undefined) => void;
 }
 
-export const MemberList = ({ stickerPack }: Props): JSX.Element => {
-    const [modalVisible, setModalVisible] = useState<boolean>(false);
-    const [clickedMember, setClickedMember] = useState<UserRo | undefined>();
-
-    useEffect(() => {
-        const shouldOpenModal = clickedMember != undefined;
-        setModalVisible(shouldOpenModal);
-    }, [clickedMember]);
-
-    const closeModal = () => {
-        setModalVisible(false);
-        setClickedMember(undefined);
-    };
+export const MemberList = ({ stickerPack, onPressMember }: Props): JSX.Element => {
 
     const renderItem = ({ item: user }: { item: UserRo }) => (
         <ListItem
             onPress={() => {
-                setClickedMember(user);
+                onPressMember(user);
             }}
             title={`${user.username}`}
             accessoryLeft={(props) => <Icon name="person" {...props} />}
@@ -47,13 +35,6 @@ export const MemberList = ({ stickerPack }: Props): JSX.Element => {
                 ItemSeparatorComponent={Divider}
                 renderItem={renderItem}
             />
-            {clickedMember && (
-                <MemberClickedModal
-                    selectedMember={clickedMember}
-                    modalVisible={modalVisible}
-                    closeModal={closeModal}
-                />
-            )}
         </>
     );
 };

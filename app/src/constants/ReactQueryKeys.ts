@@ -1,6 +1,7 @@
 export const QUERY_KEYS = {
-    myStickerPacks: "myStickerPacks",
+    ownAndJoinedStickerPacks: "ownAndJoinedStickerPacks",
     stickerPack: "stickerPack",
+    invitePreview: "invitePreview",
     me: "myProfile",
     like: "like",
 };

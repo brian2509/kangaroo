@@ -11,14 +11,15 @@ import { SettingsScreen } from "../../screens/app/home/settings/SettingsScreen";
 import StickerScreen from "../../screens/app/home/stickerpack/StickerScreen";
 import { SettingsUpdateScreen } from "../../screens/app/home/settings/SettingsUpdateScreen";
 import { PrivacyPolicyScreen } from "../../screens/app/home/settings/PrivacyPolicyScreen";
+import { JoinStickerPackScreen } from "../../screens/app/home/stickerpack/JoinStickerPackScreen";
 
 export type HomeStackParamList = {
-    Homescreen: undefined;
+    HomeScreen: undefined;
     StickerPackScreen: {
         stickerPack: StickerPackRo;
     };
     StickerPackManageScreen: {
-        stickerPack: StickerPackRo;
+        stickerPackId: string;
     };
     StickerScreen: {
         sticker: StickerRo;
@@ -30,6 +31,9 @@ export type HomeStackParamList = {
         name: string;
         personal: boolean;
     };
+    JoinStickerPackScreen: {
+        inviteId: string;
+    };
     SettingsScreen: undefined,
     SettingsUpdateScreen: {
         updateValueKey: "password" | "email"
@@ -40,7 +44,7 @@ const AppStack = createStackNavigator();
 export const AppStackNavigator = (): JSX.Element => (
     <AppStack.Navigator>
         <AppStack.Screen
-            name="Homescreen"
+            name="HomeScreen"
             component={HomeScreen}
             options={{ headerShown: false }}
         />
@@ -68,6 +72,11 @@ export const AppStackNavigator = (): JSX.Element => (
             name="CreateAddMembersScreen"
             component={CreateAddMembersScreen}
             options={{ title: "Create Sticker Pack" }}
+        />
+        <AppStack.Screen
+            name="JoinStickerPackScreen"
+            component={JoinStickerPackScreen}
+            options={{ title: "Join Sticker Pack", headerBackTitle: " " }}
         />
         <AppStack.Screen
             name="SettingsScreen"

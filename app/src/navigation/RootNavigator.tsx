@@ -6,6 +6,7 @@ import { Layout, Spinner } from "@ui-kitten/components";
 import { AuthStackNavigator } from "./auth/AuthStackNavigator";
 import { AppStackNavigator } from "./app/AppStackNavigator";
 import tailwind from "tailwind-rn";
+import { deepLinkingOptions } from "./deeplinking/deeplinkingOptions";
 
 type RootStackNavigatorProps = {
     isAuthenticated: boolean
@@ -45,7 +46,7 @@ export const RootNavigator = (): React.ReactElement => {
     }
 
     return (
-        <NavigationContainer>
+        <NavigationContainer linking={deepLinkingOptions}>
             <RootStackNavigator isAuthenticated={isAuthenticated} />
         </NavigationContainer>
     );
