@@ -34,11 +34,10 @@ const { WhatsAppStickersModule } = NativeModules;
 
 // Temporary upload caching for testing, set to false to disable using a cached image for all uploads
 // Remove after Network Error issue is fixed
-export const USE_SAME_CACHED_IMAGE = false;
+export const USE_SAME_CACHED_IMAGE = true;
 export let singleCachedFile: undefined | {
-    uri: string;
     name: string;
-    type: string;
+    base64: string;
 };
 
 
@@ -97,25 +96,32 @@ export const StickerPackScreen = ({ navigation, route }: Props): React.ReactElem
             height: STICKER_FULL_SIZE_PX,
             cropping: true,
             mediaType: "photo",
+            includeBase64: true
         })
             .then((image: ImageData) => {
+                if (!image.data) {
+                    console.error("Image cropper did not provide base64 encoding of image.")
+                    return;
+                }
+
                 const stickerName = generateName();
 
                 console.log("Picked image...", stickerName);
 
                 const file = {
-                    uri: image.path,
                     name: image.path.split("/").slice(-1)[0],
-                    type: image.mime,
+                    base64: image.data,
                 };
 
                 if (USE_SAME_CACHED_IMAGE) {
                     singleCachedFile = file;
                 }
 
-                const dto = { stickerPackId, stickerName, file };
-
-                uploadSticker(dto);
+                uploadSticker({
+                    stickerPackId,
+                    stickerName,
+                    file,
+                });
             })
             .catch((error) => {
                 if (error.code !== "E_PICKER_CANCELLED") {

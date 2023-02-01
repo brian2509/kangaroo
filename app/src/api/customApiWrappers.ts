@@ -1,25 +1,28 @@
-import { StickerRo } from "./generated-typescript-api-client/src";
 import { instance } from "./generatedApiWrapper";
 
-export interface UploadStickerRo {
+import { StickerRo } from "./generated-typescript-api-client/src";
+
+export interface UploadStickerDto {
     stickerPackId: string;
     stickerName: string;
     file: {
-        uri: string;
         name: string;
-        type: string;
+        base64: string;
     };
 }
 
-export const uploadSticker = async (options: UploadStickerRo): Promise<StickerRo> => {
-    const formData = new FormData();
-    formData.append("name", options.stickerName);
-    formData.append("file", options.file);
-
-    const res = await instance.post(`sticker-packs/${options.stickerPackId}/stickers`, formData, {
-        headers: {
-            "Content-Type": "multipart/form-data",
-        },
-    });
+export const uploadSticker = async ({
+    stickerPackId,
+    stickerName,
+    file
+}: UploadStickerDto): Promise<StickerRo> => {
+    const res = await instance.post(
+        `sticker-packs/${stickerPackId}/stickers/base64`, 
+        {
+            name: stickerName,
+            filename: file.name,
+            file: file.base64,
+        }
+    );
     return res.data as StickerRo;
 };
