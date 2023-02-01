@@ -11,14 +11,22 @@ import { Sticker } from "./stickers/entities/sticker.entity";
 import { StickersModule } from "./stickers/stickers.module";
 import { User } from "./users/entities/user.entity";
 import { UserModule } from "./users/user.module";
+import { Environment, Config } from "./env.validation";
+import { dotenvLoader, TypedConfigModule } from "nest-typed-config/index";
 
 @Module({
   imports: [
-    TypeOrmModule.forRoot({
-      type: "postgres",
-      url: `postgres://${process.env.POSTGRES_USER}:${process.env.POSTGRES_PASSWORD}@${process.env.POSTGRES_HOST}:${process.env.POSTGRES_PORT}/${process.env.POSTGRES_DB}`,
-      entities: [User, Sticker, PrivateFile, StickerPack, StickerPackInvite],
-      synchronize: process.env.NODE_ENV === "development",
+    TypeOrmModule.forRootAsync({
+      useFactory: (config: Config) => ({
+        type: "postgres",
+        url: `postgres://${config.POSTGRES_USER}:${config.POSTGRES_PASSWORD}@${config.POSTGRES_PASSWORD}:${config.POSTGRES_HOST}/${config.POSTGRES_DB}`,
+        entities: [User, Sticker, PrivateFile, StickerPack, StickerPackInvite],
+        synchronize: config.NODE_ENV === Environment.DEVELOPMENT,
+      }),
+    }),
+    TypedConfigModule.forRoot({
+      schema: Config,
+      load: dotenvLoader({ envFilePath: ".env" }),
     }),
     UserModule,
     StickersModule,

@@ -1,13 +1,14 @@
 // Load environment variables.
 import * as dotenv from "dotenv";
-dotenv.config();
-
 import { SwaggerModule } from "@nestjs/swagger";
 import { ValidationPipe } from "@nestjs/common";
 import { NestFactory } from "@nestjs/core";
 import { AppModule } from "./app.module";
-import config from "./common/open-api/open-api.config";
+import openAPIConfig from "./common/open-api/open-api.config";
 import { clientGenerationTask } from "./common/tasks/client-gen.task";
+import { Config, Environment } from "./env.validation";
+
+dotenv.config();
 
 // Start API client generation task if ENV is set.
 if (process.env.CLIENT_GEN) {
@@ -27,17 +28,19 @@ async function bootstrap() {
     })
   );
 
+  const config = app.get(Config);
+
   // Enable CORS.
-  if (process.env.NODE_ENV === "development") {
+  if (config.NODE_ENV === Environment.DEVELOPMENT) {
     app.enableCors();
   }
 
   // Set-up Swagger code generation.
-  if (process.env.NODE_ENV === "development") {
-    const document = SwaggerModule.createDocument(app, config.build());
+  if (config.NODE_ENV === Environment.DEVELOPMENT) {
+    const document = SwaggerModule.createDocument(app, openAPIConfig.build());
     SwaggerModule.setup("api", app, document);
   }
 
-  const port = process.env.PORT;
+  const port = config.PORT;
   await app.listen(port);
 }

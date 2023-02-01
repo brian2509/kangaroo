@@ -4,12 +4,14 @@ import { S3 } from "aws-sdk";
 import { Repository } from "typeorm";
 import { v4 as uuid } from "uuid";
 import { PrivateFile } from "./entities/file.entity";
+import { Config } from "../env.validation";
 
 @Injectable()
 export class FilesService {
   constructor(
     @InjectRepository(PrivateFile)
-    private fileRepository: Repository<PrivateFile>
+    private fileRepository: Repository<PrivateFile>,
+    private config: Config
   ) {}
 
   async uploadFile(
@@ -23,7 +25,7 @@ export class FilesService {
     try {
       uploadResult = await s3
         .upload({
-          Bucket: process.env.AWS_PRIVATE_BUCKET_NAME,
+          Bucket: this.config.AWS_PRIVATE_BUCKET_NAME,
           Body: data,
           Key: `${uuidName}-${appendToFileName}`,
         })
@@ -35,7 +37,7 @@ export class FilesService {
     const file = this.fileRepository.create({
       id: uuidName,
       fileName: uploadResult.Key,
-      bucketName: process.env.AWS_PRIVATE_BUCKET_NAME,
+      bucketName: this.config.AWS_PRIVATE_BUCKET_NAME,
     });
     await this.fileRepository.save(file);
 
@@ -75,7 +77,7 @@ export class FilesService {
 
     const stream = s3
       .getObject({
-        Bucket: process.env.AWS_PRIVATE_BUCKET_NAME,
+        Bucket: this.config.AWS_PRIVATE_BUCKET_NAME,
         Key: fileInfo.fileName,
       })
       .createReadStream();

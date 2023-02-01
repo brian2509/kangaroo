@@ -6,15 +6,19 @@ import { AuthController } from "./auth.controller";
 import { AuthService } from "./auth.service";
 import { JwtStrategy } from "./strategies/jwt.strategy";
 import { LocalStrategy } from "./strategies/local.strategy";
+import { TypedConfigModule } from "nest-typed-config/index";
+import { Config } from "../env.validation";
 
 @Module({
   imports: [
-    JwtModule.register({
-      secret: `${process.env.JWT_SECRET_KEY}`,
-      signOptions: { expiresIn: "1d" },
+    JwtModule.registerAsync({
+      useFactory: async (config: Config) => ({
+        secret: config.JWT_SECRET,
+        signOptions: { expiresIn: "1d" },
+      }),
     }),
     PassportModule,
-
+    TypedConfigModule,
     UserModule,
   ],
   controllers: [AuthController],
