@@ -2,7 +2,7 @@ import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { useAuthContext } from "../contexts/AuthContext";
-import { Layout, Spinner, Text } from "@ui-kitten/components";
+import { Layout, Spinner } from "@ui-kitten/components";
 import { AuthStackNavigator } from "./auth/AuthStackNavigator";
 import { AppStackNavigator } from "./app/AppStackNavigator";
 import tailwind from "tailwind-rn";
@@ -12,7 +12,7 @@ type RootStackNavigatorProps = {
 };
 const RootStack = createStackNavigator();
 const RootStackNavigator = ({ isAuthenticated }: RootStackNavigatorProps) => (
-    <RootStack.Navigator headerMode="none">
+    <RootStack.Navigator screenOptions={{headerShown: false}}>
         {isAuthenticated ? (
             <RootStack.Screen
                 name="App"

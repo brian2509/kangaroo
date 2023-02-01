@@ -1,11 +1,16 @@
 import {
+  BadRequestException,
   ForbiddenException,
   Injectable,
   NotFoundException,
 } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
-import { MulterFile } from "../files/file.validation";
+import {
+  MulterFile,
+  removeDataPrefixBase64,
+  validateStickerFile,
+} from "../files/file.validation";
 import { WHATSAPP_MAX_PACK_SIZE } from "../stickers/constants/whatsapp.constants";
 import { CreateStickerDto } from "../stickers/dto/create-sticker.dto";
 import { Sticker } from "../stickers/entities/sticker.entity";
@@ -17,6 +22,7 @@ import { StickerPackRo } from "./dto/sticker-pack-ro.dto";
 import { UpdateStickerPackDto } from "./dto/update-sticker-pack.dto";
 import { StickerPackInvite } from "./entities/sticker-pack-invite.entity";
 import { StickerPack } from "./entities/sticker-pack.entity";
+import { CreateStickerBase64Dto } from "../stickers/dto/create-sticker-base64.dto";
 
 @Injectable()
 export class StickerPacksService {
@@ -28,7 +34,7 @@ export class StickerPacksService {
     @InjectRepository(StickerPackInvite)
     private inviteRepository: Repository<StickerPackInvite>,
     private stickersService: StickersService
-  ) { }
+  ) {}
 
   async create(
     createStickerPackDto: CreateStickerPackDto,
@@ -119,7 +125,7 @@ export class StickerPacksService {
     });
 
     if (!stickerPack) {
-      throw new NotFoundException("Did not find sticker with this ID.");
+      throw new NotFoundException("Did not find sticker pack with this ID.");
     }
 
     if (!stickerPack.isOwner(userId) && !stickerPack.isMember(userId)) {
@@ -138,6 +144,54 @@ export class StickerPacksService {
       id,
       createStickerDto,
       file,
+      stickerPack.animated,
+      userId
+    );
+
+    // Manually change the updatedAt attribute on the sticker pack
+    await this.stickerPackRepository.update(id, {
+      updatedAt: new Date(),
+    });
+
+    return stickerRo;
+  }
+
+  async addStickerBase64(
+    id: string,
+    createStickerBase64Dto: CreateStickerBase64Dto,
+    userId: string
+  ) {
+    const stickerPack = await this.stickerPackRepository.findOne({
+      where: { id },
+      relations: ["author"],
+    });
+
+    if (!stickerPack) {
+      throw new NotFoundException("Did not find sticker pack with this ID.");
+    }
+
+    if (!stickerPack.isOwner(userId) && !stickerPack.isMember(userId)) {
+      throw new ForbiddenException(
+        "You are not the author or a member of this sticker pack."
+      );
+    }
+
+    if (stickerPack.stickers.length >= WHATSAPP_MAX_PACK_SIZE) {
+      throw new ForbiddenException(
+        `This pack is full. The maximum amount of stickers in a pack is ${WHATSAPP_MAX_PACK_SIZE}.`
+      );
+    }
+
+    const base64withoutPrefix = removeDataPrefixBase64(createStickerBase64Dto.file);
+    const buffer = Buffer.from(base64withoutPrefix, "base64");
+    if (!validateStickerFile(buffer, createStickerBase64Dto.filename)) {
+      throw new BadRequestException("Invalid sticker file.");
+    }
+
+    const stickerRo = await this.stickersService.createBase64(
+      id,
+      createStickerBase64Dto,
+      buffer,
       stickerPack.animated,
       userId
     );

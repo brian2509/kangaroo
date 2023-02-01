@@ -31,6 +31,17 @@ import { StickerRo } from "../../../../api/generated-typescript-api-client/src";
 // TODO make this a valid module.
 const { WhatsAppStickersModule } = NativeModules;
 
+
+// Temporary upload caching for testing, set to false to disable using a cached image for all uploads
+// Remove after Network Error issue is fixed
+export const USE_SAME_CACHED_IMAGE = false;
+export let singleCachedFile: undefined | {
+    uri: string;
+    name: string;
+    type: string;
+};
+
+
 type Props = StackScreenProps<HomeStackParamList, "StickerPackScreen">;
 export const StickerPackScreen = ({ navigation, route }: Props): React.ReactElement => {
     const queryClient = useQueryClient();
@@ -65,6 +76,22 @@ export const StickerPackScreen = ({ navigation, route }: Props): React.ReactElem
 
 
     const pickAndUploadSticker = async (stickerPackId: string) => {
+        console.log(singleCachedFile);
+
+        // Temporary testing method of caching and reusing the same sticker
+        // Remove after Network Error issue is fixed
+        if (USE_SAME_CACHED_IMAGE && singleCachedFile) {
+            console.log("Using and uploading cached sticker");
+
+            const stickerName = generateName();
+            const dto = { stickerPackId, stickerName, file: singleCachedFile };
+
+            uploadSticker(dto);
+            return;
+        } else {
+            singleCachedFile = undefined;
+        }
+
         ImagePicker.openPicker({
             width: STICKER_FULL_SIZE_PX,
             height: STICKER_FULL_SIZE_PX,
@@ -74,11 +101,17 @@ export const StickerPackScreen = ({ navigation, route }: Props): React.ReactElem
             .then((image: ImageData) => {
                 const stickerName = generateName();
 
+                console.log("Picked image...", stickerName);
+
                 const file = {
                     uri: image.path,
                     name: image.path.split("/").slice(-1)[0],
                     type: image.mime,
                 };
+
+                if (USE_SAME_CACHED_IMAGE) {
+                    singleCachedFile = file;
+                }
 
                 const dto = { stickerPackId, stickerName, file };
 

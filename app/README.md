@@ -5,13 +5,13 @@
 First, make sure you have the right React Native CLI installed:
 
 ```
-npm un -g react-native-cli && npm i -g @react-native-community/cli
+yarn global remove react-native-cli && yarn global add @react-native-community/cli
 ```
 
-Next, install other dependencies:
+Next, install other dependencies (Node.js v18.13.0 is preferred):
 
 ```
-npm install
+yarn install
 ```
 
 ### Configuration
@@ -43,7 +43,7 @@ Builds your app and starts it on a connected Android emulator or device.
 
 Usage:
 ```
-npm run android
+yarn android
 ```
 
 ### run-ios
@@ -53,7 +53,7 @@ Builds your app and starts it on iOS simulator.
 Usage:
 ```
 (in main folder)
-npm run ios
+yarn ios
 ```
 
 ### start
@@ -62,5 +62,5 @@ Starts the server that communicates with connected devices.
 
 Usage:
 ```
-npm start
+yarn start
 ```
