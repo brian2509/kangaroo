@@ -96,7 +96,8 @@ export const StickerPackScreen = ({ navigation, route }: Props): React.ReactElem
             height: STICKER_FULL_SIZE_PX,
             cropping: true,
             mediaType: "photo",
-            includeBase64: true
+            includeBase64: true,
+            compressImageQuality: 0.95
         })
             .then((image: ImageData) => {
                 if (!image.data) {
