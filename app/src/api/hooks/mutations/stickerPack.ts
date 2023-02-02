@@ -31,6 +31,8 @@ export const useRemoveStickerPackMutation = (queryClient: QueryClient) =>
 // Upload Sticker Mutation
 export const useUploadStickerMutation = (queryClient: QueryClient) =>
     useMutation<StickerRo, any, UploadStickerRo, unknown>(uploadSticker, {
+        retry: 5,
+        retryDelay: 100,
         onSuccess: (data, variables) => {
             queryClient.invalidateQueries([QUERY_KEYS.stickerPack, variables.stickerPackId]);
             queryClient.invalidateQueries(QUERY_KEYS.myStickerPacks);
