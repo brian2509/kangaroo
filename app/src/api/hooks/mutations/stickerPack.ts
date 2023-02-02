@@ -31,6 +31,8 @@ export const useRemoveStickerPackMutation = (queryClient: QueryClient) =>
 // Upload Sticker Mutation
 export const useUploadStickerMutation = (queryClient: QueryClient) =>
     useMutation<StickerRo, any, UploadStickerRo, unknown>(uploadSticker, {
+        // TODO: this is a band aid fix for the AxiosError currently generated.
+        //  Base64 encoding fixes the issue, but causes performance overhead
         retry: 5,
         retryDelay: 100,
         onSuccess: (data, variables) => {
