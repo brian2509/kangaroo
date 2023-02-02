@@ -4,14 +4,14 @@ import { S3 } from "aws-sdk";
 import { Repository } from "typeorm";
 import { v4 as uuid } from "uuid";
 import { PrivateFile } from "./entities/file.entity";
-import { Config } from "../env.validation";
+import { ConfigService } from "../env.validation";
 
 @Injectable()
 export class FilesService {
   constructor(
     @InjectRepository(PrivateFile)
     private fileRepository: Repository<PrivateFile>,
-    private config: Config
+    private config: ConfigService
   ) {}
 
   async uploadFile(

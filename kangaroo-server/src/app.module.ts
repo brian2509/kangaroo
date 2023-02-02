@@ -11,22 +11,24 @@ import { Sticker } from "./stickers/entities/sticker.entity";
 import { StickersModule } from "./stickers/stickers.module";
 import { User } from "./users/entities/user.entity";
 import { UserModule } from "./users/user.module";
-import { Environment, Config } from "./env.validation";
+import { ConfigService, Environment } from "./env.validation";
 import { dotenvLoader, TypedConfigModule } from "nest-typed-config/index";
 
 @Module({
   imports: [
-    TypeOrmModule.forRootAsync({
-      useFactory: (config: Config) => ({
-        type: "postgres",
-        url: `postgres://${config.POSTGRES_USER}:${config.POSTGRES_PASSWORD}@${config.POSTGRES_PASSWORD}:${config.POSTGRES_HOST}/${config.POSTGRES_DB}`,
-        entities: [User, Sticker, PrivateFile, StickerPack, StickerPackInvite],
-        synchronize: config.NODE_ENV === Environment.DEVELOPMENT,
-      }),
-    }),
     TypedConfigModule.forRoot({
-      schema: Config,
-      load: dotenvLoader({ envFilePath: ".env" }),
+      schema: ConfigService,
+      load: dotenvLoader(),
+    }),
+    TypeOrmModule.forRootAsync({
+      imports: [TypedConfigModule],
+      useFactory: async (configService: ConfigService) => ({
+        type: "postgres",
+        url: `postgres://${configService.POSTGRES_USER}:${configService.POSTGRES_PASSWORD}@${configService.POSTGRES_HOST}:${configService.POSTGRES_PORT}/${configService.POSTGRES_DB}`,
+        entities: [User, Sticker, PrivateFile, StickerPack, StickerPackInvite],
+        synchronize: configService.NODE_ENV === Environment.DEVELOPMENT,
+      }),
+      inject: [ConfigService],
     }),
     UserModule,
     StickersModule,

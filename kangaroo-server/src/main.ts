@@ -6,7 +6,7 @@ import { NestFactory } from "@nestjs/core";
 import { AppModule } from "./app.module";
 import openAPIConfig from "./common/open-api/open-api.config";
 import { clientGenerationTask } from "./common/tasks/client-gen.task";
-import { Config, Environment } from "./env.validation";
+import { ConfigService, Environment } from "./env.validation";
 
 dotenv.config();
 
@@ -28,19 +28,19 @@ async function bootstrap() {
     })
   );
 
-  const config = app.get(Config);
+  const configService = app.get(ConfigService);
 
   // Enable CORS.
-  if (config.NODE_ENV === Environment.DEVELOPMENT) {
+  if (configService.NODE_ENV === Environment.DEVELOPMENT) {
     app.enableCors();
   }
 
   // Set-up Swagger code generation.
-  if (config.NODE_ENV === Environment.DEVELOPMENT) {
+  if (configService.NODE_ENV === Environment.DEVELOPMENT) {
     const document = SwaggerModule.createDocument(app, openAPIConfig.build());
     SwaggerModule.setup("api", app, document);
   }
 
-  const port = config.PORT;
+  const port = configService.PORT;
   await app.listen(port);
 }

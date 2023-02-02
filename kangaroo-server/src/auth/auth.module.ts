@@ -7,15 +7,18 @@ import { AuthService } from "./auth.service";
 import { JwtStrategy } from "./strategies/jwt.strategy";
 import { LocalStrategy } from "./strategies/local.strategy";
 import { TypedConfigModule } from "nest-typed-config/index";
-import { Config } from "../env.validation";
+import { ConfigService } from "../env.validation";
 
 @Module({
   imports: [
+    TypedConfigModule,
     JwtModule.registerAsync({
-      useFactory: async (config: Config) => ({
-        secret: config.JWT_SECRET,
+      imports: [TypedConfigModule],
+      useFactory: async (configService: ConfigService) => ({
+        secret: configService.JWT_SECRET,
         signOptions: { expiresIn: "1d" },
       }),
+      inject: [ConfigService],
     }),
     PassportModule,
     TypedConfigModule,

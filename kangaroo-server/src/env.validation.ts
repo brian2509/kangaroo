@@ -5,7 +5,7 @@ export enum Environment {
   PRODUCTION = "production",
 }
 
-export class Config {
+export class ConfigService {
   @IsEnum(Environment)
   public readonly NODE_ENV: Environment;
 
