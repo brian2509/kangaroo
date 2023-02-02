@@ -16,6 +16,11 @@ export class HTTPLoggerMiddleware implements NestMiddleware {
       const body = request.body;
       const params = request.params;
 
+      // Remove the password from the logs
+      if (body.password) {
+        body.password = "*****";
+      }
+
       const message = `${method} ${url} ${statusCode} ${contentLength} - ${userAgent} ${ip} ${
         Object.keys(params).length === 0 && Object.keys(body).length === 0
           ? ""
