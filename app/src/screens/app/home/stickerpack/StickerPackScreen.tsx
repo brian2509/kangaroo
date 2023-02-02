@@ -34,7 +34,7 @@ const { WhatsAppStickersModule } = NativeModules;
 
 // Temporary upload caching for testing, set to false to disable using a cached image for all uploads
 // Remove after Network Error issue is fixed
-export const USE_SAME_CACHED_IMAGE = true;
+export const USE_SAME_CACHED_IMAGE = false;
 export let singleCachedFile: undefined | {
     name: string;
     base64: string;
