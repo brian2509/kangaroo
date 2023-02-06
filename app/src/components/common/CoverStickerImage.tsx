@@ -1,36 +1,29 @@
 import React from "react";
-import tw from "tailwind-react-native-classnames";
-import { StickerPackRo, StickerRo } from "../../api/generated-typescript-api-client/src";
-import { Image, ImageStyle, StyleProp, TouchableOpacity } from "react-native";
+import { StickerPackRo } from "../../api/generated-typescript-api-client/src";
+import { Image, ImageStyle, StyleProp } from "react-native";
 import { PlaceholderImage } from "./PlaceholderImage";
+import tailwind from "tailwind-rn";
 
-const DEFAULT_IMAGE_STYLE = tw`w-14 h-14 rounded-full`;
+const DEFAULT_IMAGE_STYLE = tailwind("w-14 h-14 rounded-full");
 
 interface Props {
     stickerPack: StickerPackRo;
     style?: StyleProp<ImageStyle>;
-    onStickerPress?: (sticker: StickerRo) => void;
 }
 
 export const CoverStickerImage = ({
     stickerPack,
     style = DEFAULT_IMAGE_STYLE,
-    onStickerPress,
 }: Props): React.ReactElement => {
-    return stickerPack.stickers.length > 0 ? (
-        <TouchableOpacity
-            disabled={onStickerPress == undefined}
-            onPress={() => {
-                if (onStickerPress) {
-                    onStickerPress(stickerPack.stickers[0]);
-                }
-            }}>
-            <Image
-                style={style}
-                source={{ uri: stickerPack.stickers[0].fileUrl }}
-            />
-        </TouchableOpacity>
+
+    return stickerPack.trayIconImageFileUrlOriginal ? (
+        <Image
+            style={style}
+            source={{ uri: stickerPack.trayIconImageFileUrlOriginal }}
+        />
     ) : (
-        <PlaceholderImage style={style} />
+        <PlaceholderImage
+            style={style}
+        />
     );
 };
