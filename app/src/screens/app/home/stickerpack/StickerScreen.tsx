@@ -1,38 +1,42 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
 import { StackScreenProps } from "@react-navigation/stack";
 import { Button, Icon } from "@ui-kitten/components";
-import { Image, SafeAreaView } from "react-native";
+import { Image, SafeAreaView, ToastAndroid } from "react-native";
 import { HomeStackParamList } from "../../../../navigation/app/AppStackNavigator";
 import tw from "tailwind-react-native-classnames";
 import tailwind from "tailwind-rn";
 import { useDeleteStickerMutation } from "../../../../api/hooks/mutations/stickerPack";
 import { useQueryClient } from "react-query";
-import { showConfirmModal } from "../../../../components/common/ConfirmModal";
+import { ConfirmModal } from "../../../../components/common/ConfirmModal";
 
 
 type Props = StackScreenProps<HomeStackParamList, "StickerScreen">;
 const StickerScreen = ({ route, navigation }: Props): JSX.Element => {
     const { stickerPack, sticker, allowDeleteSticker } = route.params;
 
+    const [confirmModalVisible, setConfirmModalVisible] = useState(false)
+
     const queryClient = useQueryClient();
-    const { mutate: deleteSticker } = useDeleteStickerMutation(queryClient);
+    const { mutate: deleteSticker, isLoading } = useDeleteStickerMutation(queryClient);
 
-    const onPressDeleteSticker = async () => {
-        const onPressConfirm = async () => {
-            await deleteSticker({
-                stickerPackId: stickerPack.id,
-                stickerId: sticker.id,
-            })
-            navigation.pop();
-        }
+    const onPressConfirmDelete = async () => {
+        deleteSticker({
+            stickerPackId: stickerPack.id,
+            stickerId: sticker.id,
+        }, {
+            onSuccess: () => {
+                setConfirmModalVisible(false);
+                navigation.pop();
+            },
+            onError: () => {
+                ToastAndroid.show("Something went wrong while deleting the sticker, please try again.", 10000);
+            }
+        })
+    }
 
-        showConfirmModal({
-            message: "Are you sure?",
-            buttonText: "Delete Sticker",
-            onPressConfirm,
-            status: "danger"
-        });
+    const onPressDeleteButton = async () => {
+        setConfirmModalVisible(true);
     }
 
     const DeleteIcon = () => (
@@ -40,7 +44,7 @@ const StickerScreen = ({ route, navigation }: Props): JSX.Element => {
             appearance="ghost"
             status="danger"
             style={tailwind("mx-3 px-1")}
-            onPress={onPressDeleteSticker}
+            onPress={onPressDeleteButton}
             accessoryLeft={(props) => (<Icon style={tw.style("w-8 h-8")} name="trash" {...props} />)}
         />
     );
@@ -54,10 +58,18 @@ const StickerScreen = ({ route, navigation }: Props): JSX.Element => {
     return (
         <SafeAreaView style={tw`flex justify-center h-full bg-white`}>
             <Image
-                style={tw.style("rounded-lg w-full", {
-                    paddingBottom: "100%",
-                })}
+                style={tw.style("rounded-lg w-full", { paddingBottom: "100%" })}
                 source={{ uri: sticker.fileUrl }}
+            />
+            <ConfirmModal
+                visible={confirmModalVisible}
+                isLoading={isLoading}
+                loadingMessage="Deleting sticker..."
+                hideModal={() => setConfirmModalVisible(false)}
+                message="Are you sure?"
+                buttonText="Delete Sticker"
+                onPressConfirm={onPressConfirmDelete}
+                status="danger"
             />
         </SafeAreaView>
     );
